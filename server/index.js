@@ -1,13 +1,16 @@
 require('dotenv').config();
+
 const express = require('express');
 const app = express();
 const session = require('express-session');
 const massive = require('massive');
 
+const ing = require('./controllers/ingredientsController')
+
 const {SERVER_PORT, SESSION_SECRET, CONNECTION_STRING} = process.env;
 
 // allows use of .json packages
-// app.use(express.json());
+app.use(express.json());
 
 // user session
 app.use(session({
@@ -24,5 +27,9 @@ massive(CONNECTION_STRING).then(db => {
    app.set('db', db);
    console.log('Connected to database');
 })
+
+// endpoints
+app.post('/api/ingredient', ing.searchIngredient)
+app.post('/api/ingredient', )
 
 app.listen(SERVER_PORT, () => console.log(`Server listening on ${SERVER_PORT}`));
