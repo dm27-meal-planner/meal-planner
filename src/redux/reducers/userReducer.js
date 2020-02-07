@@ -30,9 +30,10 @@ export function loginUser(username, password) {
    }
 }
 
-export function registerUser(firstname, lastname, username, email, password, noPpl) {
-   let familyNumber = parseInt(noPpl);
-   let user = {firstname, lastname, username, email, password, familyNumber};
+export function registerUser(username, password, email, first_name, last_name, noPpl) {
+   //household size should be a selectable dropdown in the register component.
+   let household_size = parseInt(noPpl);
+   let user = {username, password, email, first_name, last_name, household_size};
    return {
       type: REGISTER_USER,
       payload: axios.post('user/registeruser', user)
