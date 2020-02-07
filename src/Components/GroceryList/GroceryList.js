@@ -13,7 +13,7 @@ class GroceryList extends Component{
             editMode: false
         }
     }
-    getSearchResults = (searchPhrase) => {
+    getSearchResults = () => {
          axios.post('/api/ingredient/search', {searchPhrase: this.state.searchInput})
                 .then(res => {
                     this.setState({
