@@ -12,6 +12,7 @@
 - technologies/techniques used to solve the problems
 	- also why you chose that particular tech
 - project **screenshots**
+- link to the actual website to show live example
 - list of group members *with* links to personal githubs and portfolios
 - anything else you think worthy of sharing, *but* don't be too wordy
 - keep the reader's attention
