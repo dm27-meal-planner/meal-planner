@@ -1,4 +1,2 @@
-INSERT INTO ingredient(ingredient_name)
-VALUES($1)
-
-RETURNING *
+INSERT INTO ingredients(ingredient_name, cost, nutrients)
+VALUES($1, $2, $3)

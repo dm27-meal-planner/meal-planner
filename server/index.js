@@ -29,8 +29,8 @@ massive(CONNECTION_STRING).then(db => {
 })
 
 //ingredient endpoints
-app.post('/api/ingredient', ing.searchIngredient)
-app.post('/api/ingredient', )
+app.post('/api/ingredient/search', ing.searchIngredient)
+app.post('/api/ingredient', ing.addIngredient )
 
 //user endpoints
 // app.get('user/getuser', getUser);
