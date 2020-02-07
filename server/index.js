@@ -9,8 +9,8 @@ const {getUserMeals, addMeal, editMeal, deleteMeal} = require('./controllers/mea
 const {getMostLikedRecipe, getRecentRecipe, getUserRecipe, getRecipeById, addRecipe, deleteRecipe, editRecipe, getRecipeByQuery} = require('./controllers/recipecontroller');
 const {getUserFridge, addItem, editItem, deleteItem} = require('./controllers/fridgecontroller');
 const {getUserGroceryList, addItemToList, editGroceryList, deleteGroceryList} = require('./controllers/grocerylistcontroller');
+const {searchIngredient, addIngredient, getIngredientPrice} = require('./controllers/ingredientsController')
 
-const ing = require('./controllers/ingredientsController')
 
 const {SERVER_PORT, SESSION_SECRET, CONNECTION_STRING} = process.env;
 
@@ -34,6 +34,11 @@ massive(CONNECTION_STRING).then(db => {
 })
 
 //user endpoints
+
+app.post('/api/ingredient/search', searchIngredient)
+app.post('/api/ingredient', addIngredient )
+app.post('/api/ingredient/price', getIngredientPrice)
+
 app.get('user/getuser', getUser);
 app.post('user/registeruser', registerUser);
 app.post('user/login', loginUser);
@@ -63,7 +68,7 @@ app.post('api/fridge/:user_id', addItem);
 
 //grocerylist endpoints
 app.get('api/grocerylist/:user_id', getUserGroceryList);
-app.post('api/grocerylist/:user_id', addItemToList);
+app.post('/api/grocerylist/:user_id', addItemToList);
 // app.put(`api/grocerylist/:user_id?item=${item_id}`, editGroceryList);
 // app.delete(`api/grocerylist/:user_id?item=${item_id}`, deleteGroceryItem);
 

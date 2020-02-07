@@ -16,6 +16,19 @@ module.exports = {
             res.status(200).json(result)
     },
 
+    getIngredientPrice: async(req ,res) => {
+        const { id, amount, unit } = req.body
+        
+        const result = await axios.get(`https://api.spoonacular.com/food/ingredients/${id}/information?amount=${amount}&unit=${unit}&apiKey=${SPOON_API_KEY}`)
+            .then(res => res.data)
+
+            if(result.length === 0){
+                res.status(400).json('Ingredient not found')
+            }
+
+            res.status(200).json(result.estimatedCost.value)
+    },
+
     addIngredient:  async(req, res) => {
         const db = req.app.get('db')
 
