@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const getUser = async (req, res) => {
    res.status(200).json('OK');
 }
