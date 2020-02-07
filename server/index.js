@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const express = require('express');
 const app = express();
 const session = require('express-session');
@@ -9,10 +10,12 @@ const {getMostLikedRecipe, getRecentRecipe, getUserRecipe, getRecipeById, addRec
 const {getUserFridge, addItem, editItem, deleteItem} = require('./controllers/fridgecontroller');
 const {getUserGroceryList, addItemToList, editGroceryList, deleteGroceryList} = require('./controllers/grocerylistcontroller');
 
+const ing = require('./controllers/ingredientsController')
+
 const {SERVER_PORT, SESSION_SECRET, CONNECTION_STRING} = process.env;
 
 // allows use of .json packages
-// app.use(express.json());
+app.use(express.json());
 
 // user session
 app.use(session({
