@@ -1,6 +1,13 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+// import {} from '../redux/reducers/recipeReducer';
 
-function withSearch(BaseComponent){
+
+function withSearch(BaseComponent, searchBtnCb){
+    // BaseComponent can display the result of search
+    // searchBtnCb is the function will be invoked after press search button, 
+    //  the purpose is to redirect to certain page.
+
     return class extends Component{
         constructor(){
             super();
@@ -20,7 +27,7 @@ function withSearch(BaseComponent){
 
         searchRecipes = ()=>{
             // send info to redux.
-
+            searchBtnCb();
         }
 
         render(){
@@ -48,4 +55,10 @@ function withSearch(BaseComponent){
     }
 }
 
-export default withSearch;
+// const mapStateToProps = function (reduxState){
+//     return {
+
+//     }
+// }
+
+export default connect(undefined, {})(withSearch);
