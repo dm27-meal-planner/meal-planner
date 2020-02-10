@@ -14,7 +14,7 @@ class RecipeSearchResults extends Component {
     }
 
     render() {
-        let searchResultList = this.props.searchResult.map((r, i) => {
+        let searchResultList = this.props.searchResults.map((r, i) => {
             return (
                 // change the path once the route is sure.
                 <Link to={`/recipe/${r.recipe_id}`}>
@@ -28,7 +28,7 @@ class RecipeSearchResults extends Component {
                     <div className='searchResultList'>
                         {searchResultList}
                     </div>
-                    , () => { })}
+                    , () => {})}
             </div>
         )
     }
@@ -37,7 +37,7 @@ class RecipeSearchResults extends Component {
 const mapStateToProps = function (reduxState) {
     // update the redux info.
     return {
-        searchResults: []
+        searchResults: reduxState.recipe.searchResults
     }
 }
 

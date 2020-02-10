@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import './RecipeOutlineCard.css';
+import {connect} from 'react-redux';
+import { deleteRecipe } from '../../../../../redux/reducers/recipeReducer';
+
 class RecipeOutlineCard extends Component {
 
     handleEdit = () => {
@@ -7,6 +9,7 @@ class RecipeOutlineCard extends Component {
     }
     handleDelete = () => {
         // call redux to delete the recipe.
+        this.props.deleteRecipe(this.props.recipe.id);
     }
 
     render() {
@@ -26,4 +29,4 @@ class RecipeOutlineCard extends Component {
         )
     }
 }
-export default RecipeOutlineCard;
+export default connect(undefined, {deleteRecipe}) (RecipeOutlineCard);
