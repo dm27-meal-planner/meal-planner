@@ -18,7 +18,8 @@ const registerUser = async (req, res) => {
       req.session.user = {
          user_id: newUser[0].user_id,
          username: newUser[0].username,
-         email: newUser[0].email
+         email: newUser[0].email,
+         household_size: userid[0].household_size
       }
    }
    res.status(201).json(req.session.user);
@@ -26,13 +27,13 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
    const db = req.app.get('db');
-   const {usernameOrEmail, password} = req.body;
+   const {username, password} = req.body;
+   const userid = await db.check_for_username(username);
    //a salt/hash is not necessary due to the compareSync function of bcrypt;
    //it checks if the password inputted is the same as the hash of the one found.
-   let userid = await db.check_for_username(usernameOrEmail);
    //if it cannot find via username, try to find via email instead
    if (!userid[0]) {
-      userid = await db.check_for_email(usernameOrEmail);
+      userid = await db.check_for_email(username);
    }
    if (userid[0]) {
       const checkPass = bcrypt.compareSync(password, userid[0].password)
@@ -40,7 +41,8 @@ const loginUser = async (req, res) => {
          req.session.user = {
             user_id: userid[0].user_id,
             username: userid[0].username,
-            email: userid[0].email
+            email: userid[0].email,
+            household_size: userid[0].household_size
          }
          res.status(200).json(req.session.user);
       } else {

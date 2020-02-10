@@ -1,11 +1,12 @@
 import axios from 'axios';
 
 const initialState = {
-   message: null,
    username: null,
    // is_Admin: false,
    email: null,
-   user_id: null
+   user_id: null,
+   household_size: null,
+   message: ''
 }
 
 //action types
@@ -57,31 +58,35 @@ export default function reducer(state = initialState, action) {
             ...state,
             username: payload.data.username,
             user_id: payload.data.user_id,
-            email: payload.data.email
+            email: payload.data.email,
+            household_size: payload.data.household_size,
+            message: ''
          }
       case `${LOGIN_USER}_FULFILLED`:
          return {
             ...state,
             username: payload.data.username,
             user_id: payload.data.user_id,
-            email: payload.data.email
+            email: payload.data.email,
+            household_size: payload.data.household_size
          }
       case `${REGISTER_USER}_FULFILLED`:
          return {
             ...state,
-            // Use this message to display a notification to the user when an account
-            // has been made
-            message: "Account created successfully.",
             username: payload.data.username,
             user_id: payload.data.user_id,
-            email: payload.data.email
+            email: payload.data.email,
+            household_size: payload.data.household_size,
+            message: 'Account created successfully.'
          }
       case `${LOGOUT_USER}_FULFILLED`:
          return {
             ...state,
             username: null,
             user_id: null,
-            email: null
+            email: null,
+            household_size: null,
+            message: 'Successfully logged out!'
          }
       default: return state;
    }
