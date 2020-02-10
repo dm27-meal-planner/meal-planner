@@ -6,8 +6,11 @@ module.exports = {
 
         const { searchPhrase } = req.body
         
-        const result = await axios.get(`https://api.spoonacular.com/food/ingredients/autocomplete?query=${searchPhrase}&apiKey=${SPOON_API_KEY}&metaInformation=true`)
-            .then(res => res.data)
+        let result;
+        
+         await axios.get(`https://api.spoonacular.com/food/ingredients/autocomplete?query=${searchPhrase}&apiKey=${SPOON_API_KEY}&metaInformation=true`)
+            .then(res => result = res.data)
+            .catch(err => res.status(400).json(err.response.data.message))
 
             if(result.length === 0){
                 res.status(400).json('No results were found')

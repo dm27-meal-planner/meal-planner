@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {getUser, loginUser, logoutUser} from '../../redux/reducers/userReducer';
+import { withRouter } from 'react-router';
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import * as firebaseui from 'firebaseui';
@@ -57,33 +58,47 @@ class UserLoginLogout extends Component {
       
    }
 
-   handleUserInput(value) {
+   handleUserInput = (value) => {
       this.setState({userOrEmail: value});
    }
 
-   handlePasswordInput(value) {
+   handlePasswordInput = (value) => {
       this.setState({password: value});
    }
 
    render() {
       const {userOrEmail, password} = this.state;
+      console.log(this.props)
+
+      if(this.props.user_id){
+         return (
+            <>
+               <h1>Welcome, {this.props.username}!</h1> 
+               <button onClick={() => {
+                  this.props.logoutUser();
+               }}>Logout</button>
+            </>
+         )
+      }
+
       return(
          <div id="UserLoginLogout">
             <h1>Login</h1>
             <input placeholder="Name/Email"
-            value={userOrEmail}
-            id="userInput"
-            onChange={e => this.handleUserInput(e.target.value)}/>
+               value={userOrEmail}
+               id="userInput"
+               onChange={e => this.handleUserInput(e.target.value)}/>
             <input placeholder="Password" 
-            value={password}
-            type="password"
-            id="passwordInput"
-            onChange={e => this.handlePasswordInput(e.target.value)}/>
+               value={password}
+               type="password"
+               id="passwordInput"
+               onChange={e => this.handlePasswordInput(e.target.value)}/>
             <button onClick={() => {
                this.props.loginUser(userOrEmail, password)
                this.setState({userOrEmail: '', password: ''})
             }}>Log in</button>
 
+            {this.props.history.action === "REPLACE" ? <p>You must be logged in to access that page</p> : null}
             <div className="medialogin">
                <div id="firebaseui-auth-container"></div>
             </div>
@@ -103,6 +118,7 @@ class UserLoginLogout extends Component {
 
 const mapStateToProps = reduxState => {
    return {
+      user_id: reduxState.user.user_id,
       username: reduxState.user.username,
       email: reduxState.user.email,
       household_size: reduxState.user.household_size,
@@ -110,4 +126,4 @@ const mapStateToProps = reduxState => {
    }
 }
 
-export default connect(mapStateToProps, {getUser, loginUser, logoutUser})(UserLoginLogout)
+export default withRouter(connect(mapStateToProps, {getUser, loginUser, logoutUser})(UserLoginLogout))
