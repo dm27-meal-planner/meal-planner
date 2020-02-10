@@ -6,8 +6,8 @@ import grocerylistReducer from './reducers/grocerylistReducer';
 import ingredientsReducer from './reducers/ingredientsReducer';
 import mealplanReducer from './reducers/mealplanReducer';
 import recipeReducer from './reducers/recipeReducer';
-import {firestoreReducer} from 'redux-firestore';
-import {firebaseReducer} from 'react-redux-firebase';
+// import {firestoreReducer} from 'redux-firestore';
+// import {firebaseReducer} from 'react-redux-firebase';
 
 const rootReducer = combineReducers({
    user: userReducer,
@@ -15,7 +15,9 @@ const rootReducer = combineReducers({
    grocerylist: grocerylistReducer,
    ingredients: ingredientsReducer,
    mealplan: mealplanReducer,
-   recipe: recipeReducer
+   recipe: recipeReducer,
+   // firestore: firestoreReducer,
+   // firebase: firebaseReducer
 })
 
 export default createStore(rootReducer, applyMiddleware(promise));
