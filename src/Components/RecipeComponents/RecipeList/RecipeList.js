@@ -1,12 +1,21 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import withSearch from '../../../hoc/withSearch';
+import {getMostLikedRecipe, getRecentRecipes, getUserRecipe} from '../../../redux/reducers/recipeReducer';
 import TopFiveList from '../RecipeCards/TopFiveList/TopFiveList';
 
 class RecipeList extends Component{
     constructor(){
         super();
     }
+    componentDidMount(){
+        this.props.getMostLikedRecipe();
+        this.props.getRecentRecipes();
+        if(this.props.user_id){
+            this.props.getUserRecipe(this.props.user_id);
+        }
+    }
+
     redirectToSearchResult = ()=>{
         // after press search button, redirect to search result page.
 
@@ -15,23 +24,22 @@ class RecipeList extends Component{
         return (
             <div>
                 {withSearch(<div></div>, redirectToSearchResult)}
-                {/* update recipeList */}
-                <TopFiveList listName='Recently Added' recipeList={[]} editFlag={false}/>
-                <TopFiveList listName='Your Recipes' recipeList={[]} editFlag={true}/>
-                <TopFiveList listName='Most Liked' recipeList={[]} editFlag={false}/>
+                <TopFiveList listName='Recently Added' recipeList={this.props.recentlyAddedRecipes} editFlag={false}/>
+                <TopFiveList listName='Your Recipes' recipeList={this.props.userRecipes} editFlag={true}/>
+                <TopFiveList listName='Most Liked' recipeList={this.props.mostLiked} editFlag={false}/>
             </div>
         )
     }
 }
 
 const mapStateToProps = function (reduxState){
-    // update the redux info.
     return {
-        recentlyAddedRecipes: [],
-        userRecipes: [],
-        mostLiked: [],
-        searchResults: []
+        user_id: reduxState.user.user_id,
+        recentlyAddedRecipes: reduxState.recipe.recentlyAddedRecipes,
+        userRecipes: reduxState.recipe.userRecipes,
+        mostLiked: reduxState.recipe.mostLiked,
+        // searchResults: reduxState.recipe.searchResults
     }
 }
 
-export default connect(mapStateToProps, {}) (RecipeList);
+export default connect(mapStateToProps, {getMostLikedRecipe, getRecentRecipes, getUserRecipe}) (RecipeList);

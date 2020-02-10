@@ -62,10 +62,5 @@ function withSearch(BaseComponent, searchBtnCb){
     }
 }
 
-// const mapStateToProps = function (reduxState){
-//     return {
 
-//     }
-// }
-// add redux function into here.
 export default connect(undefined, { getRecipeByQuery })(withSearch);

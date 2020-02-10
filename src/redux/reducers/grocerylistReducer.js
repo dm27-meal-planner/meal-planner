@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-initialState = {
+const initialState = {
    list_id: null,
    ingredients: null
 }
