@@ -20,6 +20,7 @@ class GroceryList extends Component{
                         searchResults: res.data
                     })
                 })
+                .catch(err => console.log(err.response.data))
     }
 
     addToList = async(ingredient) => {
@@ -52,7 +53,7 @@ class GroceryList extends Component{
         })
     }
 
-    handelInputChange = (e) => {
+    handleInputChange = (e) => {
       this.setState({
           [e.target.name]: e.target.value 
       })
@@ -75,7 +76,7 @@ class GroceryList extends Component{
                     {searchResults}
                 </ul>
                 GroceryList
-                <input name='searchInput' onChange={this.handelInputChange}/> 
+                <input name='searchInput' onChange={this.handleInputChange}/> 
                 <button onClick={this.getSearchResults}>search</button>
                 <ul>
                     {list}
