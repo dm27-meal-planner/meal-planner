@@ -3,18 +3,18 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-// import {Provider} from 'react-redux';
+import {Provider} from 'react-redux';
 import {HashRouter} from 'react-router-dom';
-// import store from './redux/store';
+import store from './redux/store';
 
 ReactDOM.render(
    //we need this to utilize Redux later
-   // <Provider store={store}>
-   // HashRouter is used to provide route access
+   <Provider store={store}>
+   {/* HashRouter is used to provide route access */}
       <HashRouter>
          <App />
       </HashRouter>
-   // </Provider>
+   </Provider>
 , document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
