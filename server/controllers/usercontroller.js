@@ -1,14 +1,19 @@
 const bcrypt = require('bcryptjs');
 
 const getUser = async (req, res) => {
-   res.status(200).json(req.session.user);
+   console.log(req.session.user)
+   if(!req.session.user){
+      res.status(400).json('User is currently not logged in')
+   } else {
+      res.status(200).json(req.session.user);
+   }
 }
 
 const registerUser = async (req, res) => {
    const db = req.app.get('db');
    const {username, password, email, first_name, last_name, household_size} = req.body;
    const dupeUserName = await db.check_for_username(username);
-   const dupeEmail = await db.check_for_email(email);;
+   const dupeEmail = await db.check_for_email(email);
    if (dupeUserName[0] || dupeEmail[0]) {
       res.status(409).json('Username and/or email already exists.')
    } else {
@@ -19,7 +24,7 @@ const registerUser = async (req, res) => {
          user_id: newUser[0].user_id,
          username: newUser[0].username,
          email: newUser[0].email,
-         household_size: userid[0].household_size
+         household_size: newUser[0].household_size
       }
    }
    res.status(201).json(req.session.user);

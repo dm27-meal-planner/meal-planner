@@ -20,7 +20,7 @@ class SearchItem extends React.Component{
                 
             <li style={{display: 'flex'}}>
                 <p>{name}</p>
-                <img src={`https://www.spoonacular.com/cdn/ingredients_100x100/${image}`} />
+                <img src={`https://www.spoonacular.com/cdn/ingredients_100x100/${image}`} alt='ingredient_image' />
                 <div>
                     <input type='number' min='0' name='amount' onChange={this.handelInputChange}/>
                     <select name='unit' onChange={this.handelInputChange}>
