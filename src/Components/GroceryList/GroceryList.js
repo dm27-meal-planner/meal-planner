@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import axios from 'axios'
 import SearchItem from './SearchItem';
 import ListItem from './ListItem';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router';
 
 class GroceryList extends Component{
     constructor(){
@@ -59,7 +61,11 @@ class GroceryList extends Component{
       })
     }
     render(){
-        console.log(this.state)
+
+        if(!this.props.user_id){
+            return <Redirect to='/' />
+        }
+
         let searchResults = this.state.searchResults.map((ele, i) => {
             return(
                 <SearchItem name={ele.name} image={ele.image} possibleUnits={ele.possibleUnits} addToList={this.addToList} id={ele.id} key={i} />
@@ -85,4 +91,11 @@ class GroceryList extends Component{
         )
     }
 }
-export default GroceryList;
+
+const mapStateToProps = (reduxState) => {
+    return {
+        user_id: reduxState.user.user_id       
+    }
+}
+
+export default connect(mapStateToProps)(GroceryList)

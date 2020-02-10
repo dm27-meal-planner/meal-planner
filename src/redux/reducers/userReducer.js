@@ -16,6 +16,7 @@ const REGISTER_USER = 'REGISTER_USER';
 const LOGOUT_USER = 'LOGOUT_USER';
 
 export function getUser() {
+
    return {
       type: GET_USER,
       payload: axios.get('/user/getuser')
@@ -62,13 +63,22 @@ export default function reducer(state = initialState, action) {
             household_size: payload.data.household_size,
             message: ''
          }
+
+      case `${GET_USER}_REJECTED`: {
+        return {
+         ...state,
+         message: payload.response.data
+        }
+      }
+
       case `${LOGIN_USER}_FULFILLED`:
          return {
             ...state,
             username: payload.data.username,
             user_id: payload.data.user_id,
             email: payload.data.email,
-            household_size: payload.data.household_size
+            household_size: payload.data.household_size,
+            message: `${payload.data.username} is currently logged in`
          }
       case `${REGISTER_USER}_FULFILLED`:
          return {
