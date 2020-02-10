@@ -22,7 +22,7 @@ class Fridge extends Component{
 
 const mapStateToProps = (reduxState) => {
     return {
-        user_id: reduxState.user_id       
+        user_id: reduxState.user.user_id       
     }
 }
 

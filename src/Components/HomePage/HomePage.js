@@ -19,7 +19,7 @@ const HomePage = (props) => {
 
     return (
         <div>
-            <FullCalendar defaultView="dayGridWeek" plugins={[ dayGridPlugin, timeGridPlugin ]} events={events}/>
+            <FullCalendar defaultView="dayGridWeek" plugins={[ dayGridPlugin, timeGridPlugin ]} events={events} aspectRatio='2' eventRender={({el}) => console.log(el) } />
             HomePage
             <NextMeal />
             
