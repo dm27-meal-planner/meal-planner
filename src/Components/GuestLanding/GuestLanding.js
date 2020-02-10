@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {getUser, registerUser} from '../../redux/reducers/userReducer';
+// import firebase from 'firebase';
+// import firebaseui from 'firebaseui';
 
 class GuestLanding extends Component{
     constructor(){
@@ -75,7 +77,8 @@ class GuestLanding extends Component{
 const mapStateToProps = reduxState => {
     return {
         user_id: reduxState.user.user_id,
-        message: reduxState.user.message
+        message: reduxState.user.message,
+        firebase: reduxState.firebase
     }
 }
 
