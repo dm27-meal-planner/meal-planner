@@ -35,6 +35,7 @@ ui.start('#firebaseui-auth-container', {
       firebase.auth.TwitterAuthProvider.PROVIDER_ID
    ], callbacks: {
       signInSuccessWithAuthResult: function(authResult, redirectURL) {
+         /* 02/10 16:46: Need to fully utilize Firebase. */
          console.log(authResult);
          return false;
       }
