@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {getUser, registerUser} from '../../redux/reducers/userReducer';
+import { Redirect } from 'react-router';
+// import firebase from 'firebase';
+// import firebaseui from 'firebaseui';
 
 class GuestLanding extends Component{
     constructor(){
@@ -16,8 +19,7 @@ class GuestLanding extends Component{
             passwordconfirm: '',
             household_size: 1
         }
-        this.handleUserInput=this.handleUserInput.bind(this);
-        this.handleUserRegistration=this.handleUserRegistration.bind(this);
+
     }
 
     // reset message
@@ -29,12 +31,14 @@ class GuestLanding extends Component{
         this.setState({[e.target.name]: e.target.value})
     }
 
-    handleUserRegistration = () => {
+    handleUserRegistration = async() => {
         //compare retype password to password of user
         const {first_name, last_name, username, email, password, passwordconfirm, household_size} = this.state;
         if (password === passwordconfirm) {
             this.setState({first_name: '', last_name: '', username: '', email: '', password: '', passwordconfirm: ''})
-            this.props.registerUser(username, password, email, first_name, last_name, household_size);
+            await this.props.registerUser(username, password, email, first_name, last_name, household_size);
+            this.props.getUser()
+
         } else {
             this.setState({message: "Passwords do not match."})
         }
@@ -44,6 +48,11 @@ class GuestLanding extends Component{
         for (let i = 1; i <= 10; i++) {
             familySize.push(i);
         } 
+
+        if(this.props.user_id){
+            return <Redirect to='/home'/>
+        }
+
         return (
             <div id="GuestLanding">
                 <div className = "names">
@@ -65,7 +74,6 @@ class GuestLanding extends Component{
                     </select>
                 </div>
                 <button className="register" onClick={this.handleUserRegistration}>Register</button>
-                {this.props.message}
             </div>
         )
     }
@@ -75,7 +83,8 @@ class GuestLanding extends Component{
 const mapStateToProps = reduxState => {
     return {
         user_id: reduxState.user.user_id,
-        message: reduxState.user.message
+        message: reduxState.user.message,
+        firebase: reduxState.firebase
     }
 }
 
