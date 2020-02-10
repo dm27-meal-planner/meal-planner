@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-// import {} from '../redux/reducers/recipeReducer';
+import { getRecipeByQuery } from '../redux/reducers/recipeReducer';
 
 
 function withSearch(BaseComponent, searchBtnCb){
     // BaseComponent can display the result of search
     // searchBtnCb is the function will be invoked after press search button, 
-    //  the purpose is to redirect to certain page.
+    //  the purpose of cb is to redirect to certain page.
 
     return class extends Component{
         constructor(){
@@ -27,11 +27,17 @@ function withSearch(BaseComponent, searchBtnCb){
 
         searchRecipes = ()=>{
             // send info to redux.
+            let params = `name=${this.state.searchInput}`
+            this.props.getRecipeByQuery(params);
+            // ** working: category search.
+
+            // after press search btn, exe the callback function
+            // (mainly for redirect to certain page.)
             searchBtnCb();
         }
 
         render(){
-
+            // need to check what kind of type search.
             browseWindow = this.state.browseWindow?(<ul>
                 <li>Meal Type</li>
                 <li>Dish Type</li>
@@ -42,6 +48,7 @@ function withSearch(BaseComponent, searchBtnCb){
             return (
                 <div>
                     <div>
+                        {/* showing category window */}
                         <button onClick={()=>{this.setState({browseWindow: !this.state.browseWindow})}}>Browse</button>
                         {browseWindow}
                         <input onChange={this.handleInputChange} />
@@ -55,10 +62,5 @@ function withSearch(BaseComponent, searchBtnCb){
     }
 }
 
-// const mapStateToProps = function (reduxState){
-//     return {
 
-//     }
-// }
-
-export default connect(undefined, {})(withSearch);
+export default connect(undefined, { getRecipeByQuery })(withSearch);

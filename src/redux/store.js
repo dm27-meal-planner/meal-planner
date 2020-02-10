@@ -1,9 +1,20 @@
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import promise from 'redux-promise-middleware';
 import userReducer from './reducers/userReducer';
+import fridgeReducer from './reducers/fridgeReducer';
+import grocerylistReducer from './reducers/grocerylistReducer';
+import ingredientsReducer from './reducers/ingredientsReducer';
+import mealplanReducer from './reducers/mealplanReducer';
+import recipeReducer from './reducers/recipeReducer';
+
 
 const rootReducer = combineReducers({
-   user: userReducer
+   user: userReducer,
+   fridge: fridgeReducer,
+   grocerylist: grocerylistReducer,
+   ingredients: ingredientsReducer,
+   mealplan: mealplanReducer,
+   recipe: recipeReducer
 })
 
 export default createStore(rootReducer, applyMiddleware(promise));
