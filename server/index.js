@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 const massive = require('massive');
-const {getUser, registerUser, loginUser, logoutUser} = require('./controllers/usercontroller');
+const {getUser, registerUser, loginUser, logoutUser, registerFirebase, loginFirebase} = require('./controllers/usercontroller');
 const {getUserMeals, addMeal, editMeal, deleteMeal} = require('./controllers/mealplancontroller');
 const {getMostLikedRecipe, getRecentRecipe, getUserRecipe, getRecipeById, addRecipe, deleteRecipe, editRecipe, getRecipeByQuery} = require('./controllers/recipecontroller');
 const {getUserFridge, addItem, editItem, deleteItem} = require('./controllers/fridgecontroller');
@@ -43,7 +43,8 @@ app.get('/user/getuser', getUser);
 app.post('/user/registeruser', registerUser);
 app.post('/user/login', loginUser);
 app.post('/user/logout', logoutUser);
-
+app.post('/firebase/register', registerFirebase);
+app.post('/firebase/login', loginFirebase);
 
 //mealplan endpoints
 //momentjs can format weeks into numbers

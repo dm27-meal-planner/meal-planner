@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {getUser, loginUser, logoutUser} from '../../redux/reducers/userReducer';
+import {getUser, loginUser, logoutUser, registerFirebase, loginFirebase} from '../../redux/reducers/userReducer';
 import { withRouter } from 'react-router';
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
@@ -9,6 +9,7 @@ import './UserLoginLogout.css';
 require('dotenv').config();
 
 const {REACT_APP_FIREBASE_API_KEY, REACT_APP_FIREBASE_AUTH_DOMAIN, REACT_APP_FIREBASE_DATABASE_URL, REACT_APP_FIREBASE_PROJECT_ID, REACT_APP_FIREBASE_STORAGE_BUCKET, REACT_APP_FIREBASE_MESSAGING_SENDER_ID, REACT_APP_FIREBASE_APP_ID} = process.env;
+
 // Your app's Firebase configuration
 var firebaseConfig = {
    apiKey: REACT_APP_FIREBASE_API_KEY,
@@ -36,8 +37,15 @@ ui.start('#firebaseui-auth-container', {
       firebase.auth.TwitterAuthProvider.PROVIDER_ID
    ], callbacks: {
       signInSuccessWithAuthResult: function(authResult, redirectURL) {
-         /* 02/10 16:46: Need to fully utilize Firebase. */
          console.log(authResult);
+         //props are undefined.........................
+         if (authResult.additionalUserInfo.isNewUser) {
+            this.props.registerFirebase(authResult.user.displayName, authResult.user.email, authResult.additionalUserInfo.profile.id)
+         } else {
+            this.props.loginFirebase(authResult.additionalUserInfo.profile.id)
+         }
+         // Alter reduxState; anyone who signs in via this method no longer needs
+         // to enter their password, BUT I still need them to fill out the rest of their info
          return false;
       }
    }
@@ -83,19 +91,23 @@ class UserLoginLogout extends Component {
       return(
          <div id="UserLoginLogout">
             <h1>Login</h1>
-            <input placeholder="Name/Email"
-               value={userOrEmail}
-               id="userInput"
-               onChange={e => this.handleUserInput(e.target.value)}/>
-            <input placeholder="Password" 
-               value={password}
-               type="password"
-               id="passwordInput"
-               onChange={e => this.handlePasswordInput(e.target.value)}/>
-            <button onClick={() => {
+            <form onSubmit={() => {
                this.props.loginUser(userOrEmail, password)
                this.setState({userOrEmail: '', password: ''})
-            }}>Log in</button>
+            }}>
+               <input placeholder="Name/Email"
+                  value={userOrEmail}
+                  id="userInput"
+                  required
+                  onChange={e => this.handleUserInput(e.target.value)}/>
+               <input placeholder="Password" 
+                  value={password}
+                  type="password"
+                  id="passwordInput"
+                  required
+                  onChange={e => this.handlePasswordInput(e.target.value)}/>
+               <input type="submit" />
+            </form>
 
             {this.props.history.action === "REPLACE" ? <p>You must be logged in to access that page</p> : null}
             <div className="medialogin">
@@ -125,4 +137,4 @@ const mapStateToProps = reduxState => {
    }
 }
 
-export default withRouter(connect(mapStateToProps, {getUser, loginUser, logoutUser})(UserLoginLogout))
+export default withRouter(connect(mapStateToProps, {getUser, loginUser, logoutUser, registerFirebase, loginFirebase})(UserLoginLogout))
