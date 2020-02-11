@@ -15,8 +15,6 @@ class Firebase extends Component {
       this.state = {}
    }
 
-   componentDidMount()
-
    render() {
       const {registerFirebase, loginFirebase} = this.props
       var firebaseConfig = {
