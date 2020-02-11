@@ -38,7 +38,7 @@ function withSearch(BaseComponent, searchBtnCb){
 
         render(){
             // need to check what kind of type search.
-            browseWindow = this.state.browseWindow?(<ul>
+            const browseWindow = this.state.browseWindow?(<ul>
                 <li>Meal Type</li>
                 <li>Dish Type</li>
                 <li>Region</li>
