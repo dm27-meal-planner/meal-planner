@@ -9,7 +9,7 @@ const Clock = () => {
         changeTime(moment().format('MMMM Do h:mm:ss A'))
     , 1000);
 
-    return <p>{time}</p>
+    return <h3>{time}</h3>
     
 } 
     

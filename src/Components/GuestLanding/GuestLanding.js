@@ -17,9 +17,8 @@ class GuestLanding extends Component{
             email: '',
             password: '',
             passwordconfirm: '',
-            household_size: 1
+            household_size: 1,
         }
-
     }
 
     // reset message
@@ -44,7 +43,7 @@ class GuestLanding extends Component{
         }
     }
     render() {
-        let familySize = [];
+        const familySize = [];
         for (let i = 1; i <= 10; i++) {
             familySize.push(i);
         } 
@@ -55,7 +54,24 @@ class GuestLanding extends Component{
 
         return (
             <div id="GuestLanding">
+                {this.state.firebaseNewUser ?
+                <>{this.setState({message: 'Almost done! We just need some extra information.'})}
                 <div className = "names">
+                    <input placeholder="First name" name="first_name" value={this.state.first_name} onChange={this.handleUserInput} />
+                    <input placeholder="Last name" name="last_name" value={this.state.last_name} onChange={this.handleUserInput} />
+                </div>
+                <input placeholder="username" name="username" value={this.state.username} onChange={this.handleUserInput} />
+                <div className = "household">
+                    <h4>How many people you are cooking for. This can be changed later.</h4>
+                    <select id="householdSizeSelect" onChange={e => {this.setState({household_size: e.target.value})}}>
+                        {familySize.map((element, index) => {
+                        return (
+                            <option key={index} value={element}>{element}</option>
+                        )
+                    })}
+                    </select>
+                </div></>
+                : <><div className = "names">
                     <input placeholder="First name" name="first_name" value={this.state.first_name} onChange={this.handleUserInput} />
                     <input placeholder="Last name" name="last_name" value={this.state.last_name} onChange={this.handleUserInput} />
                 </div>
@@ -72,8 +88,9 @@ class GuestLanding extends Component{
                             )
                         })}
                     </select>
-                </div>
+                </div></>}
                 <button className="register" onClick={this.handleUserRegistration}>Register</button>
+                {this.state.message}
             </div>
         )
     }

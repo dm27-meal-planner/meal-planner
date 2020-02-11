@@ -47,7 +47,8 @@ const loginUser = async (req, res) => {
             user_id: userid[0].user_id,
             username: userid[0].username,
             email: userid[0].email,
-            household_size: userid[0].household_size
+            household_size: userid[0].household_size,
+            uid: newUser[0].uid
          }
          res.status(200).json(req.session.user);
       } else {
@@ -63,9 +64,38 @@ const logoutUser = (req, res) => {
    res.sendStatus(200);
 }
 
+const registerFirebase = async (req, res) => {
+   const {username, email, household_size, uid} = req.body;
+   const db = req.app.get('db')
+   const newUser = await db.register_firebaseuser(username, email, household_size, uid);
+   req.session.user = {
+      user_id: newUser[0].user_id,
+      username: newUser[0].username,
+      email: newUser[0].email,
+      household_size: newUser[0].household_size
+   }
+   res.status(201).json(req.session.user);
+}
+
+const loginFirebase = async (req, res) => {
+   const db = req.app.get('db')
+   console.log(req.body.uid)
+   const user = await db.login_firebaseuser(req.body.uid);
+   console.log(user)
+   req.session.user = {
+      user_id: user[0].user_id,
+      username: user[0].username,
+      email: user[0].email,
+      household_size: user[0].household_size
+   }
+   res.status(200).json(req.session.user);
+}
+
 module.exports = {
    getUser,
    registerUser,
    loginUser,
-   logoutUser
+   logoutUser,
+   registerFirebase,
+   loginFirebase
 }

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import UserLoginLogout from '../GuestLanding/UserLoginLogout'
 
+import './style/NavBar.scss'
+
 const NavBar = (props) => {
 
     if(!props.user_id){
@@ -16,12 +18,13 @@ const NavBar = (props) => {
     }
 
     return(
-        <div style={{border: 'black solid 2px'}} >
-            <p>MealPlan</p>
+        <div className='navbar' style={{border: 'black solid 2px'}} >
+            <p className='site-title'>MealPlan</p>
 
-        <Link to='/mealplan' >Meal Plan</Link>
-        <Link to='/fridge' >Fridge</Link>
-        <Link to='/grocerylist' >Grocery List</Link>
+        <Link to='/' ><p>Home</p></Link>
+        <Link to='/mealplan' ><p>Meal Plan</p></Link>
+        <Link to='/fridge' ><p>Fridge</p></Link>
+        <Link to='/grocerylist' ><p>Grocery List</p></Link>
         <UserLoginLogout />
 
         </div>

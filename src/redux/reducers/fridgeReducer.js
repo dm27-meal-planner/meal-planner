@@ -2,6 +2,7 @@ import axios from 'axios'
 
 const initialState = {
    fridge_id: null,
+   //console ingredients
    ingredients: null
 }
 
@@ -42,6 +43,7 @@ export default function reducer(state = initialState, action) {
    const {type, payload} = action;
    switch(type) {
       case `${GET_USER_FRIDGE}_FULFILLED`:
+         console.log(payload.data.ingredients);
          return {
             ...state,
             fridge_id: payload.data.fridge_id,
