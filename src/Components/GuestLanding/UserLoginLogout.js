@@ -67,7 +67,6 @@ class UserLoginLogout extends Component {
 
    render() {
       const {userOrEmail, password} = this.state;
-      console.log(this.props)
 
       if(this.props.user_id){
          return (

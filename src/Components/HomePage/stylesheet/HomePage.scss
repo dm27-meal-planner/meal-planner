@@ -4,3 +4,81 @@
 @import '~@fullcalendar/timeline/main.css';
 @import '~@fullcalendar/resource-timeline/main.css';
 
+
+.home-page {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.calendar-container {
+
+    margin-top: 20px;
+    border-radius: 20px;
+    padding: 10px;
+    width: 70%;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    border: black solid 2px;
+    h2{
+        position: relative;
+        left: 75px
+    }
+}
+
+
+.fc-unthemed{
+    width: 100%;
+
+
+}
+
+@media (max-width: 1250px){
+    .fc-unthemed{
+        width: 100%;
+    
+    }
+}
+
+.fc-widget-content{
+    height: 150px;
+}
+
+.fc-widget-content>div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.fc-cell.text{
+
+}
+
+.fc-event-container>a{
+    border-radius: 10px;
+    box-shadow: 5px 5px 15px rgb(95, 95, 95);
+}
+
+
+
+.eventTitle{
+    background-color: green;
+    font-size: 15px;
+    display: flex;
+    justify-content: space-around;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    color: rgba(255, 255, 255, 0.952);
+    font-weight: normal;
+    opacity: .9;
+}
+
+
+.toRecipe:hover{
+    cursor: pointer;
+}
