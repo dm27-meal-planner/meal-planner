@@ -24,18 +24,39 @@ const getMostLikedRecipe = async (req, res) => {
 
 // only from database since no timestamp info from spoonacular
 const getRecentRecipe = async (req, res) => {
-   res.status(200).json('OK');
+   const db = req.app.get('db');
+   const recentRecipe = await db.recipes.get_recent_recipes()
+   res.status(200).json(recentRecipe);
 }
 
 // only from database since user can only modify their recipe here.
 const getUserRecipe = async (req, res) => {
    const { user_id } = req.params;
+   // console.log(user_id);
+   const db = req.app.get('db');
+   const userRecipe = await db.recipes.get_user_recipes(user_id)
+   res.status(200).json(userRecipe);
+}
+
+const getRecipeByQuery = async (req, res) => {
+   const { name } = req.query;
    res.status(200).json('OK');
 }
 
 // recipe id start from s: spoonacular, m: mealplan
 const getRecipeById = async (req, res) => {
    const { recipe_id } = req.params;
+   if (recipe_id.startsWith('s')){
+      // get spoonacular recipe
+      // remove 's' from id.
+      const id = recipe_id.slice(1);
+
+   }else{
+      // get mealplan recipe
+      // remove 'm' from id
+      const id = recipe_id.slice(1);
+
+   }
    res.status(200).json('OK');
 }
 
@@ -55,10 +76,7 @@ const editRecipe = async (req, res) => {
    res.status(200).json('OK');
 }
 
-const getRecipeByQuery = async (req, res) => {
-   const { } = req.query;
-   res.status(200).json('OK');
-}
+
 
 module.exports = {
    getMostLikedRecipe,
