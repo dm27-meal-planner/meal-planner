@@ -56,7 +56,7 @@ export function registerFirebase(username, email, uid) {
 export function loginFirebase(uid) {
    return {
       type: LOGIN_FIREBASE,
-      payload: axios.post('/firebase/login', uid)
+      payload: axios.post('/firebase/login', {uid})
    }
 }
 

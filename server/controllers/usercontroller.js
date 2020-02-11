@@ -66,6 +66,7 @@ const logoutUser = (req, res) => {
 
 const registerFirebase = async (req, res) => {
    const {username, email, household_size, uid} = req.body;
+   const db = req.app.get('db')
    const newUser = await db.register_firebaseuser(username, email, household_size, uid);
    req.session.user = {
       user_id: newUser[0].user_id,
@@ -77,7 +78,10 @@ const registerFirebase = async (req, res) => {
 }
 
 const loginFirebase = async (req, res) => {
+   const db = req.app.get('db')
+   console.log(req.body.uid)
    const user = await db.login_firebaseuser(req.body.uid);
+   console.log(user)
    req.session.user = {
       user_id: user[0].user_id,
       username: user[0].username,
