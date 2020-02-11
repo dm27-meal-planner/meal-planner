@@ -15,6 +15,8 @@ class Firebase extends Component {
       this.state = {}
    }
 
+   componentDidMount()
+
    render() {
       const {registerFirebase, loginFirebase} = this.props
       var firebaseConfig = {
@@ -33,10 +35,10 @@ class Firebase extends Component {
       new firebaseui.auth.AuthUI(firebase.auth()).start('#firebaseui-auth-container', {
    // props: this.props,
    signInOptions: [
-      // List of OAuth providers supported.
+      // Facebook and Twitter do not work for now. Will work on this later.
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      firebase.auth.TwitterAuthProvider.PROVIDER_ID
+      // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+      // firebase.auth.TwitterAuthProvider.PROVIDER_ID
    ], callbacks: {
       signInSuccessWithAuthResult: function(authResult, redirectURL) {
          console.log(authResult);
