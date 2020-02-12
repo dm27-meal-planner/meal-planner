@@ -1,34 +1,37 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { getRecipeByQuery } from '../redux/reducers/recipeReducer';
 
 
-function withSearch(BaseComponent, searchBtnCb){
+function withSearch(BaseComponent, searchBtnCb) {
     // BaseComponent can display the result of search
     // searchBtnCb is the function will be invoked after press search button, 
     //  the purpose of cb is to redirect to certain page.
 
-    return class extends Component{
-        constructor(){
+    return class extends Component {
+        constructor() {
             super();
             this.state = {
                 browseWindow: false,
-                searchInput: ''
+                searchInput: '',
+                page: 1
             }
             this.handleInputChange = this.handleInputChange.bind(this);
         }
 
 
-        handleInputChange(e){
+        handleInputChange(e) {
             this.setState({
                 searchInput: e.target.value
             });
         }
 
-        searchRecipes = ()=>{
+        searchRecipes = () => {
             // send info to redux.
-            let params = `name=${this.state.searchInput}`
-            this.props.getRecipeByQuery(params);
+            if (this.state.searchInput) {
+                let params = `name=${this.state.searchInput}&page=${this.state.page}`
+                this.props.getRecipeByQuery(params);
+            }
             // ** working: category search.
 
             // after press search btn, exe the callback function
@@ -36,23 +39,38 @@ function withSearch(BaseComponent, searchBtnCb){
             searchBtnCb();
         }
 
-        render(){
+        handlePageChange = (iter) => {
+            if (this.state.page + iter != 0){
+                // switch page
+                this.setState({
+                    page: this.state.page + iter
+                }, ()=>{
+                    this.searchRecipes();
+                });
+            }
+        }
+
+        render() {
             // need to check what kind of type search.
-            const browseWindow = this.state.browseWindow?(<ul>
+            const browseWindow = this.state.browseWindow ? (<ul>
                 <li>Meal Type</li>
-                <li>Dish Type</li>
-                <li>Region</li>
+                {/* <li>Dish Type</li> */}
+                <li>Cuisine</li>
                 <li>Ingredient</li>
-            </ul>):null;
+            </ul>) : null;
 
             return (
                 <div>
                     <div>
                         {/* showing category window */}
-                        <button onClick={()=>{this.setState({browseWindow: !this.state.browseWindow})}}>Browse</button>
+                        <button onClick={() => { this.setState({ browseWindow: !this.state.browseWindow }) }}>Browse</button>
                         {browseWindow}
                         <input onChange={this.handleInputChange} />
                         <button onClick={this.searchRecipes}>Search</button>
+                    </div>
+                    <div>
+                        <button onClick={()=>{this.handlePageChange(-1)}}>Previous page</button>
+                        <button onClick={()=>{this.handlePageChange(1)}}>Next page</button>
                     </div>
                     {/* BaseComponent getting the search result from redux */}
                     <BaseComponent />
