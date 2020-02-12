@@ -1,46 +1,50 @@
 import React, {useState, useEffect} from 'react'
 import { connect } from 'react-redux'
 import moment from 'moment'
+import {getMealsForUser, addMeal} from '../../redux/reducers/mealplanReducer'
 
 import './stylesheet/NextMeal.scss'
 
 
 const NextMeal = (props) => {
 
-    const [events,  changeEvents] = useState([
-        {title: 'burrito-lunch', date:'2020-02-11', resourceId: 'lunch', backgroundColor: 'red'}, 
-        {title: 'burrito-dinner', date:moment().format(), resourceId:'dinner'}, 
-        {title: 'burrito-breakfast', date:moment().format(), resourceId:'breakfast'}, 
-        {title: 'burrito-snack', date:'2020-02-15', resourceId:'snack'} 
-    ])
-
+  const [currentMeal, changeCurrentMeal] = useState(null)
+  
+  useEffect(() => findNearestMeal(), [props.meals])
 
     const findNearestMeal = () => {
-        if(moment().isBetween(moment().hour(10), moment().hour(14))){
-            return events.find(ele => ele.resourceId === 'lunch')
-        } else if(moment().isBetween(moment().hour(14), moment().hour(16))){
-          return events.find(ele => ele.resourceId === 'snack')
-        } else if(moment().isBetween(moment().hour(16), moment().hour(22))){
-          return events.find(ele => ele.resourceId === 'dinner')
+      if(+moment().format('H') >= 10 && +moment().format('H') <= 13){
+          changeCurrentMeal(props.meals.find(ele => ele.resourceid === 'lunch'))
+        } else if(+moment().format('H') >= 14 && +moment().format('H') <= 15){
+          changeCurrentMeal(props.meals.find(ele => ele.resourceid === 'snack'))
+        } else if(+moment().format('H') >= 16 && +moment().format('H') <= 21){
+          changeCurrentMeal(props.meals.find(ele => ele.resourceid === 'dinner'))
         } else {
-          return events.find(ele => ele.resourceId === 'breakfast')
+          changeCurrentMeal(props.meals.find(ele => ele.resourceid === 'breakfast'))
         }
       }
 
-    const [currentMeal, changeCurrentMeal] = useState(findNearestMeal())
+    if(props.loading){
+      return <div>Loading...</div>
+    }
 
     return(
-        <div className='next-meal' >
-                <p>Your next meal is {currentMeal.resourceId}</p>
-                <p>You have planned to cook {currentMeal.title} </p>
-        </div>
+        <>
+          {!currentMeal ? <p>you have no upcoming meals</p> : 
+            <div className='next-meal' >
+                <p>Your next meal is {currentMeal.resourceid}</p>
+              <p>You have planned to cook {currentMeal.title} </p>
+            </div> }
+        </>
     )
 }
 
 const mapStateToProps = (reduxState) => {
     return {
-
+      user_id: reduxState.user.user_id,
+      meals: reduxState.mealplan.meals,
+      loading: reduxState.mealplan.loading
     }
 }
 
-export default connect(null)(NextMeal)
+export default connect(mapStateToProps, {getMealsForUser, addMeal})(NextMeal)
