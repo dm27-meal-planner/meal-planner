@@ -8,9 +8,11 @@ const getUserFridge = async (req, res) => {
 
 const addItem = async (req, res) => {
    const {user_id} = req.params;
-   // const {item} 
+   const {quantity, unit, ingredient_name} = req.body; 
    const db = req.app.get('db');
-
+   const item = await db.fridge.add_fridge_item(quantity, unit, ingredient_name);
+   const fridgeItem = await db.fridge.add_item_to_userfridge(user_id, item[0].fridge_item_id);
+   res.sendStatus(200);
 }
 
 const editItem = async (req, res) => {
