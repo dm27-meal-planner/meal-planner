@@ -1,11 +1,15 @@
 const getUserFridge = async (req, res) => {
    const {user_id} = req.params;
-   res.status(200).json('OK');
+   const db = req.app.get('db');
+   const fridge = await db.get_fridge(user_id);
+   console.log(fridge);
+   res.status(200).json(fridge);
 }
 
 const addItem = async (req, res) => {
    const {user_id} = req.params;
-   res.status(200).json('OK');
+   const db = req.app.get('db');
+
 }
 
 const editItem = async (req, res) => {
