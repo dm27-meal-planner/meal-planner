@@ -7,37 +7,45 @@ import moment from 'moment'
 import ReactDOM from 'react-dom'
 import { Popover } from 'antd'
 import 'antd/es/popover/style/css'
-
-// import { Popover } from 'antd'
-// import 'antd/dist/antd.css'
-
-
-
-
-
 import NextMeal from './NextMeal';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import Clock from './Clock';
+import {getMealsForUser, addMeal} from '../../redux/reducers/mealplanReducer'
 
 import './stylesheet/HomePage.scss'
 
 const HomePage = (props) => {
 
-    const [events,  changeEvents] = useState([
-        {title: 'burrito', date:'2020-02-11', resourceId: 'lunch', backgroundColor: 'red'}, 
-        {title: 'burrito', date:moment().format(), resourceId:'dinner'}, 
-        {title: 'burrito', date:moment().format(), resourceId:'breakfast'}, 
-        {title: 'burrito', date:'2020-02-15', resourceId:'snack'} 
-    ])
+    const [events,  changeEvents] = useState(null)
+    
+    useEffect(() => {
+         props.getMealsForUser(props.user_id)
+        console.log(props.meals)
+        parseMeals(props.meals)
+    }, [props.meals.length])
+
+    const parseMeals = (propsMeals) => {
+        let meals = []
+        propsMeals.map(ele => {
+            meals.push({title: ele.title, date: ele.date, resourceId:ele.resourceid})
+        })
+        changeEvents(meals)
+    }
+
+
+    console.log(events)
 
 
     if(!props.user_id){
         return <Redirect to='/'/>
     }
+    
+    if(props.loading){
+        return <div>Loading...</div>
+    }
 
     const newEventRender = ({event, el}) =>{
-        console.log(moment().format())
         let newResource = (
             <Popover title={`${event.title} for ${event._def.resourceIds[0]}`} content={<div><span>mexican burrito</span><button>go to recipe</button></div>} trigger='click' >
                 <div style={{ position:'relative', backgroundImage: 'url(https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500)', backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'90%', height:'100px', margin: '5px'}} >
@@ -49,7 +57,7 @@ const HomePage = (props) => {
         )
          ReactDOM.render(newResource, el)
     }
-
+    
 
     return (
         <div className='home-page'>
@@ -88,7 +96,9 @@ const HomePage = (props) => {
 const mapStateToProps = (reduxState) => {
     return {
         user_id: reduxState.user.user_id,
-        username: reduxState.user.username       
+        username: reduxState.user.username,
+        meals: reduxState.mealplan.meals,
+        loading: reduxState.mealplan.loading    
     }
 }
-export default connect(mapStateToProps)(HomePage);
+export default connect(mapStateToProps, {getMealsForUser, addMeal})(HomePage);

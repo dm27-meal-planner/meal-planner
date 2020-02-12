@@ -48,7 +48,7 @@ app.post('/firebase/login', loginFirebase);
 
 //mealplan endpoints
 //momentjs can format weeks into numbers
-// app.get(`a/pi/mealplan/:user_id?week=${weeknumber}`, getUserMeals);
+app.get(`/api/mealplan/:user_id`, getUserMeals);
 app.post('/api/mealplan/:user_id', addMeal);
 app.put('/api/mealplan/:meal_id', editMeal);
 app.delete('/api/mealplan/:meal_id', deleteMeal);
