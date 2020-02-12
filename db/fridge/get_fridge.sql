@@ -11,4 +11,4 @@ SELECT i.*, FI.quantity, FI.date_added, FI.unit FROM ingredients i
 INNER JOIN fridge_item FI ON i.ingredient_id = fi.ingredient_id
 INNER JOIN fridge f ON fi.fridge_id = f.fridge_id
 INNER JOIN users u ON u.user_id = f.user_id
-WHERE u.user_id = 1;
+WHERE u.user_id = $1;
