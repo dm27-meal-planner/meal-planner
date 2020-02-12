@@ -6,29 +6,31 @@ class RecipeEditor extends Component {
     constructor() {
         super();
         this.state = {
+            // ---------first column
             recipeName: '',
             recipeImg: '',
             recipeAuthorId: '',
-            deleteWindowFlag: false,
 
-            recipeCookTime: '',
             recipeMealType: '',
             mealTypeWindow: false,
-            recipeDishType: '',
-            dishTypeWindow: false,
+            // recipeDishType: '',
+            // dishTypeWindow: false,
+
+            // ---------second column
+            recipePrepTimeHour: '',
+            recipePrepTimeMin: '',
+            recipeCookTimeHour: '',
+            recipeCookTimeMin: '',
+
             recipeDes: '',
 
             recipeNutrition: {},
 
+            // ---------third column
             recipeIngredients: [],
 
             recipeDirection: '',
         }
-        // refs
-        this.prepHour = React.createRef();
-        this.prepMin = React.createRef();
-        this.cookHour = React.createRef();
-        this.cookMin = React.createRef();
     }
 
     componentDidMount() {
@@ -42,9 +44,14 @@ class RecipeEditor extends Component {
                         recipeImg: response.data[0].image,
                         recipeAuthorId: response.data[0].user_id,
 
-                        recipeCookTime: response.data[0].cook_time,
                         recipeMealType: response.data[0].meal_type,
-                        recipeDishType: response.data[0].dish_type,
+                        // recipeDishType: response.data[0].dish_type,
+
+                        recipePrepTimeHour: Math.floor(response.data[0].prep_time / 60),
+                        recipePrepTimeMin: response.data[0].prep_time % 60,
+                        recipeCookTimeHour: Math.floor(response.data[0].cook_time / 60),
+                        recipeCookTimeMin: response.data[0].cook_time % 60,
+
                         recipeDes: response.data[0].description,
 
                         recipeNutrition: response.data[0].nutritional_info,
@@ -78,30 +85,34 @@ class RecipeEditor extends Component {
         })
     }
 
-    handleDishTypeWindow = () => {
-        this.setState({
-            dishTypeWindow: !this.state.dishTypeWindow
-        })
-    }
+    handleSubmitClick = () => {
+        // add a new recipe
+        if (this.state.recipeAuthorId){
 
-    handleDishTypeChange = (e) => {
-        if(e.target.checked){
-            // remove dish type
-            target.removeAttribute('checked');
-            // **
         }else{
-            // add dish type
-            target.setAttribute('checked', true);
-            // **
+            // edit and save the recipe.
+
         }
     }
 
-    handlePrepTimeChange = (e) => {
-        // **update prep time by refs
-    }
-    handleCookTimeChange = (e) => {
-        // **update cook time by refs
-    }
+    // handleDishTypeWindow = () => {
+    //     this.setState({
+    //         dishTypeWindow: !this.state.dishTypeWindow
+    //     })
+    // }
+
+    // handleDishTypeChange = (e) => {
+    //     if(e.target.checked){
+    //         // remove dish type
+    //         target.removeAttribute('checked');
+    //         // **
+    //     }else{
+    //         // add dish type
+    //         target.setAttribute('checked', true);
+    //         // **
+    //     }
+    // }
+
 
     render() {
 
@@ -121,22 +132,22 @@ class RecipeEditor extends Component {
             <button onClick={this.handleMealTypeWindow}>Done </button>
         </div>) : null
 
-        let dishTypeWindow = this.state.dishTypeWindow ? (<div>
-            <span>Select Many</span>
-            <ul>
-                <li><input type='checkbox' onClick={this.handleDishTypeChange} /></li>
-            </ul>
-            <button onClick={this.handleDishTypeWindow}>Done </button>
-        </div>) : null
+        // let dishTypeWindow = this.state.dishTypeWindow ? (<div>
+        //     <span>Select Many</span>
+        //     <ul>
+        //         <li><input type='checkbox' onClick={this.handleDishTypeChange} /></li>
+        //     </ul>
+        //     <button onClick={this.handleDishTypeWindow}>Done </button>
+        // </div>) : null
 
         return (
             <div>
                 <div className='first-column-wrapper'>
                     <div>
-                        <input name='recipeName' onChange={this.handleUserInput} 
-                        placeholder='Recipe Name' value={this.state.recipeName}/>
-                        <input name='recipeImg' onChange={this.handleUserInput} 
-                        placeholder='Picture URL' value={this.state.recipeImg} />
+                        <input name='recipeName' onChange={this.handleUserInput}
+                            placeholder='Recipe Name' value={this.state.recipeName} />
+                        <input name='recipeImg' onChange={this.handleUserInput}
+                            placeholder='Picture URL' value={this.state.recipeImg} />
                     </div>
                     <div>
                         <span>Create Your Own Recipe!</span>
@@ -147,36 +158,57 @@ class RecipeEditor extends Component {
                             <button onClick={this.handleMealTypeWindow}>Select</button>
                         </div>
                         {mealTypeWindow}
-                        <div>
+                        {/* <div>
                             <span>Dish Type</span>
                             <button onClick={this.handleDishTypeWindow}>Select</button>
                         </div>
-                        {dishTypeWindow}
+                        {dishTypeWindow} */}
                     </div>
                 </div>
                 <div className='second-column-wrapper'>
                     <div>
                         <span>Prepare Time:</span>
-                        <input type='number' min='0' step='1' 
-                        ref={this.prepHour} onChange={handlePrepTimeChange}/> hour 
-                        <input type='number' min='0' step='1' 
-                        ref={this.prepMin} onChange={handlePrepTimeChange} max='59' />min
+                        <input type='number' min='0' step='1'
+                            name='recipePrepTimeHour'
+                            onChange={handleUserInput} /> hour
+                        <input type='number' min='0' step='1'
+                            name='recipePrepTimeMin'
+                            onChange={handleUserInput} max='59' />min
 
                         <span>Cook Time: </span>
-                        <input type='number' min='0' step='1' 
-                        ref={this.cookHour} onChange={handleCookTimeChange}/> hour 
-                        <input type='number' min='0' step='1' 
-                        ref={this.cookMin} onChange={handleCookTimeChange} max='59' />min
+                        <input type='number' min='0' step='1'
+                            name='recipeCookTimeHour'
+                            onChange={handleUserInput} /> hour
+                        <input type='number' min='0' step='1'
+                            name='recipeCookTimeMin'
+                            onChange={handleUserInput} max='59' />min
                     </div>
                     <div>
                         <textarea name='recipeDes' onChange={this.handleUserInput}>
                             {this.state.recipeDes}
                         </textarea>
                     </div>
+                    <div>
+                        <h3>Nutrition Information</h3>
+                        {/* **beautify later */}
+                        <div>{JSON.stringify(this.state.recipeNutrition)} </div>
+                    </div>
                 </div>
                 <div className='third-column-wrapper'>
-
+                    <div>
+                        {/* **Ingredient list, waiting for design the common use one. */}
+                    </div>
+                    <div>
+                        <span>Directions:</span>
+                        <div>
+                            <textarea name='recipeDirection' onChange={this.handleUserInput} >
+                                {this.state.recipeDirection}
+                            </textarea>
+                        </div>
+                    </div>
                 </div>
+
+                <button onClick={this.handleSubmitClick} >Submit</button>
             </div>
         )
     }

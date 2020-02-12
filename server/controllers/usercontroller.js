@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
 
 const getUser = async (req, res) => {
-   console.log(req.session.user)
    if(!req.session.user){
       res.status(400).json('User is currently not logged in')
    } else {
@@ -79,9 +78,7 @@ const registerFirebase = async (req, res) => {
 
 const loginFirebase = async (req, res) => {
    const db = req.app.get('db')
-   console.log(req.body.uid)
    const user = await db.login_firebaseuser(req.body.uid);
-   console.log(user)
    req.session.user = {
       user_id: user[0].user_id,
       username: user[0].username,

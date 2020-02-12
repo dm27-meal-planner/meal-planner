@@ -20,8 +20,8 @@ class RecipeOutlineCard extends Component {
                 {this.props.editFlag ?
                     (
                         <div>
-                            <button onClick={handleEdit}>Edit</button>
-                            <button onClick={handleDelete}>Delete</button>
+                            <button onClick={this.handleEdit}>Edit</button>
+                            <button onClick={this.handleDelete}>Delete</button>
                         </div>
                     ) :
                     null}
