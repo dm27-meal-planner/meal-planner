@@ -47,8 +47,8 @@ const HomePage = (props) => {
 
     const newEventRender = ({event, el}) =>{
         let newResource = (
-            <Popover title={`${event.title} for ${event._def.resourceIds[0]}`} content={<div><span>mexican burrito</span><button>go to recipe</button></div>} trigger='click' >
-                <div style={{ position:'relative', backgroundImage: 'url(https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500)', backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'90%', height:'100px', margin: '5px'}} >
+            <Popover title={`${event.title} for ${event._def.resourceIds[0]}`} content={<div><span>{event.title}</span><button>Go To Recipe</button></div>} trigger='click' >
+                <div style={{ position:'relative', backgroundImage: 'url(https://imbindonesia.com/images/placeholder/camera.jpg)', backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'90%', height:'100px', margin: '5px'}} >
                     <div className='eventTitle'>
                         <div className='toRecipe'>{event.title}</div>
                     </div>
