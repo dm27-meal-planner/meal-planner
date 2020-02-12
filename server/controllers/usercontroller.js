@@ -47,7 +47,6 @@ const loginUser = async (req, res) => {
             username: userid[0].username,
             email: userid[0].email,
             household_size: userid[0].household_size,
-            uid: userid[0].uid
          }
          res.status(200).json(req.session.user);
       } else {

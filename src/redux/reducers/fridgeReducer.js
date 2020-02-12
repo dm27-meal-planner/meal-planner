@@ -21,7 +21,7 @@ export function getUserFridge(user_id) {
 export function addItem(user_id, item) {
    return {
       type: ADD_ITEM,
-      payload: axios.post(`api/fridge/${user_id}`, item)
+      payload: axios.post(`api/fridge/${user_id}`, {...item})
    }
 }
 
@@ -43,7 +43,6 @@ export default function reducer(state = initialState, action) {
    const {type, payload} = action;
    switch(type) {
       case `${GET_USER_FRIDGE}_FULFILLED`:
-         console.log(payload.data.ingredients);
          return {
             ...state,
             fridge_id: payload.data.fridge_id,
