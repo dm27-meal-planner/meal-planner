@@ -1,6 +1,8 @@
 const axios = require('axios')
 const {SPOON_API_KEY} = process.env
 
+// looks a little difference since we are interacting with the API
+
 module.exports = {
     searchIngredient:  async(req, res) => {
 
