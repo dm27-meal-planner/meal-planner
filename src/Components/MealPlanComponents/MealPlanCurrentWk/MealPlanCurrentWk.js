@@ -9,25 +9,43 @@ import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import ReactDOM from 'react-dom'
 import moment from 'moment'
 import { Popover } from 'antd'
+import { addMeal } from '../../../redux/reducers/mealplanReducer'
 import 'antd/es/popover/style/css'
 import './stylesheet/MealPlanCurrentWk.scss'
 
 
+
 const MealPlanCurrentWk = (props) => {
 
-    const [reduxEvents,  changeReduxEvents] = useState([
-        {id: 1, title: 'burrito', date:'2020-02-11', resourceId: 'lunch', backgroundColor: 'red'}, 
-        {id: 2, title: 'burrito', date:moment().format(), resourceId:'dinner'}, 
-        {id: 3, title: 'burrito', date:moment().format(), resourceId:'breakfast'}, 
-        {id: 4, title: 'burrito', date:'2020-02-15', resourceId:'snack'} 
-    ])
-    
-    const [events,  changeEvents] = useState([...reduxEvents])
+
+    const [initializeDnd, toggleDnd] = useState(false)
+    const [selectedRecipe, selectRecipe] = useState({id: 6, title: 'pizza', extendedProps:{ image: 'https://www.qsrmagazine.com/sites/default/files/styles/story_page/public/PizzaHut.jpg?itok=g-UcJm9k'} })
+    const [events,  changeEvents] = useState(props.meals)
+    const [modifiedEvents, modifyEvent] = useState(null)
+    const [addedMeals, addMoreMeals]= useState([])
+
+    console.log(modifiedEvents)
+    console.log(events)
+    console.log(selectedRecipe)
+    console.log(addedMeals)
+
+    useEffect(() => {
+        parseMeals(props.meals)
+    }, [])
+
+    const parseMeals = (propsMeals) => {
+        let meals = []
+        propsMeals.map(ele => {
+            meals.push({id: ele.mealplan_id, title: ele.title, date: ele.date, resourceId: ele.resourceid})
+        })
+        changeEvents(meals)
+        modifyEvent(meals)
+    }
 
     const newEventRender = ({event, el}) =>{
         let newResource = (
-            <Popover title={`${event.title} for ${event._def.resourceIds[0]}`} content={<div><span>mexican burrito</span><button>go to recipe</button></div>} trigger='click' >
-                <div style={{ position:'relative', backgroundImage: 'url(https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500)', backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100%', height:'100px', margin: '5px'}} >
+            <Popover title={`${event._def.resourceIds[0]} for ${moment(event.start).format('dddd')}`} content={<div><span>{event.title}</span><br /><button>Go To Recipe</button></div>} trigger='click' >
+                <div style={{ position:'relative', backgroundImage: `url(${event.extendedProps.image || 'https://www.heavydutydirect.ca/wp-content/uploads/2019/02/camera-placeholder-150x150.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100%', height:'100px', margin: '5px'}} >
                     <div className='eventTitle'>
                         <div className='toRecipe'>{event.title}</div>
                     </div>
@@ -38,15 +56,22 @@ const MealPlanCurrentWk = (props) => {
     }
 
     const createDraggableRecipe = () => {
+        toggleDnd(true)
         new Draggable(document.getElementById('new-recipe-container'), {
-            itemSelector: '.item',
-            eventData:{
-                id: 5,
-                title: 'pizza'
+            itemSelector: '.fc-event',
+            eventData: function(eventEl) {
+                return{
+                    extendedProps: selectedRecipe.extendedProps,
+                    id: selectedRecipe.id,
+                    title: eventEl.innerText
+                }
             }
         })  
     }
 
+    const SaveChanges = () => {
+
+    }
 
 
     if(!props.user_id){
@@ -59,17 +84,17 @@ const MealPlanCurrentWk = (props) => {
             plugins={[ dayGridPlugin, timeGridPlugin, resourceTimelinePlugin, interactionPlugin ]}
             schedulerLicenseKey='GPL-My-Project-Is-Open-Source'
             resources={[
-                {id: 'breakfast', title: 'breakfast' },
-                {id: 'lunch', title: 'lunch' },
-                {id: 'dinner', title: 'dinner' },
-                {id: 'snack', title: 'snack'}
+                {id: 'breakfast', title: 'Breakfast' },
+                {id: 'lunch', title: 'Lunch' },
+                {id: 'dinner', title: 'Dinner' },
+                {id: 'snack', title: 'Snack'}
             ]}  
             slotLabelInterval={{day: 1}}
             slotLabelFormat={{weekday: 'short'}}
             eventRender={(info) => newEventRender(info)}
             resourceAreaWidth='8%'
             contentHeight='auto'
-            events={reduxEvents}
+            events={events}
             height='auto'
             defaultTimedEventDuration={'00:01'}
             header={
@@ -78,38 +103,41 @@ const MealPlanCurrentWk = (props) => {
             resourceLabelText={'Meal Type'}
             editable={true}
             eventDrop={({event}) => {
-                changeEvents(() => {
-                    let eventsCopy = events.slice() 
-                    eventsCopy.find(ele => ele.id == event.id).date = moment(event.start).format()
-                    eventsCopy.find(ele => ele.id == event.id ).resourceId = event._def.resourceIds[0]
+                modifyEvent(() => {
+                    let eventsCopy = modifiedEvents.slice() 
+                    eventsCopy.find(ele => +ele.id === +event.id).date = moment(event.start).format()
+                    eventsCopy.find(ele => +ele.id === +event.id ).resourceId = event._def.resourceIds[0]
                     return eventsCopy
                 })
             }}
-            // droppable={true}
-            eventReceive={({event}) => changeEvents([...events, {id: event.id, title: event.title, date: moment(event.start).format(), resourceId: event._def.resourceIds[0]}])}
+            eventReceive={({event}) => {
+                addMoreMeals([...addedMeals, {id: +event.id, title: event.title, date: moment(event.start).format(), resourceId: event._def.resourceIds[0]}])
+                modifyEvent([...events, {id: +event.id, title: event.title, date: moment(event.start).format(), resourceId: event._def.resourceIds[0]}])
+            }}
             />
 
 
             
-            {/* <img id='draggable-el'  /> */}
-
             <div id='new-recipe-container'>
-                <img className='item' src='https://cdn.modpizza.com/wp-content/uploads/2019/11/Maddy.png' height='100px' width='100px' />
+                <div className='fc-event' style={{ position:'relative', backgroundImage: `url(${ initializeDnd ? selectedRecipe.extendedProps.image : 'https://imbindonesia.com/images/placeholder/camera.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100px', height:'100px', marginLeft: 'auto', marginRight:'auto'}} >
+                    <div className='eventTitle'>
+                        <div className='toRecipe'>{initializeDnd ? selectedRecipe.title : 'Pick a recipe.' }</div>
+                    </div>
+                </div>
             </div>
+
             <button onClick={createDraggableRecipe}>Create Draggable Recipe</button>
-            <button onClick={() => {
-                changeReduxEvents([...events])
-                props.history.push('/')
-                }} >Save to redux</button>
-            
-            </div>
+            <button >Save Changes</button>
+        </div>
+
     )
 }
 
 const mapStateToProps = (reduxState) => {
     return {
-        user_id: reduxState.user.user_id
+        user_id: reduxState.user.user_id,
+        meals: reduxState.mealplan.meals
     }
 }
 
-export default connect(mapStateToProps)(MealPlanCurrentWk)
+export default connect(mapStateToProps, { addMeal })(MealPlanCurrentWk)
