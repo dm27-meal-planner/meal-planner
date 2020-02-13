@@ -2,7 +2,6 @@ const getUserFridge = async (req, res) => {
    const {user_id} = req.params;
    const db = req.app.get('db');
    const fridge = await db.fridge.get_fridge(user_id);
-   console.log(fridge);
    res.status(200).json(fridge);
 }
 

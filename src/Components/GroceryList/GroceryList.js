@@ -33,6 +33,7 @@ class GroceryList extends Component{
         this.setState({
             list: [...this.state.list, {...ingredient, price: price}]
         })
+        console.log(this.state.list);
     }
     
     removeItem = (i) => {
