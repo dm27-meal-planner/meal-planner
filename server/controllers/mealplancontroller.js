@@ -8,7 +8,7 @@ const getUserMeals = async (req, res) => {
    const result = await db.mealplan.get_meals(user_id)
 
    if(result.length === 0){
-      res.status(400).json('User has no meals planned')
+      return res.status(400).json('User has no meals planned')
    }
    res.status(200).json(result);
 }
