@@ -8,10 +8,6 @@ import RecipeSearchResults from './Components/RecipeComponents/RecipeSearchResul
 import MealPlanCurrentWeek from './Components/MealPlanComponents/MealPlanCurrentWk/MealPlanCurrentWk';
 import GroceryList from './Components/GroceryList/GroceryList';
 import Fridge from './Components/Fridge/Fridge';
-import RecipeList from './Components/RecipeComponents/RecipeList/RecipeList'
-import MealPlanCurrentWeek from './Components/MealPlanComponents/MealPlanCurrentWk/MealPlanCurrentWk'
-import GroceryList from './Components/GroceryList/GroceryList'
-import Fridge from './Components/Fridge/Fridge'
 import MealPlanExe from "./Components/MealPlanComponents/MealPlanExe/MealPlanExe";
 
 
