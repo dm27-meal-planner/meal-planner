@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Prompt } from 'react-router';
 import FullCalendar from '@fullcalendar/react';
@@ -28,6 +28,8 @@ const MealPlanCurrentWk = (props) => {
     const [changesSaved, setToFalse] = useState(true)
 
     console.log(selectedRecipe)
+    let calendarRef = useRef()
+
 
     useEffect(() => {
         if(selectedRecipe){
@@ -35,7 +37,14 @@ const MealPlanCurrentWk = (props) => {
             createDraggableRecipe(selectedRecipe)
         }
     }, [selectedRecipe])
-    console.log(document.getElementById('new-recipe-container'))
+
+  
+
+    // let calendarApi = this.calendarRef.current.getApi()
+
+    // console.log(calendarApi)
+
+
     
     useEffect(() => {
         if(editedMeals.length === 0 && deletedMeals.length === 0 && addedMeals.length === 0 ){
@@ -80,6 +89,12 @@ const MealPlanCurrentWk = (props) => {
             </div>
         )
         ReactDOM.render(newinstance, document.getElementById('new-recipe-container'))
+
+    }
+
+    const destroyEvent = () => {
+            let calendarApi = calendarRef.current.getApi()
+            console.dir(document.getElementById('newEvent'))
 
     }
 
@@ -129,6 +144,7 @@ const MealPlanCurrentWk = (props) => {
     return (
         <div className='calendar-container-mealplan-currentweek' >
             <FullCalendar
+            ref={calendarRef} 
             defaultView="resourceTimelineWeek"
             plugins={[ dayGridPlugin, timeGridPlugin, resourceTimelinePlugin, interactionPlugin ]}
             schedulerLicenseKey='GPL-My-Project-Is-Open-Source'
@@ -146,6 +162,7 @@ const MealPlanCurrentWk = (props) => {
             events={events}
             height='auto'
             defaultTimedEventDuration={'00:01'}
+            eventClick={({event}) => console.log(event)}
             header={
                 {center: 'title', left: ''}
             }
@@ -234,6 +251,7 @@ const MealPlanCurrentWk = (props) => {
 
             <button onClick={() => createDraggableRecipe(selectedRecipe)}>Create Draggable Recipe</button>
             <button onClick={SaveChanges} >Save Changes</button>
+            <button onClick={ destroyEvent} >destory</button>
             <div id='trash' style={{position: 'fixed', bottom: '20px', right: '50px'}} >🗑</div>
             <Prompt 
             when={!changesSaved}
