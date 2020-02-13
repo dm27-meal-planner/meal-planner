@@ -15,27 +15,46 @@ const getUserMeals = async (req, res) => {
 
 const addMeal = async (req, res) => {
    const {user_id} = req.params;
-   const {recipe_id, meal_start, nutritional_info, meal_type, meal_title} = req.body;
+   const {recipe_id, date, nutritional_info, resourceid, title} = req.body;
    const db = req.app.get('db')
 
-   const results = await db.mealplan.add_meal(user_id, moment().format(), null, null, 'lunch', 'pizza')
+   const results = await db.mealplan.add_meal(user_id, date, nutritional_info, false, resourceid, title)
 
    if (!results[0]){
       res.status(400).json('Error adding meal to plan')
    }
 
-   res.status(200).json(results[0]);
+   res.status(200).json(results);
 }
 
 const editMeal = async (req, res) => {
-   // const {} = req.body;
+   const {user_id} = req.body
+   const { date, followed_plan, resourceid, title} = req.body
    const {meal_id} = req.params;
-   res.status(200).json('OK');
+   const db = req.app.get('db')
+
+
+   const result = await db.mealplan.edit_meal(date, followed_plan, resourceid, title, meal_id, user_id)
+
+   if (!result[0]){
+      res.status(400).json('Error adding meal to plan')
+   }
+
+   res.status(200).json(result);
 }
 
 const deleteMeal = async (req, res) => {
    const {meal_id} = req.params;
-   res.status(200).json('OK');
+   const {user_id} = req.query
+   const db = req.app.get('db')
+
+   const results = await db.mealplan.delete_meal(meal_id, user_id)
+
+   if(!results[0]){
+      res.status(400).json('No meals were deleted')
+   }
+
+   res.status(200).json(results)
 }
 
 module.exports = {
