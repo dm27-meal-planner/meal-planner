@@ -21,9 +21,13 @@ class RecipeList extends Component{
 
     }
     render(){
+        let SearchBar = withSearch(()=>{return(<div></div>)}, this.redirectToSearchResult);
+        // console.log(SearchBar);
+        
         return (
             <div>
-                {withSearch(<div></div>, this.redirectToSearchResult)}
+                <SearchBar />
+                {/* {withSearch(<div></div>, this.redirectToSearchResult)} */}
                 <TopFiveList listName='Recently Added' recipeList={this.props.recentlyAddedRecipes} editFlag={false}/>
                 <TopFiveList listName='Your Recipes' recipeList={this.props.userRecipes} editFlag={true}/>
                 <TopFiveList listName='Most Liked' recipeList={this.props.mostLiked} editFlag={false}/>

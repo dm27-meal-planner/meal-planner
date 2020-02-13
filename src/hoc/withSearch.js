@@ -8,7 +8,7 @@ function withSearch(BaseComponent, searchBtnCb) {
     // searchBtnCb is the function will be invoked after press search button, 
     //  the purpose of cb is to redirect to certain page.
 
-    return class extends Component {
+    class HOComponent extends Component {
         constructor() {
             super();
             this.state = {
@@ -78,7 +78,8 @@ function withSearch(BaseComponent, searchBtnCb) {
             )
         }
     }
+    return connect(undefined, { getRecipeByQuery })(HOComponent)
 }
 
 
-export default connect(undefined, { getRecipeByQuery })(withSearch);
+export default withSearch;

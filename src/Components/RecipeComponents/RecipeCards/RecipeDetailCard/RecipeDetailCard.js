@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './RecipeDetailCard.css';
+
 class RecipeDetailCard extends Component{
     constructor(){
         super();
@@ -7,12 +7,12 @@ class RecipeDetailCard extends Component{
     render(){
         return (
             <div className='RecipeDetailCard'>
-                <img className='RecipeDetailCard-img' src={this.props.recipe.image} alt={`${this.props.recipe.name} Picture`}/>
-                <div className='RecipeDetailCard-name'>{this.props.recipe.name}</div>
-                <div className='RecipeDetailCard-author'>{this.props.recipe.author}</div>
-                <div className='RecipeDetailCard-cooktime'>{this.props.recipe.cook_time}</div>
+                <img className='RecipeDetailCard-img' src={this.props.recipe.recipe_img} alt={`${this.props.recipe.recipe_name} Picture`}/>
+                <div className='RecipeDetailCard-name'>{this.props.recipe.recipe_name}</div>
+                <div className='RecipeDetailCard-author'>{this.props.recipe.recipe_author}</div>
+                <div className='RecipeDetailCard-time'>{this.props.recipe.recipe_time}</div>
                 {/* review hasn't appear in the database. */}
-                {/* <div>{this.props.recipe.review}</div> */}
+                <div>{this.props.recipe.recipe_review}</div>
             </div>
         )
     }
