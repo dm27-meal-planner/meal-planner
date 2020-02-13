@@ -46,7 +46,6 @@ class Firebase extends Component {
          } else {
             loginFirebase(authResult.additionalUserInfo.profile.id)
          }
-         // so fucking define them!
          return false;
       }
    }
