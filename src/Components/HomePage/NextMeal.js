@@ -10,7 +10,7 @@ const NextMeal = (props) => {
 
   const [currentMeal, changeCurrentMeal] = useState(null)
   
-  useEffect(() => findNearestMeal(), [props.meals])
+  useEffect(() => findNearestMeal(), [props.meals.length])
 
     const findNearestMeal = () => {
       if(+moment().format('H') >= 10 && +moment().format('H') <= 13){

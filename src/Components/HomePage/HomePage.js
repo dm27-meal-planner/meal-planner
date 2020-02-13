@@ -12,19 +12,23 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import Clock from './Clock';
 import {getMealsForUser, addMeal} from '../../redux/reducers/mealplanReducer'
+import loadingAnimation from '../../animations/loading.gif'
 
 import './stylesheet/HomePage.scss'
 
 const HomePage = (props) => {
-
+    
     const [events,  changeEvents] = useState(null)
     
     useEffect(() => {
-         props.getMealsForUser(props.user_id)
-        console.log(props.meals)
-        parseMeals(props.meals)
-    }, [props.meals.length])
 
+        if(props.user_id){
+            props.getMealsForUser(props.user_id)
+            parseMeals(props.meals)
+        }
+        
+    }, [props.meals.length])
+    
     const parseMeals = (propsMeals) => {
         let meals = []
         propsMeals.map(ele => {
@@ -32,23 +36,19 @@ const HomePage = (props) => {
         })
         changeEvents(meals)
     }
-
-
-    console.log(events)
-
-
+    
     if(!props.user_id){
         return <Redirect to='/'/>
     }
     
     if(props.loading){
-        return <div>Loading...</div>
+        return <img src={loadingAnimation} alt='loading' />
     }
 
     const newEventRender = ({event, el}) =>{
         let newResource = (
-            <Popover title={`${event.title} for ${event._def.resourceIds[0]}`} content={<div><span>mexican burrito</span><button>go to recipe</button></div>} trigger='click' >
-                <div style={{ position:'relative', backgroundImage: 'url(https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500)', backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'90%', height:'100px', margin: '5px'}} >
+            <Popover title={`${event.title} for ${event._def.resourceIds[0]}`} content={<div><span>{event.title}</span><button>Go To Recipe</button></div>} trigger='click' >
+                <div style={{ position:'relative', backgroundImage: 'url(https://imbindonesia.com/images/placeholder/camera.jpg)', backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'90%', height:'100px', margin: '5px'}} >
                     <div className='eventTitle'>
                         <div className='toRecipe'>{event.title}</div>
                     </div>
