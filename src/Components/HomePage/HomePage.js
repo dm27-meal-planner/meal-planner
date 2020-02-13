@@ -12,19 +12,23 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import Clock from './Clock';
 import {getMealsForUser, addMeal} from '../../redux/reducers/mealplanReducer'
+import loadingAnimation from '../../animations/loading.gif'
 
 import './stylesheet/HomePage.scss'
 
 const HomePage = (props) => {
-
+    
     const [events,  changeEvents] = useState(null)
     
     useEffect(() => {
-         props.getMealsForUser(props.user_id)
-        console.log(props.meals)
-        parseMeals(props.meals)
-    }, [props.meals.length])
 
+        if(props.user_id){
+            props.getMealsForUser(props.user_id)
+            parseMeals(props.meals)
+        }
+        
+    }, [props.meals.length])
+    
     const parseMeals = (propsMeals) => {
         let meals = []
         propsMeals.map(ele => {
@@ -32,17 +36,13 @@ const HomePage = (props) => {
         })
         changeEvents(meals)
     }
-
-
-    console.log(events)
-
-
+    
     if(!props.user_id){
         return <Redirect to='/'/>
     }
     
     if(props.loading){
-        return <div>Loading...</div>
+        return <img src={loadingAnimation} alt='loading' />
     }
 
     const newEventRender = ({event, el}) =>{

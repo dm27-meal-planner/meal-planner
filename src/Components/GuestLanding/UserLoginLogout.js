@@ -62,7 +62,6 @@ class UserLoginLogout extends Component {
                <input type="submit" />
             </form>
 
-            {this.props.history.action === "REPLACE" ? <p>You must be logged in to access that page</p> : null}
             {this.props.username ? 
             <>
                <h1>Welcome, {this.props.username}!</h1> 

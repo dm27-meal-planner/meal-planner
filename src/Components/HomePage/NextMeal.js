@@ -9,8 +9,6 @@ import './stylesheet/NextMeal.scss'
 const NextMeal = (props) => {
 
   const [currentMeal, changeCurrentMeal] = useState(null)
-
-  console.log(props)
   
   useEffect(() => findNearestMeal(), [props.meals.length])
 
