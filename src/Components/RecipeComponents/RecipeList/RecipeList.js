@@ -18,7 +18,7 @@ class RecipeList extends Component{
 
     redirectToSearchResult = ()=>{
         // after press search button, redirect to search result page.
-
+        this.props.history.push('/recipe/search');
     }
     render(){
         let SearchBar = withSearch(()=>{return(<div></div>)}, this.redirectToSearchResult);

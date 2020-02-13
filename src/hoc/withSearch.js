@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getRecipeByQuery } from '../redux/reducers/recipeReducer';
+import { saveSearchCondition } from '../redux/reducers/recipeSearchReducer';
 
 
 function withSearch(BaseComponent, searchBtnCb) {
@@ -13,23 +14,47 @@ function withSearch(BaseComponent, searchBtnCb) {
             super();
             this.state = {
                 browseWindow: false,
-                searchInput: '',
-                page: 1
+                name: '',
+                page: 1,
+                mealType: '',
+                cuisine: '',
+                ingredient: '',
             }
             this.handleInputChange = this.handleInputChange.bind(this);
         }
 
+        componentDidMount(){
+            this.setLocalStateToProps();
+        }
+
+        setLocalStateToProps = () => {
+            this.setState({
+                name: this.props.name,
+                page: this.props.page,
+                mealType: this.props.mealType,
+                cuisine: this.props.cuisine,
+                ingredient: this.props.ingredient,
+            })
+        }
 
         handleInputChange(e) {
             this.setState({
-                searchInput: e.target.value
+                name: e.target.value
             });
         }
 
         searchRecipes = () => {
+            // save search condition
+            this.props.saveSearchCondition({
+                name: this.state.name,
+                page: this.state.page,
+                mealType: this.state.mealType,
+                cuisine: this.state.cuisine,
+                ingredient: this.state.ingredient,
+            });
             // send info to redux.
-            if (this.state.searchInput) {
-                let params = `name=${this.state.searchInput}&page=${this.state.page}`
+            if (this.state.name) {
+                let params = `name=${this.state.name}&page=${this.state.page}`
                 this.props.getRecipeByQuery(params);
             }
             // ** working: category search.
@@ -40,11 +65,11 @@ function withSearch(BaseComponent, searchBtnCb) {
         }
 
         handlePageChange = (iter) => {
-            if (this.state.page + iter != 0){
+            if (this.state.page + iter != 0) {
                 // switch page
                 this.setState({
                     page: this.state.page + iter
-                }, ()=>{
+                }, () => {
                     this.searchRecipes();
                 });
             }
@@ -65,12 +90,13 @@ function withSearch(BaseComponent, searchBtnCb) {
                         {/* showing category window */}
                         <button onClick={() => { this.setState({ browseWindow: !this.state.browseWindow }) }}>Browse</button>
                         {browseWindow}
-                        <input onChange={this.handleInputChange} />
+                        <input onChange={this.handleInputChange} value={this.state.name} />
                         <button onClick={this.searchRecipes}>Search</button>
                     </div>
                     <div>
-                        <button onClick={()=>{this.handlePageChange(-1)}}>Previous page</button>
-                        <button onClick={()=>{this.handlePageChange(1)}}>Next page</button>
+                        <button onClick={() => { this.handlePageChange(-1) }}>Previous page</button>
+                        {this.props.name?(<span>Current Page: {this.state.page} </span>):null}
+                        <button onClick={() => { this.handlePageChange(1) }}>Next page</button>
                     </div>
                     {/* BaseComponent getting the search result from redux */}
                     <BaseComponent />
@@ -78,7 +104,18 @@ function withSearch(BaseComponent, searchBtnCb) {
             )
         }
     }
-    return connect(undefined, { getRecipeByQuery })(HOComponent)
+
+    const mapStateToProps = function (reduxState){
+        return {
+            name: reduxState.recipeSearch.name,
+            page: reduxState.recipeSearch.page,
+            mealType: reduxState.recipeSearch.mealType,
+            cuisine: reduxState.recipeSearch.cuisine,
+            ingredient: reduxState.recipeSearch.ingredient,
+        }
+    }
+    
+    return connect(mapStateToProps, { getRecipeByQuery, saveSearchCondition })(HOComponent)
 }
 
 
