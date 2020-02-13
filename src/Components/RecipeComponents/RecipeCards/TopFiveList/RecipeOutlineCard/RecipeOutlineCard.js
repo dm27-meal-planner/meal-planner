@@ -9,14 +9,14 @@ class RecipeOutlineCard extends Component {
     }
     handleDelete = () => {
         // call redux to delete the recipe.
-        this.props.deleteRecipe(this.props.recipe.id);
+        this.props.deleteRecipe(this.props.recipe.recipe_id);
     }
 
     render() {
         return (
-            <div key={this.props.recipe.id}>
-                <img src={this.props.recipe.img} />
-                <span>{this.props.recipe.name}</span>
+            <div key={this.props.recipe.recipe_id}>
+                <img src={this.props.recipe.recipe_img} />
+                <span>{this.props.recipe.recipe_name}</span>
                 {this.props.editFlag ?
                     (
                         <div>

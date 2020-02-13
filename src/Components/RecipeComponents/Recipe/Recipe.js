@@ -24,24 +24,24 @@ class Recipe extends Component {
     }
 
     componentDidMount() {
-        axios.get(`/api/recipe/${this.props.match.params.recipe_id}`).then(response => {
-            this.setState({
-                recipeName: response.data[0].name,
-                recipeImg: response.data[0].image,
-                recipeAuthorId: response.data[0].user_id,
+        // axios.get(`/api/recipe/${this.props.match.params.recipe_id}`).then(response => {
+        //     this.setState({
+        //         recipeName: response.data[0].name,
+        //         recipeImg: response.data[0].image,
+        //         recipeAuthorId: response.data[0].user_id,
 
-                recipeCookTime: response.data[0].cook_time,
-                recipeMealType: response.data[0].meal_type,
-                recipeDishType: response.data[0].dish_type,
-                recipeDes: response.data[0].description,
+        //         recipeCookTime: response.data[0].cook_time,
+        //         recipeMealType: response.data[0].meal_type,
+        //         recipeDishType: response.data[0].dish_type,
+        //         recipeDes: response.data[0].description,
 
-                recipeNutrition: response.data[0].nutritional_info,
+        //         recipeNutrition: response.data[0].nutritional_info,
 
-                recipeIngredients: response.data.map(e => e.ingredient_name),
+        //         recipeIngredients: response.data.map(e => e.ingredient_name),
 
-                recipeDirection: response.data[0].directions,
-            })
-        })
+        //         recipeDirection: response.data[0].directions,
+        //     })
+        // })
     }
 
     handleEdit = () => {
@@ -83,6 +83,7 @@ class Recipe extends Component {
 
         return (
             <div className='Recipe-wrapper'>
+                <div>**You are in the recipe {this.props.match.params.recipe_id} and here is still working...</div>
                 <div className='Recipe-title-wrapper'>
                     <div>{this.state.recipeName} </div>
                     <img src={this.state.recipeImg} alt='Recipe-img' />

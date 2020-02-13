@@ -17,18 +17,21 @@ class RecipeSearchResults extends Component {
         let searchResultList = this.props.searchResults.map((r, i) => {
             return (
                 // change the path once the route is sure.
-                <Link to={`/recipe/${r.recipe_id}`}>
+                <Link to={`/recipe/${r.recipe_source[0]+r.recipe_id}`}>
                     <RecipeDetailCard recipe={r} key={i} />
                 </Link>
             )
         })
+
+        let SearchBar = withSearch(() => {
+            return (<div className='searchResultList'>
+                {searchResultList}
+            </div>)
+        }, () => { });
+
         return (
             <div>
-                {withSearch(
-                    <div className='searchResultList'>
-                        {searchResultList}
-                    </div>
-                    , () => {})}
+                <SearchBar />
             </div>
         )
     }

@@ -9,7 +9,7 @@ class TopFiveList extends Component {
     render() {
         const recipeList = this.props.recipeList.map(r => {
             return (
-                <Link to={`/recipe/${r.recipe_id}`} key={r.recipe_id}>
+                <Link to={`/recipe/${r.recipe_source[0]+r.recipe_id}`} key={r.recipe_id}>
                     <RecipeOutlineCard recipe={r} editFlag={this.props.editFlag} />
                 </Link>
             )
