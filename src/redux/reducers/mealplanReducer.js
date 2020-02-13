@@ -7,6 +7,8 @@ const initialState = {
 
 const GET_MEALS = 'GET_MEALS'
 const ADD_MEAL = 'ADD_MEAL'
+const EDIT_MEAL = 'EDIT_MEAL'
+const DELETE_MEAL = 'DELETE_MEAL'
 
 
 export function getMealsForUser(userid){
@@ -23,6 +25,22 @@ export function addMeal(userid, newMeal){
         payload: axios.post(`/api/mealplan/${userid}`, newMeal)
                     .then(res => res.data)
     }
+}
+
+export function editMeal(meal_id, editedMeal){
+  return {
+      type: EDIT_MEAL,
+      payload: axios.put(`/api/mealplan/${meal_id}`, editedMeal)
+                    .then( res => res.data)
+  }
+}
+
+export function deleteMeal(meal_id, user_id){
+  return{
+    type: DELETE_MEAL,
+    payload: axios.delete(`/api/mealplan/${meal_id}?user_id=${user_id}`)
+                  .then(res => res.data)
+  }
 }
 
 // export function editMeal(mealid, editedMeal)
@@ -62,6 +80,28 @@ export default function reducer(state = initialState, action){
           }
         }
         case `${ADD_MEAL}_REJECTED`: {
+          return {
+            ...state
+          }
+        }
+        case `${EDIT_MEAL}_FULFILLED`: {
+          return {
+            ...state,
+            meals: payload
+          }
+        }
+        case `${EDIT_MEAL}_REJECTED`: {
+          return {
+            ...state
+          }
+        }
+        case `${DELETE_MEAL}_FULFILLED`: {
+          return {
+            ...state,
+            meals: payload
+          }
+        }
+        case `${DELETE_MEAL}_REJECTED`: {
           return {
             ...state
           }

@@ -20,4 +20,15 @@
     margin-left: auto;
     margin-right: auto;
     padding: 10px
+    
+}
+
+#trash{
+    transition: .5s;
+    font-size: 60px;
+
+}
+
+#trash:hover{
+    font-size: 100px
 }

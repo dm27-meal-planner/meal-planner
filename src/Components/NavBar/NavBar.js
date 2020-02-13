@@ -23,6 +23,7 @@ const NavBar = (props) => {
 
         <Link to='/' ><p>Home</p></Link>
         <Link to='/mealplan' ><p>Meal Plan</p></Link>
+        <Link to='/nutritional'><p>Meal Plan Nutrition</p></Link>
         <Link to='/fridge' ><p>Fridge</p></Link>
         <Link to='/grocerylist' ><p>Grocery List</p></Link>
         <UserLoginLogout />
