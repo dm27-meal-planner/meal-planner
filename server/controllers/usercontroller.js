@@ -19,6 +19,8 @@ const registerUser = async (req, res) => {
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(password, salt);
       const newUser = await db.register_user(username, hash, email, first_name, last_name, household_size);
+      const newFridge = await db.fridge.create_fridge(newUser[0].user_id);
+      const newGroceryList = await db.grocerylist.create_grocerylist(newUser[0].user_id);
       req.session.user = {
          user_id: newUser[0].user_id,
          username: newUser[0].username,
@@ -66,6 +68,8 @@ const registerFirebase = async (req, res) => {
    const {username, email, household_size, uid} = req.body;
    const db = req.app.get('db')
    const newUser = await db.register_firebaseuser(username, email, household_size, uid);
+   const newFridge = await db.fridge.create_fridge(newUser[0].user_id);
+   const newGroceryList = await db.grocerylist.create_grocerylist(newUser[0].user_id);
    req.session.user = {
       user_id: newUser[0].user_id,
       username: newUser[0].username,

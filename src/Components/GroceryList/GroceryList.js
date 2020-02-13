@@ -88,9 +88,14 @@ class GroceryList extends Component{
                 <ul>
                     {list}
                 </ul>
+                <div className="addToListDatabase">
+                    {/* After adding items to the local list, add them to the list_item list,
+                    tying the items in that local list to the user_id */}
+                    {/* <button onClick={} */}
+                </div>
             </div>
         )
-    }
+    } 
 }
 
 const mapStateToProps = (reduxState) => {
