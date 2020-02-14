@@ -1,5 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash'
 import { Redirect, Prompt } from 'react-router';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -20,22 +21,26 @@ const MealPlanCurrentWk = (props) => {
 
     const [initializeDnd, toggleDnd] = useState(true)
     const [selectedRecipe, selectRecipe] = useState(null)
-    const [events,  changeEvents] = useState(props.meals)
-    const [modifiedEvents, modifyEvent] = useState(null)
+    const [events,  changeEvents] = useState([])
+    const [modifiedEvents, modifyEvent] = useState([])
     const [addedMeals, addMoreMeals]= useState([])
     const [editedMeals, editMoreMeals] = useState([])
     const [deletedMeals, deleteMoreMeals] = useState([])
     const [changesSaved, setToFalse] = useState(true)
+    const [count, increment] = useState(1)
 
-    console.log(selectedRecipe)
+    let calendarRef = useRef()
 
     useEffect(() => {
         if(selectedRecipe){
-            newDraggable(selectedRecipe)
             createDraggableRecipe(selectedRecipe)
+
         }
     }, [selectedRecipe])
-    console.log(document.getElementById('new-recipe-container'))
+
+
+
+
     
     useEffect(() => {
         if(editedMeals.length === 0 && deletedMeals.length === 0 && addedMeals.length === 0 ){
@@ -52,13 +57,13 @@ const MealPlanCurrentWk = (props) => {
     const parseMeals = (propsMeals) => {
         let meals = []
         propsMeals.map(ele => {
-            meals.push({id: ele.mealplan_id, title: ele.title, date: ele.date, resourceId: ele.resourceid})
+            meals.push({id: ele.mealplan_id, title: ele.title, date: ele.date, resourceId: ele.resourceid, extendedProps: {image: ele.image}})
         })
-        changeEvents(meals)
+        changeEvents(meals);
         modifyEvent(meals)
     }
 
-    const newEventRender = ({event, el}) =>{
+    const newEventRender = ({event, el}) => {
         let newResource = (
             <Popover title={`${event._def.resourceIds[0]} for ${moment(event.start).format('dddd')}`} content={<div><span>{event.title}</span><br /><button>Go To Recipe</button></div>} trigger='click' >
                 <div style={{ position:'relative', backgroundImage: `url(${event.extendedProps.image || 'https://www.heavydutydirect.ca/wp-content/uploads/2019/02/camera-placeholder-150x150.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100%', height:'100px', margin: '5px'}} >
@@ -73,7 +78,7 @@ const MealPlanCurrentWk = (props) => {
 
     const newDraggable = (selectedRecipe) => {
         let newinstance = (
-            <div className='fc-event' id='newEvent' style={{ position:'relative', backgroundImage: `url(${ initializeDnd ? selectedRecipe.extendedProps.image : 'https://imbindonesia.com/images/placeholder/camera.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100px', height:'100px', marginLeft: 'auto', marginRight:'auto'}} >
+            <div className='fc-event' id={`new-event-${count}`} style={{ position:'relative', backgroundImage: `url(${selectedRecipe.extendedProps.image || 'https://imbindonesia.com/images/placeholder/camera.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100px', height:'100px', marginLeft: 'auto', marginRight:'auto'}} >
                 <div className='eventTitle'>
                     <div className='toRecipe'>{initializeDnd ? selectedRecipe.title : 'Pick a recipe.' }</div>
                 </div>
@@ -84,24 +89,19 @@ const MealPlanCurrentWk = (props) => {
     }
 
     const createDraggableRecipe = (selectedRecipe) => {
+        newDraggable(selectedRecipe)
         toggleDnd(true)
         new Draggable(document.getElementById('new-recipe-container'), {
-            itemSelector: '.fc-event',
-            eventData: 
-                        {
-                            extendedProps: selectedRecipe.extendedProps,
-                            id: selectedRecipe.id,
-                            title: selectedRecipe.title
-
-                        }
+            itemSelector: `#new-event-${count}`
                     }
                 )
-            }    
+                increment(count + 1)
+    }   
 
     const SaveChanges = () => {
         if(addedMeals.length){
             addedMeals.map(ele => {
-                props.addMeal(props.user_id, {date: ele.date, resourceid: ele.resourceId, title: ele.title})
+                props.addMeal(props.user_id, {date: ele.date, resourceid: ele.resourceId, title: ele.title, image: ele.image})
             })
             addMoreMeals([])
         } 
@@ -129,6 +129,7 @@ const MealPlanCurrentWk = (props) => {
     return (
         <div className='calendar-container-mealplan-currentweek' >
             <FullCalendar
+            ref={calendarRef} 
             defaultView="resourceTimelineWeek"
             plugins={[ dayGridPlugin, timeGridPlugin, resourceTimelinePlugin, interactionPlugin ]}
             schedulerLicenseKey='GPL-My-Project-Is-Open-Source'
@@ -144,6 +145,30 @@ const MealPlanCurrentWk = (props) => {
             resourceAreaWidth='12%'
             contentHeight='auto'
             events={events}
+            droppable={true}
+            drop={({date, resource}) => {
+
+                console.log(date)
+
+                let calendarApi = calendarRef.current.getApi()
+
+                
+                calendarApi.addEvent({                    
+                    extendedProps: selectedRecipe.extendedProps,
+                    start:date,
+                    title: selectedRecipe.title,
+                    resourceId: resource.id
+                })
+                
+                let allEvents = calendarApi.getEvents()
+
+                console.log(allEvents)
+
+                addMoreMeals([...addedMeals, {id: +allEvents[allEvents.length - 1]._instance.instanceId, title: selectedRecipe.title, date: moment(date).format(), resourceId: resource.id, image: selectedRecipe.extendedProps.image}])
+                modifyEvent([...modifiedEvents, {id: +allEvents[allEvents.length - 1]._instance.instanceId, title: selectedRecipe.title, date: moment(date).format(), resourceId: resource.id, image: selectedRecipe.extendedProps.image}])
+
+
+            }}
             height='auto'
             defaultTimedEventDuration={'00:01'}
             header={
@@ -159,15 +184,19 @@ const MealPlanCurrentWk = (props) => {
             }}
             eventDrop={({event}) => {
 
-                console.log(event)
 
 
-                modifyEvent(() => {
-                    let eventsCopy = modifiedEvents.slice()
-                    eventsCopy.find(ele => +ele.id === +event.id).date = moment(event.start).format()
-                    eventsCopy.find(ele => +ele.id === +event.id ).resourceId = event._def.resourceIds[0]
-                    return eventsCopy
-                })
+                // modifyEvent(() => {
+                //     let eventsCopy = modifiedEvents.slice()
+                //     eventsCopy.find(ele => +ele.id === +event._instance.instanceId || event.id).date = moment(event.start).format()
+                //     eventsCopy.find(ele => +ele.id === +event._instance.instanceId || event.id ).resourceId = event._def.resourceIds[0]
+                //     return eventsCopy
+                // })
+                // console.log(modifiedEvents)
+                // console.log(editedMeals)
+                // console.log(event)
+                // console.log(moment(event.start).format())
+
 
                 if(addedMeals.some(ele => +ele.id === +event._instance.instanceId )){
                     addMoreMeals(() => {
@@ -176,52 +205,47 @@ const MealPlanCurrentWk = (props) => {
                         eventsCopy.find(ele => +ele.id === +event._instance.instanceId ).resourceId = event._def.resourceIds[0]
                         return eventsCopy
                     })
-
-                } else {                    
-                    if(editedMeals.some(ele => +ele.id === +event.id) && editedMeals.some(ele => moment(ele.date).format() === moment(event.start).format()) && editedMeals.some(ele => ele.resourceId === event._def.resourceIds[0])){
+                } else if(editedMeals.some(ele => +ele.id === +event.id) && modifiedEvents.some(ele => moment(ele.date).format() === moment(event.start).format()) && editedMeals.some(ele => ele.resourceId === event._def.resourceIds[0])){
+                        console.log('exact')
                         editMoreMeals(() =>{
-                            let eventsCopy = editedMeals.slice()
+                            let eventsCopy = _.cloneDeep(editedMeals)
                             eventsCopy.splice(eventsCopy.findIndex(ele => +ele.id === +event.id), 1)
                             return eventsCopy
                         })
+
                     
                     }else if(editedMeals.some(ele => +ele.id === +event.id)){
                         editMoreMeals(() =>{
-                                let eventsCopy = editedMeals.slice()
+                                let eventsCopy = _.cloneDeep(editedMeals)
                                 eventsCopy.find(ele => +ele.id === +event.id).date = moment(event.start).format()
                                 eventsCopy.find(ele => +ele.id === +event.id ).resourceId = event._def.resourceIds[0]
                                 return eventsCopy
                             }
                         )
                     } else {
-                        editMoreMeals(() => {
-                            let eventsCopy = modifiedEvents.slice()
-                            eventsCopy.find(ele => +ele.id === +event.id).date = moment(event.start).format()
-                            eventsCopy.find(ele => +ele.id === +event.id ).resourceId = event._def.resourceIds[0]
-                            return [...editedMeals, eventsCopy.find(ele => +ele.id === +event.id)]
-                        })
+                        let eventsCopy = _.cloneDeep(modifiedEvents)
+                        eventsCopy.find(ele => +ele.id === +event.id).date = moment(event.start).format()
+                        eventsCopy.find(ele => +ele.id === +event.id ).resourceId = event._def.resourceIds[0]
+                        editMoreMeals([...editedMeals, eventsCopy.find(ele => +ele.id === +event.id)])
 
                     }
                 }
 
 
 
-            }}
-            eventReceive={({event}) => {             
-                console.log(event)   
-                        addMoreMeals([...addedMeals, {id: +event._instance.instanceId, title: event.title, date: moment(event.start).format(), resourceId: event._def.resourceIds[0]}])
-                        modifyEvent([...modifiedEvents, {id: +event._instance.instanceId, title: event.title, date: moment(event.start).format(), resourceId: event._def.resourceIds[0]}])
-            }}
+            }
+        
+
             />
 
 
             <div>
                 <div id='new-recipe-container'>
-                    {/* <div className='fc-event' id='newEvent' style={{ position:'relative', backgroundImage: `url(${ initializeDnd ? selectedRecipe.extendedProps.image : 'https://imbindonesia.com/images/placeholder/camera.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100px', height:'100px', marginLeft: 'auto', marginRight:'auto'}} >
+                    <div className='fc-event' id='newEvent' style={{ position:'relative', backgroundImage: `url(https://imbindonesia.com/images/placeholder/camera.jpg)`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100px', height:'100px', marginLeft: 'auto', marginRight:'auto'}} >
                         <div className='eventTitle'>
-                            <div className='toRecipe'>{initializeDnd ? selectedRecipe.title : 'Pick a recipe.' }</div>
+                            <div className='toRecipe'>Pick a recipe.</div>
                         </div>
-                    </div> */}
+                    </div>
                 </div>
                     <select name='recipes' onChange={ e => selectRecipe(JSON.parse(e.target.value))} id='recipes'>
                         <option value={null} >Select a recipe</option>
@@ -232,8 +256,7 @@ const MealPlanCurrentWk = (props) => {
 
             </div>
 
-            <button onClick={() => createDraggableRecipe(selectedRecipe)}>Create Draggable Recipe</button>
-            <button onClick={SaveChanges} >Save Changes</button>
+            <button onClick={SaveChanges}>Save Changes</button>
             <div id='trash' style={{position: 'fixed', bottom: '20px', right: '50px'}} >🗑</div>
             <Prompt 
             when={!changesSaved}
