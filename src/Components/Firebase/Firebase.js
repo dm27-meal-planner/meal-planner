@@ -31,7 +31,6 @@ class Firebase extends Component {
          firebase.initializeApp(firebaseConfig);
       }
       new firebaseui.auth.AuthUI(firebase.auth()).start('#firebaseui-auth-container', {
-   // props: this.props,
    signInOptions: [
       // Facebook and Twitter do not work for now. Will work on this later.
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -47,8 +46,6 @@ class Firebase extends Component {
          } else {
             loginFirebase(authResult.additionalUserInfo.profile.id)
          }
-         // Alter reduxState; anyone who signs in via this method no longer needs
-         // to enter their password, BUT I still need them to fill out the rest of their info
          return false;
       }
    }

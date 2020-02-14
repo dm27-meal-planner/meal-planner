@@ -8,7 +8,7 @@ class SearchItem extends React.Component{
         }
     }
 
-    handelInputChange = (e) => {
+    handleInputChange = (e) => {
       this.setState({
           [e.target.name]: e.target.value 
       })
@@ -22,8 +22,8 @@ class SearchItem extends React.Component{
                 <p>{name}</p>
                 <img src={`https://www.spoonacular.com/cdn/ingredients_100x100/${image}`} alt='ingredient_image' />
                 <div>
-                    <input type='number' min='0' name='amount' onChange={this.handelInputChange}/>
-                    <select name='unit' onChange={this.handelInputChange}>
+                    <input type='number' min='0' name='amount' onChange={this.handleInputChange}/>
+                    <select name='unit' onChange={this.handleInputChange}>
                         <option value={null}>Select unit of measurement</option>
                         {possibleUnits.map((ele, i) => <option value={ele} key={i} >{ele}</option>)}
                     </select>

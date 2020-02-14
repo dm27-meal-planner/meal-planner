@@ -2,7 +2,6 @@ const getUserFridge = async (req, res) => {
    const {user_id} = req.params;
    const db = req.app.get('db');
    const fridge = await db.fridge.get_fridge(user_id);
-   console.log(fridge);
    res.status(200).json(fridge);
 }
 
@@ -19,18 +18,29 @@ const editItem = async (req, res) => {
    // const {} = req.body;
    const {user_id} = req.params;
    const {item} = req.query;
+   const db = req.app.get('db');
    res.status(200).json('OK');
 }
 
 const deleteItem = async (req, res) => {
    const {user_id} = req.params;
    const {item} = req.query;
+   const db = req.app.get('db');
    res.status(200).json('OK');
+}
+
+const emptyFridge = async (req, res) => {
+   const {user_id} = req.params;
+   const db = req.app.get('db');
+   // should return an empty array
+   const fridge = await db.fridge.empty_fridge(user_id);
+   res.status(200).json(fridge);
 }
 
 module.exports = {
    getUserFridge,
    addItem,
    editItem,
-   deleteItem
+   deleteItem,
+   emptyFridge
 }

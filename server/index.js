@@ -7,7 +7,7 @@ const massive = require('massive');
 const {getUser, registerUser, loginUser, logoutUser, registerFirebase, loginFirebase} = require('./controllers/usercontroller');
 const {getUserMeals, addMeal, editMeal, deleteMeal, changeFollowedPlan, getNutrition} = require('./controllers/mealplancontroller');
 const {getMostLikedRecipe, getRecentRecipe, getUserRecipe, getRecipeById, addRecipe, deleteRecipe, editRecipe, getRecipeByQuery} = require('./controllers/recipecontroller');
-const {getUserFridge, addItem, editItem, deleteItem} = require('./controllers/fridgecontroller');
+const {getUserFridge, addItem, editItem, deleteItem, emptyFridge} = require('./controllers/fridgecontroller');
 const {getUserGroceryList, addItemToList, editGroceryList, deleteGroceryList} = require('./controllers/grocerylistcontroller');
 const {searchIngredient, addIngredient, getIngredientPrice} = require('./controllers/ingredientsController')
 
@@ -70,6 +70,7 @@ app.get('/api/fridge/:user_id', getUserFridge);
 app.post('/api/fridge/:user_id', addItem);
 // app.put(`/api/fridge/:user_id?item=${item_id}`, editItem);
 // app.delete(`/api/fridge/:user_id?item=${item_id}`, deleteItem);
+app.delete('/api/fridge/:user_id', emptyFridge);
 
 //grocerylist endpoints
 app.get('api/grocerylist/:user_id', getUserGroceryList);
