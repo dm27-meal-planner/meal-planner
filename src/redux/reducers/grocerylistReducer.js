@@ -44,7 +44,6 @@ export default function reducer(state = initialState, action) {
    const {type, payload} = action;
    switch(type) {
       case `${GET_USER_GROCERY_LIST}_FULFILLED`:
-         console.log(payload.data);
          return {
             ...state,
             ingredients: payload.data
