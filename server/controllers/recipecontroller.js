@@ -3,7 +3,7 @@ const { SPOON_API_KEY } = process.env
 
 // only get information from spoonacular since review system is not online yet.
 const getMostLikedRecipe = async (req, res) => {
-   const condition = `apiKey=${SPOON_API_KEY}&type=main%20course&sort=meta-score&sortDirection=desc&number=5&addRecipeInformation=true`
+   const condition = `apiKey=${SPOON_API_KEY}&type=main+course&sort=meta-score&sortDirection=desc&number=5&addRecipeInformation=true`
    await axios.get(`https://api.spoonacular.com/recipes/complexSearch?${condition}`)
       .then(response => {
          result = response.data.results.map((r) => {
@@ -99,7 +99,7 @@ const getRecipeByQuery = async (req, res) => {
          condition += `&offset=${offset}`;
 
          console.log(condition);
-         
+
 
          const spoonacularRecipes = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?${condition}`)
             .then(response => {
@@ -140,14 +140,92 @@ const getRecipeById = async (req, res) => {
       // get spoonacular recipe
       // remove 's' from id.
       const id = recipe_id.slice(1);
+      let condition = `apiKey=${SPOON_API_KEY}`;
+      condition += '&includeNutrition=true';
+      axios.get(`https://api.spoonacular.com/recipes/${id}/information?${condition}`)
+         .then(response => {
+            // console.log(response.data);
+
+            result = {
+               recipe_id: response.data.id,
+               recipe_img: response.data.image,
+               recipe_name: response.data.title,
+               recipe_source: 'spoonacular',
+               recipe_author: response.data.creditsText,
+               recipe_author_id: -1,
+               recipe_review: response.data.spoonacularScore / 20,
+
+               recipe_servings: response.data.servings,
+               recipe_cuisine: response.data.cuisines,
+               recipe_meal_type: response.data.dishTypes,
+
+               recipe_time: response.data.readyInMinutes,
+               recipe_prep_time: response.data.preparationMinutes ? response.data.preparationMinutes : 0,
+               recipe_cook_time: response.data.cookingMinutes ? response.data.cookingMinutes : response.data.readyInMinutes,
+
+               recipe_description: `From: ${response.data.sourceUrl}`,
+
+               recipe_nutrition: response.data.nutrition.nutrients,
+
+               recipe_ingredients: response.data.extendedIngredients.map(e => {
+                  return {
+                     id: e.id,
+                     amount: e.amount,
+                     unit: e.unit,
+                     name: e.name
+                  }
+               }),
+
+               recipe_directions: response.data.instructions,
+            }
+            res.status(200).json(result);
+            // return result;
+         })
+         .catch(err => {
+            console.log(err);
+
+            res.status(400).json(err.response.data.message)
+            console.log(err.response.data.message);
+            // return [];
+         })
+
 
    } else {
       // get mealplan recipe
       // remove 'm' from id
       const id = recipe_id.slice(1);
+      const db = req.app.get('db');
+      const mealRecipe = await db.recipes.get_recipe_by_id(id);
+      let result = {
+         recipe_id: mealRecipe[0].recipe_id,
+         recipe_img: mealRecipe[0].recipe_img,
+         recipe_name: mealRecipe[0].recipe_name,
+         recipe_source: mealRecipe[0].recipe_source,
+         recipe_author: mealRecipe[0].recipe_author,
+         recipe_author_id: mealRecipe[0].recipe_author_id,
+         recipe_review: mealRecipe[0].recipe_review,
 
+         recipe_servings: mealRecipe[0].recipe_servings,
+         recipe_cuisine: mealRecipe[0].recipe_cuisine,
+         recipe_meal_type: mealRecipe[0].recipe_meal_type,
+
+         recipe_time: mealRecipe[0].recipe_time,
+         recipe_prep_time: mealRecipe[0].recipe_prep_time,
+         recipe_cook_time: mealRecipe[0].recipe_cook_time,
+
+         recipe_description: mealRecipe[0].recipe_description,
+
+         recipe_nutrition: mealRecipe[0].recipe_nutrition,
+
+         recipe_directions: mealRecipe[0].recipe_directions,
+      }
+
+      const mealRecipeIngredients = await db.recipes.get_recipe_ingredients_by_id(id);
+
+      result.ingredients = mealRecipeIngredients;
+
+      res.status(200).json(result);
    }
-   res.status(200).json('OK');
 }
 
 const addRecipe = async (req, res) => {
