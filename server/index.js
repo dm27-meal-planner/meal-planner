@@ -71,7 +71,7 @@ app.post('/api/fridge/:user_id', addItem);
 app.delete('/api/fridge/:user_id', emptyFridge);
 
 //grocerylist endpoints
-app.get('api/grocerylist/:user_id', getUserGroceryList);
+app.get('/api/grocerylist/:user_id', getUserGroceryList);
 app.post('/api/grocerylist/:user_id', addItemToList);
 // app.put(`api/grocerylist/:user_id?item=${item_id}`, editGroceryList);
 // app.delete(`api/grocerylist/:user_id?item=${item_id}`, deleteGroceryItem);
