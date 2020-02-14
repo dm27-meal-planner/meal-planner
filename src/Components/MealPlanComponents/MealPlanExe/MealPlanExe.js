@@ -9,6 +9,8 @@ import interactionPlugin from '@fullcalendar/interaction';
 import ReactDOM from 'react-dom'
 import moment from 'moment'
 import { Popover } from 'antd'
+import { Radio } from 'antd'
+import {changeIsFollowed, getNutrition} from '../../../redux/reducers/mealplanReducer'
 
 
 import '../MealPlanCurrentWk/stylesheet/MealPlanCurrentWk.scss'
@@ -19,19 +21,27 @@ const MealPlanExe = (props) => {
     const [events, changeEvents] = useState([])
     const [mealSelected, changeSelectedMeal] = useState(null)
 
-    console.log(mealSelected)
+
+    if (mealSelected){
+        console.log(mealSelected)
+
+    }
+
+    console.log(props.meals)
+    console.log(props.nutrition.nutrients)
+
 
 
 
 
     useEffect(() => {
         parseMeals(props.meals)
-    }, [])
+    }, [props.meals])
 
     const parseMeals = (propsMeals) => {
         let meals = []
         propsMeals.map(ele => {
-            meals.push({id: ele.mealplan_id, title: ele.title, date: ele.date, resourceId: ele.resourceid, isfollowed: ele.isfollowed})
+            meals.push({id: ele.mealplan_id, title: ele.title, date: ele.date, resourceId: ele.resourceid, isfollowed: ele.followed_plan, extendedProps: {image: ele.image}})
         })
         changeEvents(meals)
     }
@@ -51,6 +61,17 @@ const MealPlanExe = (props) => {
         )
          ReactDOM.render(newResource, el)
     }
+
+    const changeIsFollowed = async(id, boolean) => {
+        props.changeIsFollowed(id, boolean)
+        changeSelectedMeal({...mealSelected, isfollowed: boolean})
+
+        if(boolean === true){
+            await props.getNutrition()
+        }
+    }
+
+
 
     if(!props.user_id){
         return <Redirect to='/' />
@@ -83,7 +104,7 @@ const MealPlanExe = (props) => {
                     }
                     eventClick={({event}) => {
                         console.log(event)
-                        changeSelectedMeal({id: +event.id, title: event.title, date: event.start, mealType: event._def.resourceIds[0]})}}
+                        changeSelectedMeal({id: +event.id, title: event.title, date: event.start, mealType: event._def.resourceIds[0], isfollowed: event.extendedProps.isfollowed})}}
                     resourceLabelText={'Meal Type'}
                     />
             </div>
@@ -91,14 +112,21 @@ const MealPlanExe = (props) => {
             { mealSelected ? <div className='meal-info-container'>
                     <p>{mealSelected.title} for {mealSelected.mealType}</p>
                     <p>{moment(mealSelected.date).format('ll')}</p>
-                    <form>
-                        <input type='radio' value='true' name='exe' style={{transform:'scale(1.5)'}} />
-                        <span style={{position: 'relative', left: '10px'}}>Stuck To Plan</span> 
-                        <br />
-                        <input type='radio' value='false' name='exe' style={{transform:'scale(1.5)'}}/>
-                        <span style={{position: 'relative', left: '10px'}}>Ate Out</span>
-                    </form>
+                    <div>
+                        <Radio.Group buttonStyle='solid' defaultChecked={mealSelected.isfollowed} value={mealSelected.isfollowed} >
+                            <Radio.Button id='stuck-to-plan' value={true} onClick={() => changeIsFollowed(mealSelected.id, true) }> Stuck to Plan </Radio.Button>
+                            <Radio.Button id='ate-out' value={false}  onClick={() => changeIsFollowed(mealSelected.id, false) }> Ate Out </Radio.Button>
+                        </Radio.Group>
+                    </div>
             </div> : <div> <p>Please Select A Meal</p></div>}
+            <ul>
+                {props.nutrition.nutrients ? props.nutrition.nutrients.slice(0, 9).map(ele => {
+                    return (
+                    <li>
+                       {ele.title}: {ele.amount}{ele.unit} 
+                    </li>)
+                }): null}
+            </ul>
         </div>
     )
 }
@@ -106,8 +134,9 @@ const MealPlanExe = (props) => {
 const mapStateToProps = (reduxState) => {
     return {
         user_id: reduxState.user.user_id,
-        meals: reduxState.mealplan.meals       
+        meals: reduxState.mealplan.meals,
+        nutrition: reduxState.mealplan.nutrition      
     }
 }
 
-export default connect(mapStateToProps, {})(MealPlanExe) 
+export default connect(mapStateToProps, {changeIsFollowed, getNutrition})(MealPlanExe) 

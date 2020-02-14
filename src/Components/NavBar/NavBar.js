@@ -26,6 +26,9 @@ const NavBar = (props) => {
         <Link to='/nutritional'><p>Meal Plan Nutrition</p></Link>
         <Link to='/fridge' ><p>Fridge</p></Link>
         <Link to='/grocerylist' ><p>Grocery List</p></Link>
+        <Link to='/recipes'><p>Recipes</p></Link>
+        <Link to='/recipes'><p>Recipes</p></Link>
+        <Link to='/recipes'><p>Recipes</p></Link>
         <UserLoginLogout />
 
         </div>
