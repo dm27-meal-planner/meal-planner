@@ -8,7 +8,7 @@ const {getUser, registerUser, loginUser, logoutUser, registerFirebase, loginFire
 const {getUserMeals, addMeal, editMeal, deleteMeal} = require('./controllers/mealplancontroller');
 const {getMostLikedRecipe, getRecentRecipe, getUserRecipe, getRecipeById, addRecipe, deleteRecipe, editRecipe, getRecipeByQuery} = require('./controllers/recipecontroller');
 const {getUserFridge, addItem, editItem, deleteItem, emptyFridge} = require('./controllers/fridgecontroller');
-const {getUserGroceryList, addItemToList, editGroceryList, deleteGroceryList} = require('./controllers/grocerylistcontroller');
+const {getUserGroceryList, addItemToList, editGroceryList, deleteGroceryItem, listToFridge} = require('./controllers/grocerylistcontroller');
 const {searchIngredient, addIngredient, getIngredientPrice} = require('./controllers/ingredientsController')
 
 
@@ -74,6 +74,9 @@ app.delete('/api/fridge/:user_id', emptyFridge);
 app.get('/api/grocerylist/:user_id', getUserGroceryList);
 app.post('/api/grocerylist/:user_id', addItemToList);
 // app.put(`api/grocerylist/:user_id?item=${item_id}`, editGroceryList);
-// app.delete(`api/grocerylist/:user_id?item=${item_id}`, deleteGroceryItem);
+app.delete(`/api/grocerylist/:user_id`, deleteGroceryItem);
+
+//transfer endpoints
+app.post(`/api/transfer/:user_id`, listToFridge);
 
 app.listen(SERVER_PORT, () => console.log(`Server listening on ${SERVER_PORT}`));

@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import axios from 'axios'
 import SearchItem from './SearchItem';
 import ListItem from './ListItem';
-import {getUserGroceryList, addItemToList} from '../../redux/reducers/grocerylistReducer';
+import {addItem} from '../../redux/reducers/fridgeReducer';
+import {getUserGroceryList, addItemToList, deleteGroceryItem, listToFridge} from '../../redux/reducers/grocerylistReducer';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 
@@ -13,7 +14,9 @@ class GroceryList extends Component{
             searchInput: '',
             searchResults: [],
             list: [],
-            editMode: false
+            editMode: false,
+            // checked items in this.props.groceryList go here
+            shoppingList: [],
         }
     }
     componentDidMount() {
@@ -69,6 +72,14 @@ class GroceryList extends Component{
         this.props.getUserGroceryList(this.props.user_id);
     }
 
+    // The user should be able to check boxes in the shopping list so they can add items
+    // that they actually shopped for
+    transferToFridge = (list) => {
+        // await this.props.addItem(this.props.user_id, list);
+        // await this.props.deleteGroceryItem(this.props.user_id, list);
+        this.props.listToFridge(this.props.user_id, list);
+    }
+
     render(){
 
         if(!this.props.user_id){
@@ -104,7 +115,22 @@ class GroceryList extends Component{
                 : null}
                 <h1>My Shopping List</h1>
                 {/* So shopping list and items to add to the list are separate. */}
-                {this.props.groceryList[0] ? <>has stuff</> 
+                {this.props.groceryList[0] ? 
+                <div id="groceryList">
+                    {this.props.groceryList.map((element, index) => {
+                        return (
+                            <div key={index}>
+                                {/* checkbox should go here as well! */}
+                                <img src={element.imageurl} alt='ingredient_image'/>
+                                <span>{element.name} </span>
+                                <span>{element.quantity} </span>
+                                <span>{element.unit} </span>
+                                <span>Estimated cost: ${element.price}</span>
+                            </div>
+                        )
+                    })}
+                    <button onClick={() => this.transferToFridge(this.props.groceryList)}>Add selected items to Fridge</button>
+                </div>
                 : <>does not have stuff</>}
             </div>
         )
@@ -118,4 +144,6 @@ const mapStateToProps = (reduxState) => {
     }
 }
 
-export default connect(mapStateToProps, {getUserGroceryList, addItemToList})(GroceryList)
+export default connect(mapStateToProps, 
+{getUserGroceryList, addItemToList, addItem, deleteGroceryItem, listToFridge})
+(GroceryList)
