@@ -32,3 +32,57 @@
 #trash:hover{
     font-size: 100px
 }
+
+#search-result-container{
+    list-style-type: none;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    max-height: 500px;
+
+    padding: 20px;
+    overflow-y: scroll;
+    border: black solid 2px;
+}
+
+.search-result-block{
+    margin-top: 5px;
+    border: solid black 2px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    padding:5px;
+    height: 80px;
+    height: 80px;
+    box-shadow: 2px 2px 5px grey;
+    p{
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-right: 60px;
+        width: 50%;
+        font-size: 15px;
+        
+    }
+    img{
+        height: 100%;
+        border-radius: 10px;
+    }
+}
+
+#search-recipe{
+    background-image: url('../../../../icons/search-solid.svg');
+    background-repeat: no-repeat;
+    background-size: 15px;
+    background-position-y:3px;
+    background-position-x: 3px;
+    border-radius: 5px;
+    border: solid;
+    padding-left: 30px;
+}
+
+#search-recipe:focus{
+}
+
+button:disabled{
+    color:rgb(214, 214, 214);
+}

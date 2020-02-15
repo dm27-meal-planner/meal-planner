@@ -84,11 +84,39 @@ const getNutrition = async (req, res) => {
 
 }
 
+const searchForRecipe = async (req, res) => {
+   const { searchTerm } = req.query
+
+   let result = await axios.get(`https://api.spoonacular.com/recipes/search?query=${searchTerm}&apiKey=${SPOON_API_KEY}&number=10`)
+   .then(res => res.data)
+
+   if(!result.results.length){
+      return res.status(400).json('No Search Results')
+   }
+
+   res.status(200).json(result)
+}
+
+const searchByCategory = async (req, res) => {
+   const { cuisine } = req.query
+
+
+
+   let results = await axios.get(`https://api.spoonacular.com/recipes/search?cuisine=${cuisine}&apiKey=${SPOON_API_KEY}&number=10`)
+            .then(res => res.data)
+
+   res.status(200).json(results)
+}
+
+
 module.exports = {
    getUserMeals,
    addMeal,
    editMeal,
    deleteMeal,
    changeFollowedPlan,
-   getNutrition
+   getNutrition,
+   searchForRecipe,
+   searchByCategory
+   
 }
