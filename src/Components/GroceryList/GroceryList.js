@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import axios from 'axios'
 import SearchItem from './SearchItem';
 import ListItem from './ListItem';
-import {getUserGroceryList, addItemToList} from '../../redux/reducers/grocerylistReducer';
+import ShoppingList from './ShoppingList';
+import {addItem} from '../../redux/reducers/fridgeReducer';
+import {getUserGroceryList, addItemToList, deleteGroceryItem} from '../../redux/reducers/grocerylistReducer';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 
@@ -13,11 +15,11 @@ class GroceryList extends Component{
             searchInput: '',
             searchResults: [],
             list: [],
-            editMode: false
+            editMode: false,
         }
     }
-    componentDidMount() {
-        this.props.getUserGroceryList(this.props.user_id);
+    componentDidMount = async () => {
+        await this.props.getUserGroceryList(this.props.user_id);
     }
     getSearchResults = () => {
          axios.post('/api/ingredient/search', {searchPhrase: this.state.searchInput})
@@ -70,7 +72,6 @@ class GroceryList extends Component{
     }
 
     render(){
-
         if(!this.props.user_id){
             return <Redirect to='/' />
         }
@@ -104,7 +105,10 @@ class GroceryList extends Component{
                 : null}
                 <h1>My Shopping List</h1>
                 {/* So shopping list and items to add to the list are separate. */}
-                {this.props.groceryList[0] ? <>has stuff</> 
+                {this.props.groceryList[0] ? 
+                <div id="groceryList">
+                    <ShoppingList groceryList={this.props.groceryList} />
+                </div>
                 : <>does not have stuff</>}
             </div>
         )
@@ -118,4 +122,6 @@ const mapStateToProps = (reduxState) => {
     }
 }
 
-export default connect(mapStateToProps, {getUserGroceryList, addItemToList})(GroceryList)
+export default connect(mapStateToProps, 
+{getUserGroceryList, addItemToList, addItem, deleteGroceryItem})
+(GroceryList)

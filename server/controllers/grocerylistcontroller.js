@@ -26,15 +26,26 @@ const editGroceryList = async (req, res) => {
    res.status(200).json('OK');
 }
 
-const deleteGroceryList = async (req, res) => {
-   const {item} = req.query;
+const deleteGroceryItem = async (req, res) => {
    const {user_id} = req.params;
    res.status(200).json('OK');
+}
+
+const listToFridge = async (req, res) => {
+   const {user_id} = req.params;
+   const db = req.app.get('db');
+   // should be whatever is left
+   const transferDone = await req.body.map(element => {
+      db.grocerylist.transfer_to_fridge(element.quantity, element.unit, user_id, element.name, element.imageurl, element.spoon_id, element.list_item_id);
+   })
+   const remainList = await db.grocerylist.get_grocerylist(user_id);
+   res.sendStatus(200).json(remainList);
 }
 
 module.exports = {
    getUserGroceryList,
    addItemToList,
    editGroceryList,
-   deleteGroceryList
+   deleteGroceryItem,
+   listToFridge
 }
