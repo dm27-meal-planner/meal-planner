@@ -7,7 +7,8 @@ const initialState = {
     searching: false,
     categorySearching: false, 
     loading: true,
-    categoryResults: []
+    categoryResults: [],
+    autoCompleteResults: []
 }
 
 const GET_MEALS = 'GET_MEALS'
@@ -18,6 +19,7 @@ const CHANGE_IS_FOLLOWED = 'CHANGE_IS_FOLLOWED'
 const GET_NUTRITION = 'GET_NUTRITION'
 const SEARCH_RECIPES = 'SEARCH_RECIPES'
 const SEARCH_BY_CATEGORY = 'SEARCH_BY_CATEGORY'
+const AUTO_COMPLETE = 'AUTO_COMPLETE'
 
 
 export function getMealsForUser(userid){
@@ -85,6 +87,13 @@ export function searchByCategory(category){
   }
 }
 
+export function autoCompleteSearch(searchTerm){
+  return{
+      type: AUTO_COMPLETE,
+      payload: axios.get(`/api/mealplan/search/autocomplete?searchTerm=${searchTerm}`)
+                  .then(res => res.data)
+  }
+}
 
 
 
@@ -208,6 +217,26 @@ export default function reducer(state = initialState, action){
           return {
             ...state,
             categorySearching: false,
+          }
+        }
+
+        case `${AUTO_COMPLETE}_PENDING`: {
+          return {
+            ...state
+          }
+        }
+
+        case `${AUTO_COMPLETE}_FULFILLED`: {
+          return {
+            ...state,
+            autoCompleteResults: payload
+          }
+        }
+        case `${AUTO_COMPLETE}_REJECTED`: {
+          return {
+            ...state,
+            autoCompleteResults: []
+
           }
         }
 

@@ -86,3 +86,29 @@
 button:disabled{
     color:rgb(214, 214, 214);
 }
+
+.auto-complete-list{
+    border: rgb(139, 139, 139) solid 2px;
+    border-radius: 8px;
+    list-style-type: none;
+    margin-left:auto ;
+    margin-right:auto ;
+    width: 22%;
+    padding: 5px;
+    max-height: 150px;
+    overflow-y: scroll;
+    li{
+        border: rgb(163, 163, 163) solid 2px;
+        border-radius: 10px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 5px;
+        width: 90%;
+        font-size: 15px;
+        color: grey;
+    }
+    li:hover{
+        cursor: pointer;
+        box-shadow: 2px 2px 2px;
+    }
+}

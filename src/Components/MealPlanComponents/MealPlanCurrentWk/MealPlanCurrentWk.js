@@ -10,7 +10,7 @@ import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import ReactDOM from 'react-dom'
 import moment from 'moment'
 import { Popover, message, Cascader } from 'antd'
-import { addMeal, editMeal, deleteMeal, searchFunction, searchByCategory } from '../../../redux/reducers/mealplanReducer'
+import { addMeal, editMeal, deleteMeal, searchFunction, searchByCategory, autoCompleteSearch } from '../../../redux/reducers/mealplanReducer'
 import searching from '../../../animations/searching.gif'
 import searchIcon from '../../../icons/search-solid.svg'
 import 'antd/es/popover/style/css'
@@ -31,9 +31,11 @@ const MealPlanCurrentWk = (props) => {
     const [deletedMeals, deleteMoreMeals] = useState([])
     const [changesSaved, setToFalse] = useState(true)
     const [count, increment] = useState(1)
+    const [results, updateResults] = useState([])
+    const [searchInput, updateInput] = useState('')
+
 
     console.log(props)
-
 
     let calendarRef = useRef()
 
@@ -60,6 +62,25 @@ const MealPlanCurrentWk = (props) => {
         parseMeals(props.meals)
     }, [])
 
+    useEffect(() => {
+        if(props.categoryResults.length){
+            updateResults(props.categoryResults)
+        }
+    }, [props.categoryResults])
+
+    useEffect(() => {
+        if(props.searchResults.length){
+            updateResults(props.searchResults)
+        }
+    }, [props.searchResults])
+
+    useEffect(() => {
+             props.autoCompleteSearch(searchInput)
+    }, [searchInput])
+
+
+
+
     
 
     const parseMeals = (propsMeals) => {
@@ -71,19 +92,15 @@ const MealPlanCurrentWk = (props) => {
         modifyEvent(meals)
     }
 
-    let options = [
-        {
-            value: '',
-            label: ''
-        },
-        {
-            value: '',
-            label: ''
-        },
-    ]
 
-    const searchForRecipe = (e) => {        
-         props.searchFunction(e.target.value)
+
+    const handleAutoCompleteClick = (value) => {
+        props.searchFunction(value)
+        updateInput('')
+    }
+
+    const categorySelected = (value) => {
+         props.searchByCategory(value)
     }
 
     const newEventRender = ({event, el}) => {
@@ -261,18 +278,25 @@ const MealPlanCurrentWk = (props) => {
             <button onClick={SaveChanges} disabled={changesSaved} >Save Changes</button>
 
             <div>
-                    <input id='search-recipe' style = {{backgroundImage: `url(${props.searching ? searching : searchIcon})` }} name='search' onChange={ e => searchForRecipe(e)}  />
+                    <div>
+                        <input  id='search-recipe' style = {{backgroundImage: `url(${props.searching ? searching : searchIcon})` }} name='search' value={searchInput}  onChange={e => updateInput(e.target.value)} />
+                        <ul className='auto-complete-list' style={{display: `${!props.autoCompleteResults.length ? 'none' : 'block'}`}} >
+                            {props.autoCompleteResults.length ? props.autoCompleteResults.map((ele, i) => {
+                                return <li key={i} onClick={() => handleAutoCompleteClick(ele.title)} >{ele.title}</li>
+                            }): null}
+                        </ul>
+                    </div>
 
                 <ul id='search-result-container' >
-                    { props.searchResults.length ?  props.searchResults.map((ele, i) => {
+                    { results.length ?  results.map((ele, i) => {
                         return <li key={i} onClick={() => selectRecipe(_.cloneDeep({id: ele.id, title: ele.title, extendedProps:{ image: `https://spoonacular.com/recipeImages/${ele.image}`}}))} className='search-result-block' >
                             <img src={`https://spoonacular.com/recipeImages/${ele.image}`} alt='recipe'  width='70px'/>
                             <p>{ele.title}</p>
                         </li>
-                    }):null}
+                    }) :null}
                 </ul>
             </div>
-            <CategroyCascader selectRecipe={selectRecipe} />
+            <CategroyCascader selectRecipe={selectRecipe} categorySelected={categorySelected} />
 
             <div id='trash' style={{position: 'fixed', bottom: '20px', right: '50px'}} >🗑</div>
             <Prompt 
@@ -290,8 +314,9 @@ const mapStateToProps = (reduxState) => {
         meals: reduxState.mealplan.meals,
         searching: reduxState.mealplan.searching,
         searchResults: reduxState.mealplan.searchResults,
-        categoryResults: reduxState.mealplan.categoryResults
+        categoryResults: reduxState.mealplan.categoryResults,
+        autoCompleteResults: reduxState.mealplan.autoCompleteResults
     }
 }
 
-export default connect(mapStateToProps, { addMeal, editMeal, deleteMeal, searchFunction, searchByCategory })(MealPlanCurrentWk)
+export default connect(mapStateToProps, { addMeal, editMeal, deleteMeal, searchFunction, searchByCategory, autoCompleteSearch })(MealPlanCurrentWk)

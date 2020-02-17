@@ -14,164 +14,132 @@ const CategoryCascader = (props) => {
         console.log(categorySelected)
 
         if(categorySelected){
-             props.searchByCategory(categorySelected)
+            props.categorySelected(categorySelected)
         }
-    }, [categorySelected])
 
-    console.log(categorySelected)
-    console.log(props)
+        changeCategory(null)
+    })
+
     
     let options = [
         {
             value: 'African',
-            label: 'African',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'African' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: _.cloneDeep({id: ele.id, title: ele.title, extendedProps:{ image: `https://spoonacular.com/recipeImages/${ele.image}`}})}}): [{value: ''}]
+            label: 'African'
         },
         {
             value: 'American',
-            label: 'American',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'American' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: _.cloneDeep({id: ele.id, title: ele.title, extendedProps:{ image: `https://spoonacular.com/recipeImages/${ele.image}`}})}}): [{value: ''}]
-
+            label: 'American'
         },
         {
             value: 'British',
-            label: 'British',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'British' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: _.cloneDeep({id: ele.id, title: ele.title, extendedProps:{ image: `https://spoonacular.com/recipeImages/${ele.image}`}})}}): [{value: ''}]
+            label: 'British'
         },
         {
             value: 'Cajun',
-            label: 'Cajun',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Cajun' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'Cajun'
         },
         {
             value: 'Caribbean',
-            label: 'Caribbean',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Caribbean' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'Caribbean'
         },
         {
             value: 'Chinese',
-            label: 'Chinese',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Chinese' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'Chinese'
 
         },
         {
             value: 'Eastern European',
-            label: 'Eastern European',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Eastern European' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'Eastern European'
 
         },
         {
             value: 'European',
-            label: 'European',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'European' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'European'
 
         },
         {
             value: 'French',
-            label: 'French',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'French' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'French'
 
         },
         {
             value: 'German',
-            label: 'German',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'German' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'German'
 
         },
         {
             value: 'Greek',
-            label: 'Greek',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Greek' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'Greek'
 
         },
         {
             value: 'Indian',
-            label: 'Indian',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Indian' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'Indian'
 
         },
         {
             value: 'Irish',
-            label: 'Irish',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Irish' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'Irish'
 
         },
         {
             value: 'Italian',
-            label: 'Italian',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Italian' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'Italian'
 
         },
         {
             value: 'Japanese',
-            label: 'Japanese',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Japanese' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'Japanese'
 
         },
         {
             value: 'Jewish',
-            label: 'Jewish',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Jewish' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'Jewish'
 
         },
         {
             value: 'Korean',
-            label: 'Korean',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Korean' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'Korean'
 
         },
         {
             value: 'Latin American',
-            label: 'Latin American',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Latin American' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'Latin American'
 
         },
         {
             value: 'Mediterranean',
-            label: 'Mediterranean',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Mediterranean' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'Mediterranean'
         },
         {
             value: 'Mexican',
-            label: 'Mexican',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Mexican' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'Mexican'
 
         },
         {
             value: 'Middle Eastern',
-            label: 'Middle Eastern',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Middle Eastern' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
-
-
+            label: 'Middle Eastern'
         },
         {
             value: 'Nordic',
-            label: 'Nordic',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Nordic' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
-
+            label: 'Nordic'
         },
         {
             value: 'Southern',
-            label: 'Southern',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Southern' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
-
+            label: 'Southern'
         },
         {
             value: 'Spanish',
-            label: 'Spanish',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Spanish' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
-
+            label: 'Spanish'
         },
         {
             value: 'Thai',
-            label: 'Thai',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Thai' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'Thai'
 
         },
         {
             value: 'Vietnamese',
-            label: 'Vietnamese',
-            children: props.categorySearching ? [{label: <img src={categorySearching} alt='loading'/>}] : categorySelected === 'Thai' ? props.categoryResults.map((ele) =>{return {label: ele.title, value: ele.title}}): [{value: ''}]
+            label: 'Vietnamese'
 
         }
     ]
@@ -187,7 +155,7 @@ const CategoryCascader = (props) => {
     
 
     return(
-        <Cascader options={options} onChange={onChange} changeOnSelect placeholder="Browse By Cuisine" />
+            <Cascader options={options} onChange={onChange} value={[]} changeOnSelect placeholder="Browse By Cuisine" />
 
     )
 }
