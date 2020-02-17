@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline'
-import moment from 'moment'
+// import moment from 'moment'
 import ReactDOM from 'react-dom'
 import { Popover } from 'antd'
 import 'antd/es/popover/style/css'
@@ -11,6 +11,7 @@ import NextMeal from './NextMeal';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import Clock from './Clock';
+import Fridge from '../Fridge/Fridge';
 import {getMealsForUser, addMeal} from '../../redux/reducers/mealplanReducer'
 import loadingAnimation from '../../animations/loading.gif'
 
@@ -61,6 +62,7 @@ const HomePage = (props) => {
 
     return (
         <div className='home-page'>
+            <div className='calendarAndNextMeal'>
             <div className='calendar-container' >
                 <h1>{props.username}'s Weekly Meal Plan</h1>
                 <Clock />
@@ -88,7 +90,10 @@ const HomePage = (props) => {
             </div>
 
             <NextMeal />
-            
+            </div>
+            <div className="itemsInFridge">
+                <Fridge />
+            </div>
         </div>
     )
 }
