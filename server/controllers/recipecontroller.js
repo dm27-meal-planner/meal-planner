@@ -222,14 +222,29 @@ const getRecipeById = async (req, res) => {
 
       const mealRecipeIngredients = await db.recipes.get_recipe_ingredients_by_id(id);
 
-      result.ingredients = mealRecipeIngredients;
+      result.recipe_ingredients = mealRecipeIngredients;
 
       res.status(200).json(result);
    }
 }
 
 const addRecipe = async (req, res) => {
-   // const {} = req.body;
+   const {
+      recipeName,
+      recipeImg,
+      recipePrepTime,
+      recipeCookTime,
+      recipeDirection,
+      recipeMealType,
+      recipeDes,
+      recipeNutrition
+
+   } = req.body;
+   if (!req.session.user) {
+      res.status(401).json("Please login!");
+      return null;
+   }
+
    res.status(200).json('OK');
 }
 
