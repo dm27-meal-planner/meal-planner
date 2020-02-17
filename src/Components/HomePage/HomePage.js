@@ -50,7 +50,7 @@ const HomePage = (props) => {
             <Popover title={`${event.title} for ${event._def.resourceIds[0]}`} content={<div><span>{event.title}</span><button>Go To Recipe</button></div>} trigger='click' >
                 <div style={{ position:'relative', backgroundImage: `url(${event.extendedProps.image || 'https://imbindonesia.com/images/placeholder/camera.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'90%', height:'100px', margin: '5px'}} >
                     <div className='eventTitle'>
-                        <div className='toRecipe'>{event.title}</div>
+                        <div className='toRecipe' style={{whiteSpace: 'pre-wrap'}} >{event.title}</div>
                     </div>
                 </div>
             </Popover>

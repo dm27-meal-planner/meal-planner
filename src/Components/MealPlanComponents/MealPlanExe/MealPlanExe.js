@@ -52,9 +52,9 @@ const MealPlanExe = (props) => {
     const newEventRender = ({event, el}) =>{
         let newResource = (
             <Popover title={`${event._def.resourceIds[0]} for ${moment(event.start).format('dddd')}`} trigger='click' >
-                <div style={{ position:'relative', backgroundImage: `url(${event.extendedProps.image || 'https://www.heavydutydirect.ca/wp-content/uploads/2019/02/camera-placeholder-150x150.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100%', height:'100px', margin: '5px'}} >
+                <div style={{ margin:'0px, !import', position:'relative', backgroundImage: `url(${event.extendedProps.image || 'https://www.heavydutydirect.ca/wp-content/uploads/2019/02/camera-placeholder-150x150.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100%', height:'100px', margin: '5px'}} >
                     <div className='eventTitle'>
-                        <div className='toRecipe'>{event.title}</div>
+                        <div className='toRecipe' style={{whiteSpace: 'pre-wrap'}} >{event.title}</div>
                     </div>
                 </div>
             </Popover>
