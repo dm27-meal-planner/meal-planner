@@ -5,7 +5,7 @@ const app = express();
 const session = require('express-session');
 const massive = require('massive');
 const {getUser, registerUser, loginUser, logoutUser, registerFirebase, loginFirebase} = require('./controllers/usercontroller');
-const {getUserMeals, addMeal, editMeal, deleteMeal, changeFollowedPlan, getNutrition} = require('./controllers/mealplancontroller');
+const {getUserMeals, addMeal, editMeal, deleteMeal, changeFollowedPlan, getNutrition, searchForRecipe, searchByCategory, autoCompleteTerm} = require('./controllers/mealplancontroller');
 const {getMostLikedRecipe, getRecentRecipe, getUserRecipe, getRecipeById, addRecipe, deleteRecipe, editRecipe, getRecipeByQuery} = require('./controllers/recipecontroller');
 const {getUserFridge, addItem, editItem, deleteItem, emptyFridge} = require('./controllers/fridgecontroller');
 const {getUserGroceryList, addItemToList, editGroceryList, deleteGroceryItem, listToFridge} = require('./controllers/grocerylistcontroller');
@@ -48,12 +48,16 @@ app.post('/firebase/login', loginFirebase);
 
 //mealplan endpoints
 //momentjs can format weeks into numbers
+app.get('/api/mealplan/search', searchForRecipe)
+app.get('/api/search/category', searchByCategory)
 app.get(`/api/mealplan/:user_id`, getUserMeals);
 app.post('/api/mealplan/:user_id', addMeal);
 app.put('/api/mealplan/:meal_id', editMeal);
 app.delete('/api/mealplan/:meal_id', deleteMeal);
 app.put('/api/mealplan/isfollowed/:meal_id', changeFollowedPlan)
 app.get('/api/mealplan/nutrition/pizza', getNutrition)
+app.get('/api/mealplan/search/autocomplete', autoCompleteTerm)
+
 
 //recipe endpoints
 app.get('/api/recipe/mostliked', getMostLikedRecipe);

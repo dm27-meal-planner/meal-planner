@@ -9,10 +9,13 @@ import resourceTimelinePlugin from '@fullcalendar/resource-timeline'
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import ReactDOM from 'react-dom'
 import moment from 'moment'
-import { Popover } from 'antd'
-import { addMeal, editMeal, deleteMeal } from '../../../redux/reducers/mealplanReducer'
+import { Popover, message, Cascader } from 'antd'
+import { addMeal, editMeal, deleteMeal, searchFunction, searchByCategory, autoCompleteSearch } from '../../../redux/reducers/mealplanReducer'
+import searching from '../../../animations/searching.gif'
+import searchIcon from '../../../icons/search-solid.svg'
 import 'antd/es/popover/style/css'
 import './stylesheet/MealPlanCurrentWk.scss'
+import CategroyCascader from './CategroyCascader';
 
 
 
@@ -28,6 +31,11 @@ const MealPlanCurrentWk = (props) => {
     const [deletedMeals, deleteMoreMeals] = useState([])
     const [changesSaved, setToFalse] = useState(true)
     const [count, increment] = useState(1)
+    const [results, updateResults] = useState([])
+    const [searchInput, updateInput] = useState('')
+
+
+    console.log(props)
 
     let calendarRef = useRef()
 
@@ -54,6 +62,27 @@ const MealPlanCurrentWk = (props) => {
         parseMeals(props.meals)
     }, [])
 
+    useEffect(() => {
+        if(props.categoryResults.length){
+            updateResults(props.categoryResults)
+        }
+    }, [props.categoryResults])
+
+    useEffect(() => {
+        if(props.searchResults.length){
+            updateResults(props.searchResults)
+        }
+    }, [props.searchResults])
+
+    useEffect(() => {
+             props.autoCompleteSearch(searchInput)
+    }, [searchInput])
+
+
+
+
+    
+
     const parseMeals = (propsMeals) => {
         let meals = []
         propsMeals.map(ele => {
@@ -63,12 +92,23 @@ const MealPlanCurrentWk = (props) => {
         modifyEvent(meals)
     }
 
+
+
+    const handleAutoCompleteClick = (value) => {
+        props.searchFunction(value)
+        updateInput('')
+    }
+
+    const categorySelected = (value) => {
+         props.searchByCategory(value)
+    }
+
     const newEventRender = ({event, el}) => {
         let newResource = (
             <Popover title={`${event._def.resourceIds[0]} for ${moment(event.start).format('dddd')}`} content={<div><span>{event.title}</span><br /><button>Go To Recipe</button></div>} trigger='click' >
-                <div style={{ position:'relative', backgroundImage: `url(${event.extendedProps.image || 'https://www.heavydutydirect.ca/wp-content/uploads/2019/02/camera-placeholder-150x150.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100%', height:'100px', margin: '5px'}} >
+                <div style={{ position:'relative', backgroundImage: `url(${event.extendedProps.image || selectedRecipe.extendedProps.image ||'https://www.heavydutydirect.ca/wp-content/uploads/2019/02/camera-placeholder-150x150.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100%', height:'100px', margin: '5px'}} >
                     <div className='eventTitle'>
-                        <div className='toRecipe'>{event.title}</div>
+                        <div className='toRecipe' style={{whiteSpace: 'pre-wrap'}} >{event.title || selectedRecipe.title}</div>
                     </div>
                 </div>
             </Popover>
@@ -96,7 +136,8 @@ const MealPlanCurrentWk = (props) => {
                     }
                 )
                 increment(count + 1)
-    }   
+    }
+
 
     const SaveChanges = () => {
         if(addedMeals.length){
@@ -104,6 +145,8 @@ const MealPlanCurrentWk = (props) => {
                 props.addMeal(props.user_id, {date: ele.date, resourceid: ele.resourceId, title: ele.title, image: ele.image})
             })
             addMoreMeals([])
+
+            
         } 
 
         if(editedMeals.length){
@@ -118,6 +161,8 @@ const MealPlanCurrentWk = (props) => {
             })
             deleteMoreMeals([])
         }
+
+        message.success('Changes have been saved!')
     }
 
 
@@ -184,20 +229,6 @@ const MealPlanCurrentWk = (props) => {
             }}
             eventDrop={({event}) => {
 
-
-
-                // modifyEvent(() => {
-                //     let eventsCopy = modifiedEvents.slice()
-                //     eventsCopy.find(ele => +ele.id === +event._instance.instanceId || event.id).date = moment(event.start).format()
-                //     eventsCopy.find(ele => +ele.id === +event._instance.instanceId || event.id ).resourceId = event._def.resourceIds[0]
-                //     return eventsCopy
-                // })
-                // console.log(modifiedEvents)
-                // console.log(editedMeals)
-                // console.log(event)
-                // console.log(moment(event.start).format())
-
-
                 if(addedMeals.some(ele => +ele.id === +event._instance.instanceId )){
                     addMoreMeals(() => {
                         let eventsCopy = addedMeals.slice()
@@ -230,12 +261,7 @@ const MealPlanCurrentWk = (props) => {
 
                     }
                 }
-
-
-
             }
-        
-
             />
 
 
@@ -247,16 +273,31 @@ const MealPlanCurrentWk = (props) => {
                         </div>
                     </div>
                 </div>
-                    <select name='recipes' onChange={ e => selectRecipe(JSON.parse(e.target.value))} id='recipes'>
-                        <option value={null} >Select a recipe</option>
-                        <option value={JSON.stringify({id: 6, title: 'pizza', extendedProps:{ image: 'https://www.qsrmagazine.com/sites/default/files/styles/story_page/public/PizzaHut.jpg?itok=g-UcJm9k'}})} >pizza</option>
-                        <option value={JSON.stringify({id: 50, title: 'burrito', extendedProps:{ image: 'https://food.fnr.sndimg.com/content/dam/images/food/fullset/2018/10/16/0/DV2904_Korean-BBQ-Burrito_s4x3.jpg.rend.hgtvcom.826.620.suffix/1539714414867.jpeg'}})} >burrito</option>
-
-                    </select>
-
             </div>
 
-            <button onClick={SaveChanges}>Save Changes</button>
+            <button onClick={SaveChanges} disabled={changesSaved} >Save Changes</button>
+
+            <div>
+                    <div>
+                        <input  id='search-recipe' style = {{backgroundImage: `url(${props.searching ? searching : searchIcon})` }} name='search' value={searchInput}  onChange={e => updateInput(e.target.value)} />
+                        <ul className='auto-complete-list' style={{display: `${!props.autoCompleteResults.length ? 'none' : 'block'}`}} >
+                            {props.autoCompleteResults.length ? props.autoCompleteResults.map((ele, i) => {
+                                return <li key={i} onClick={() => handleAutoCompleteClick(ele.title)} >{ele.title}</li>
+                            }): null}
+                        </ul>
+                    </div>
+
+                <ul id='search-result-container' >
+                    { results.length ?  results.map((ele, i) => {
+                        return <li key={i} onClick={() => selectRecipe(_.cloneDeep({id: ele.id, title: ele.title, extendedProps:{ image: `https://spoonacular.com/recipeImages/${ele.image}`}}))} className='search-result-block' >
+                            <img src={`https://spoonacular.com/recipeImages/${ele.image}`} alt='recipe'  width='70px'/>
+                            <p>{ele.title}</p>
+                        </li>
+                    }) :null}
+                </ul>
+            </div>
+            <CategroyCascader selectRecipe={selectRecipe} categorySelected={categorySelected} />
+
             <div id='trash' style={{position: 'fixed', bottom: '20px', right: '50px'}} >🗑</div>
             <Prompt 
             when={!changesSaved}
@@ -270,8 +311,12 @@ const MealPlanCurrentWk = (props) => {
 const mapStateToProps = (reduxState) => {
     return {
         user_id: reduxState.user.user_id,
-        meals: reduxState.mealplan.meals
+        meals: reduxState.mealplan.meals,
+        searching: reduxState.mealplan.searching,
+        searchResults: reduxState.mealplan.searchResults,
+        categoryResults: reduxState.mealplan.categoryResults,
+        autoCompleteResults: reduxState.mealplan.autoCompleteResults
     }
 }
 
-export default connect(mapStateToProps, { addMeal, editMeal, deleteMeal })(MealPlanCurrentWk)
+export default connect(mapStateToProps, { addMeal, editMeal, deleteMeal, searchFunction, searchByCategory, autoCompleteSearch })(MealPlanCurrentWk)
