@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import AddToMealPlanCard from '../RecipeCards/AddToMealPlanCard/AddToMealPlanCard';
 class Recipe extends Component {
     constructor() {
         super();
@@ -8,11 +9,12 @@ class Recipe extends Component {
             recipeId: '',
             recipeImg: '',
             recipeName: '',
-            recipeSource:'',
+            recipeSource: '',
             recipeAuthor: '',
             recipeAuthorId: '',
             recipeReview: 0,
             deleteWindowFlag: false,
+            addMPWindowFlag: false,
 
             recipeServings: 0,
             recipeCuisine: '',
@@ -38,11 +40,11 @@ class Recipe extends Component {
                 recipeId: response.data.recipe_id,
                 recipeImg: response.data.recipe_img,
                 recipeName: response.data.recipe_name,
-                recipeSource:response.data.recipe_source,
+                recipeSource: response.data.recipe_source,
                 recipeAuthor: response.data.recipe_author,
                 recipeAuthorId: response.data.recipe_author_id,
                 recipeReview: response.data.recipe_review,
-    
+
                 recipeServings: response.data.recipe_servings,
                 recipeCuisine: response.data.recipe_cuisine,
                 recipeMealType: response.data.recipe_meal_type,
@@ -50,11 +52,11 @@ class Recipe extends Component {
                 recipePrepTime: response.data.recipe_prep_time,
                 recipeCookTime: response.data.recipe_cook_time,
                 recipeDes: response.data.recipe_description,
-    
+
                 recipeNutrition: response.data.recipe_nutrition,
-    
+
                 recipeIngredients: response.data.recipe_ingredients,
-    
+
                 recipeDirection: response.data.recipe_directions,
 
             })
@@ -62,8 +64,9 @@ class Recipe extends Component {
     }
 
     handleEdit = () => {
-        // **go to edit page.
-        alert('Working on edit btn...');
+        // go to edit page.
+        // alert('Working on edit btn...');
+        this.props.history.push(`/recipe/edit/${this.props.match.params.recipe_id}`);
     }
 
     handleDeleteWindow = () => {
@@ -75,7 +78,15 @@ class Recipe extends Component {
     handleDelete = () => {
         // **delete the recipe.
         alert('Working on delete btn...');
-        // **go back to search recipe page.
+        // go back to search recipe page.
+        this.props.history.push('/recipes');
+    }
+
+
+    handleMPWindow = () => {
+        this.setState({
+            addMPWindowFlag: !this.state.addMPWindowFlag
+        })
     }
 
     render() {
@@ -96,17 +107,28 @@ class Recipe extends Component {
                     <button onClick={() => { this.handleDelete() }}>Delete</button>
                 </div>
             </div>) : null;
+        // add to meal plan window
+        let addMPWindow = this.state.addMPWindowFlag ?
+            (<AddToMealPlanCard 
+                recipeId={this.props.match.params.recipe_id}
+                recipeNutrition={this.state.recipeNutrition}
+                recipeMealType={this.state.recipeMealType}
+                recipeName={this.state.recipeName}
+                recipeImg={this.state.recipeImg}
+                />) : null;
         // ** beautify later
         let nutrition = JSON.stringify(this.state.recipeNutrition);
 
         return (
             <div className='Recipe-wrapper'>
-                <div>**You are in the recipe {this.props.match.params.recipe_id} and here is still working...</div>
+                {/* <div>**You are in the recipe {this.props.match.params.recipe_id} and here is still working...</div> */}
                 <div className='Recipe-title-wrapper'>
-                    <div>{this.state.recipeName} </div>
-                    <img src={this.state.recipeImg} alt='Recipe-img' />
+                    <div className='Recipe-name'>{this.state.recipeName} </div>
+                    <img className='Recipe-img' src={this.state.recipeImg} alt='Recipe-img' />
                     {recipeModifyButtons}
                     {deleteWindow}
+                    <button onClick={this.handleMPWindow}>Add to Meal Plan</button>
+                    {addMPWindow}
                 </div>
                 <div className='Recipe-info-wrapper'>
                     <ul>
@@ -121,8 +143,8 @@ class Recipe extends Component {
                 </div>
                 <div className='Recipe-ingredient-wrapper'>
                     {/* ** waiting for ingredient to be implemented. */}
-                    {this.state.recipeIngredients.map((e,i)=>{
-                        return(
+                    {this.state.recipeIngredients.map((e, i) => {
+                        return (
                             <div key={e.id}>
                                 <span>{e.amount}</span>
                                 <span>{e.unit}</span>
