@@ -17,7 +17,7 @@ class ShoppingList extends Component {
 
    // The user should be able to check boxes in the shopping list so they can add items
    // that they actually shopped for
-   // To-do before bed 2/14: Alter the local list by clicking them. Once they are done shopping, add the selected items to the fridge!
+   // To-do before bed 2/16: Alter the local list by clicking them. Once they are done shopping, add the selected items to the fridge!
    transferToFridge = (list) => {
       console.log('should work');
       // this.props.listToFridge(this.props.user_id, list);
