@@ -13,8 +13,6 @@ class RecipeEditor extends Component {
 
             recipeMealType: '',
             mealTypeWindow: false,
-            // recipeDishType: '',
-            // dishTypeWindow: false,
 
             // ---------second column
             recipePrepTimeHour: '',
@@ -36,29 +34,33 @@ class RecipeEditor extends Component {
     componentDidMount() {
         // edit: need to bring data from database.
         if (this.props.match.params.recipe_id) {
-            axios.get(`/api/recipe/${this.props.match.params.recipe_id}`).then(response => {
+            let sourceId = this.props.match.params.recipe_id;
+            axios.get(`/api/recipe/id/${sourceId}`).then(response => {
                 // if the user is the author
-                if (response.data[0].user_id === this.props.user_id) {
+                if (response.data.recipe_author_id === this.props.user_id) {
                     this.setState({
-                        recipeName: response.data[0].name,
-                        recipeImg: response.data[0].image,
-                        recipeAuthorId: response.data[0].user_id,
+                        recipeId: response.data.recipe_id,
+                        recipeImg: response.data.recipe_img,
+                        recipeName: response.data.recipe_name,
+                        recipeAuthor: response.data.recipe_author,
+                        recipeAuthorId: response.data.recipe_author_id,
 
-                        recipeMealType: response.data[0].meal_type,
-                        // recipeDishType: response.data[0].dish_type,
+                        recipeServings: response.data.recipe_servings,
+                        recipeCuisine: response.data.recipe_cuisine,
+                        recipeMealType: response.data.recipe_meal_type,
 
-                        recipePrepTimeHour: Math.floor(response.data[0].prep_time / 60),
-                        recipePrepTimeMin: response.data[0].prep_time % 60,
-                        recipeCookTimeHour: Math.floor(response.data[0].cook_time / 60),
-                        recipeCookTimeMin: response.data[0].cook_time % 60,
+                        recipePrepTimeHour: Math.floor(response.data.recipe_prep_time / 60),
+                        recipePrepTimeMin: response.data.recipe_prep_time % 60,
+                        recipeCookTimeHour: Math.floor(response.data.recipe_cook_time / 60),
+                        recipeCookTimeMin: response.data.recipe_cook_time % 60,
 
-                        recipeDes: response.data[0].description,
+                        recipeDes: response.data.recipe_description,
 
-                        recipeNutrition: response.data[0].nutritional_info,
+                        recipeNutrition: response.data.recipe_nutrition,
 
-                        recipeIngredients: response.data.map(e => e.ingredient_name),
+                        recipeIngredients: response.data.recipe_ingredients,
 
-                        recipeDirection: response.data[0].directions,
+                        recipeDirection: response.data.recipe_directions,
                     })
                 } else {
                     // user using illegal way to enter. redirect to recipe page.
@@ -87,9 +89,9 @@ class RecipeEditor extends Component {
 
     handleSubmitClick = () => {
         // add a new recipe
-        if (this.state.recipeAuthorId){
+        if (this.state.recipeAuthorId) {
 
-        }else{
+        } else {
             // edit and save the recipe.
 
         }
@@ -170,18 +172,18 @@ class RecipeEditor extends Component {
                         <span>Prepare Time:</span>
                         <input type='number' min='0' step='1'
                             name='recipePrepTimeHour'
-                            onChange={handleUserInput} /> hour
+                            onChange={this.handleUserInput} /> hour
                         <input type='number' min='0' step='1'
                             name='recipePrepTimeMin'
-                            onChange={handleUserInput} max='59' />min
+                            onChange={this.handleUserInput} max='59' />min
 
                         <span>Cook Time: </span>
                         <input type='number' min='0' step='1'
                             name='recipeCookTimeHour'
-                            onChange={handleUserInput} /> hour
+                            onChange={this.handleUserInput} /> hour
                         <input type='number' min='0' step='1'
                             name='recipeCookTimeMin'
-                            onChange={handleUserInput} max='59' />min
+                            onChange={this.handleUserInput} max='59' />min
                     </div>
                     <div>
                         <textarea name='recipeDes' onChange={this.handleUserInput}>
