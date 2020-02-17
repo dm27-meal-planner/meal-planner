@@ -27,14 +27,15 @@ export function addItem(user_id, list) {
 export function editItem(user_id, item_id, item) {
    return {
       type: EDIT_ITEM,
-      payload: axios.put(`api/fridge/${user_id}?item=${item_id}`, item)
+      payload: axios.put(`api/fridgeitem/${user_id}`, {data: {item_id, item}})
    }
 }
 
 export function deleteItem(user_id, item_id) {
    return {
       type: DELETE_ITEM,
-      payload: axios.delete(`api/fridge/${user_id}?item=${item_id}`)
+      // the data type to pass data in an express delete/get request must be an object (array)
+      payload: axios.delete(`api/fridgeitem/${user_id}`, {data: {item_id}})
    }
 }
 
@@ -66,7 +67,7 @@ export default function reducer(state = initialState, action) {
       case `${DELETE_ITEM}_FULFILLED`:
          return {
             ...state,
-            ingredients: payload.data
+            // ingredients: payload.data
          }
       case `${EMPTY_FRIDGE}_FULFILLED`:
          return {
