@@ -17,10 +17,10 @@ export function getUserFridge(user_id) {
    }
 }
 
-export function addItem(user_id, item) {
+export function addItem(user_id, list) {
    return {
       type: ADD_ITEM,
-      payload: axios.post(`api/fridge/${user_id}`, {...item})
+      payload: axios.post(`api/fridge/${user_id}`, list)
    }
 }
 

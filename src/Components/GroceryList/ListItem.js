@@ -18,8 +18,6 @@ class ListItem extends React.Component{
 
     render(){
         const {name, image, amount, unit, price, i, saveChanges, removeItem} = this.props
-        console.log(this.props)
-        console.log(this.state)
         return(
         <li  >
             <div style={{display: 'flex'}}>

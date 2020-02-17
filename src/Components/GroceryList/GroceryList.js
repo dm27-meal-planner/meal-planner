@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import axios from 'axios'
 import SearchItem from './SearchItem';
 import ListItem from './ListItem';
+import ShoppingList from './ShoppingList';
+import {addItem} from '../../redux/reducers/fridgeReducer';
+import {getUserGroceryList, addItemToList, deleteGroceryItem} from '../../redux/reducers/grocerylistReducer';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 
@@ -12,8 +15,11 @@ class GroceryList extends Component{
             searchInput: '',
             searchResults: [],
             list: [],
-            editMode: false
+            editMode: false,
         }
+    }
+    componentDidMount = async () => {
+        await this.props.getUserGroceryList(this.props.user_id);
     }
     getSearchResults = () => {
          axios.post('/api/ingredient/search', {searchPhrase: this.state.searchInput})
@@ -27,13 +33,10 @@ class GroceryList extends Component{
 
     addToList = async(ingredient) => {
         let price = await axios.post('/api/ingredient/price', {id: ingredient.id, amount: ingredient.amount, unit:ingredient.unit})
-                            .then(res => res.data)
-
-                            
+                .then(res => res.data)   
         this.setState({
             list: [...this.state.list, {...ingredient, price: price}]
         })
-        console.log(this.state.list);
     }
     
     removeItem = (i) => {
@@ -61,8 +64,14 @@ class GroceryList extends Component{
           [e.target.name]: e.target.value 
       })
     }
-    render(){
 
+    localToDatabase = (grocerylist) => {
+        this.props.addItemToList(this.props.user_id, grocerylist);
+        this.setState({list: []});
+        this.props.getUserGroceryList(this.props.user_id);
+    }
+
+    render(){
         if(!this.props.user_id){
             return <Redirect to='/' />
         }
@@ -88,11 +97,19 @@ class GroceryList extends Component{
                 <ul>
                     {list}
                 </ul>
+                {list[0] ? 
                 <div className="addToListDatabase">
-                    {/* After adding items to the local list, add them to the list_item list,
-                    tying the items in that local list to the user_id */}
-                    {/* <button onClick={} */}
+                    {/* This actually is not adding stuff to the database. Find out why. */}
+                    <button onClick={() => this.localToDatabase(this.state.list)}>Add items to list</button>
                 </div>
+                : null}
+                <h1>My Shopping List</h1>
+                {/* So shopping list and items to add to the list are separate. */}
+                {this.props.groceryList[0] ? 
+                <div id="groceryList">
+                    <ShoppingList groceryList={this.props.groceryList} />
+                </div>
+                : <>does not have stuff</>}
             </div>
         )
     } 
@@ -100,8 +117,11 @@ class GroceryList extends Component{
 
 const mapStateToProps = (reduxState) => {
     return {
-        user_id: reduxState.user.user_id       
+        user_id: reduxState.user.user_id,
+        groceryList: reduxState.grocerylist.ingredients  
     }
 }
 
-export default connect(mapStateToProps)(GroceryList)
+export default connect(mapStateToProps, 
+{getUserGroceryList, addItemToList, addItem, deleteGroceryItem})
+(GroceryList)
