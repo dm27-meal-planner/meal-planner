@@ -222,7 +222,7 @@ const getRecipeById = async (req, res) => {
 
       const mealRecipeIngredients = await db.recipes.get_recipe_ingredients_by_id(id);
 
-      result.ingredients = mealRecipeIngredients;
+      result.recipe_ingredients = mealRecipeIngredients;
 
       res.status(200).json(result);
    }
