@@ -24,9 +24,10 @@ const editItem = async (req, res) => {
 
 const deleteItem = async (req, res) => {
    const {user_id} = req.params;
-   const {item} = req.query;
    const db = req.app.get('db');
-   res.status(200).json('OK');
+   // req.body is now an object with one property that we specified in reducer: item_id
+   const fridge = await db.fridge.delete_fridge_item(user_id, req.body.item_id)
+   res.status(200).json(fridge);
 }
 
 const emptyFridge = async (req, res) => {

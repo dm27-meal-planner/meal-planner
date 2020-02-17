@@ -8,7 +8,10 @@ const initialState = {
     categorySearching: false, 
     loading: true,
     categoryResults: [],
-    autoCompleteResults: []
+    autoCompleteResults: [],
+    mealSearchResults: [],
+    altMealNutrition:[]
+
 }
 
 const GET_MEALS = 'GET_MEALS'
@@ -20,6 +23,8 @@ const GET_NUTRITION = 'GET_NUTRITION'
 const SEARCH_RECIPES = 'SEARCH_RECIPES'
 const SEARCH_BY_CATEGORY = 'SEARCH_BY_CATEGORY'
 const AUTO_COMPLETE = 'AUTO_COMPLETE'
+const MEAL_SEARCH = 'MEAL_SEARCH'
+const MEAL_NUTRITION = 'MEAL_NUTRTITION'
 
 
 export function getMealsForUser(userid){
@@ -92,6 +97,22 @@ export function autoCompleteSearch(searchTerm){
       type: AUTO_COMPLETE,
       payload: axios.get(`/api/mealplan/search/autocomplete?searchTerm=${searchTerm}`)
                   .then(res => res.data)
+  }
+}
+
+export function mealSearch(searchTerm){
+  return{
+    type: MEAL_SEARCH,
+    payload: axios.get(`/api/mealplan/search/meal?searchTerm=${searchTerm}`)
+              .then(res => res.data)
+  }
+}
+
+export function mealNutrition(id){
+  return{
+    type: MEAL_NUTRITION,
+    payload: axios.get(`/api/mealplan/meal/nutrition?id=${id}`)
+    .then(res => res.data)
   }
 }
 
@@ -234,9 +255,40 @@ export default function reducer(state = initialState, action){
         }
         case `${AUTO_COMPLETE}_REJECTED`: {
           return {
-            ...state,
-            autoCompleteResults: []
+            ...state
+          }
+        }
 
+        case `${MEAL_SEARCH}_PENDING`: {
+          return {
+            ...state
+          }
+        }
+        case `${MEAL_SEARCH}_FULFILLED`: {
+          return {
+            ...state,
+            mealSearchResults: payload.menuItems
+          }
+        }
+        case `${MEAL_SEARCH}_REJECTED`: {
+          return {
+            ...state
+          }
+        }
+        case `${MEAL_NUTRITION}_PENDING`: {
+          return {
+            ...state
+          }
+        }
+        case `${MEAL_NUTRITION}_FULFILLED`: {
+          return {
+            ...state,
+            altMealNutrition: payload.nutrients
+          }
+        }
+        case `${MEAL_NUTRITION}_REJECTED`: {
+          return {
+            ...state
           }
         }
 

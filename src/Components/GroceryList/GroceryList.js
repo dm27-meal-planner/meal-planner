@@ -21,6 +21,12 @@ class GroceryList extends Component{
     componentDidMount = async () => {
         await this.props.getUserGroceryList(this.props.user_id);
     }
+
+    componentDidUpdate = async (prevProps) => {
+        if (this.props.groceryList !== prevProps.groceryList) {
+            await this.props.getUserGroceryList(this.props.user_id);
+        }
+    }
     getSearchResults = () => {
          axios.post('/api/ingredient/search', {searchPhrase: this.state.searchInput})
                 .then(res => {
@@ -68,7 +74,6 @@ class GroceryList extends Component{
     localToDatabase = (grocerylist) => {
         this.props.addItemToList(this.props.user_id, grocerylist);
         this.setState({list: []});
-        this.props.getUserGroceryList(this.props.user_id);
     }
 
     render(){
@@ -99,7 +104,6 @@ class GroceryList extends Component{
                 </ul>
                 {list[0] ? 
                 <div className="addToListDatabase">
-                    {/* This actually is not adding stuff to the database. Find out why. */}
                     <button onClick={() => this.localToDatabase(this.state.list)}>Add items to list</button>
                 </div>
                 : null}
