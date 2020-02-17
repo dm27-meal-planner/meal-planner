@@ -229,7 +229,22 @@ const getRecipeById = async (req, res) => {
 }
 
 const addRecipe = async (req, res) => {
-   // const {} = req.body;
+   const {
+      recipeName,
+      recipeImg,
+      recipePrepTime,
+      recipeCookTime,
+      recipeDirection,
+      recipeMealType,
+      recipeDes,
+      recipeNutrition
+
+   } = req.body;
+   if (!req.session.user) {
+      res.status(401).json("Please login!");
+      return null;
+   }
+
    res.status(200).json('OK');
 }
 
