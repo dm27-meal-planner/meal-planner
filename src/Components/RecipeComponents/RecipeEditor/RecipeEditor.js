@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect, Link } from 'react-router-dom'
+// import { Redirect, Link } from 'react-router-dom'
 import axios from 'axios';
+import MealTypeCard from '../RecipeCards/MealTypeCard/MealTypeCard';
 class RecipeEditor extends Component {
     constructor() {
         super();
@@ -64,6 +65,7 @@ class RecipeEditor extends Component {
                     })
                 } else {
                     // user using illegal way to enter. redirect to recipe page.
+                    // this.props.history.push('/home');
                 }
             })
         }
@@ -119,7 +121,12 @@ class RecipeEditor extends Component {
     render() {
 
         let mealTypeWindow = this.state.mealTypeWindow ? (<div>
-            <span>Select One</span>
+            <MealTypeCard 
+                recipeMealType={this.state.recipeMealType}
+                handleMealTypeChange={this.handleMealTypeChange}
+                handleMealTypeWindow={this.handleMealTypeWindow}
+            />
+            {/* <span>Select One</span>
             <ul>
                 <li><input type='radio' name='meal-type' value='breakfast'
                     checked={this.state.recipeMealType === 'breakfast'}
@@ -131,7 +138,7 @@ class RecipeEditor extends Component {
                     checked={this.state.recipeMealType === 'dinner'}
                     onChange={this.handleMealTypeChange} /> Dinner </li>
             </ul>
-            <button onClick={this.handleMealTypeWindow}>Done </button>
+            <button onClick={this.handleMealTypeWindow}>Done </button> */}
         </div>) : null
 
         // let dishTypeWindow = this.state.dishTypeWindow ? (<div>
@@ -186,6 +193,7 @@ class RecipeEditor extends Component {
                             onChange={this.handleUserInput} max='59' />min
                     </div>
                     <div>
+                        <span>Descriptions: </span>
                         <textarea name='recipeDes' onChange={this.handleUserInput}>
                             {this.state.recipeDes}
                         </textarea>
