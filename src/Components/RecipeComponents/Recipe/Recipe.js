@@ -101,10 +101,10 @@ class Recipe extends Component {
 
         return (
             <div className='Recipe-wrapper'>
-                <div>**You are in the recipe {this.props.match.params.recipe_id} and here is still working...</div>
+                {/* <div>**You are in the recipe {this.props.match.params.recipe_id} and here is still working...</div> */}
                 <div className='Recipe-title-wrapper'>
-                    <div>{this.state.recipeName} </div>
-                    <img src={this.state.recipeImg} alt='Recipe-img' />
+                    <div className='Recipe-name'>{this.state.recipeName} </div>
+                    <img className='Recipe-img' src={this.state.recipeImg} alt='Recipe-img' />
                     {recipeModifyButtons}
                     {deleteWindow}
                 </div>
