@@ -5,14 +5,21 @@ class Recipe extends Component {
     constructor() {
         super();
         this.state = {
-            recipeName: '',
+            recipeId: '',
             recipeImg: '',
+            recipeName: '',
+            recipeSource:'',
+            recipeAuthor: '',
             recipeAuthorId: '',
+            recipeReview: 0,
             deleteWindowFlag: false,
 
-            recipeCookTime: '',
+            recipeServings: 0,
+            recipeCuisine: '',
             recipeMealType: '',
-            recipeDishType: '',
+            recipeTime: 0,
+            recipePrepTime: 0,
+            recipeCookTime: 0,
             recipeDes: '',
 
             recipeNutrition: {},
@@ -24,28 +31,39 @@ class Recipe extends Component {
     }
 
     componentDidMount() {
-        // axios.get(`/api/recipe/${this.props.match.params.recipe_id}`).then(response => {
-        //     this.setState({
-        //         recipeName: response.data[0].name,
-        //         recipeImg: response.data[0].image,
-        //         recipeAuthorId: response.data[0].user_id,
+        let sourceId = this.props.match.params.recipe_id;
+        axios.get(`/api/recipe/id/${sourceId}`).then(response => {
+            this.setState({
 
-        //         recipeCookTime: response.data[0].cook_time,
-        //         recipeMealType: response.data[0].meal_type,
-        //         recipeDishType: response.data[0].dish_type,
-        //         recipeDes: response.data[0].description,
+                recipeId: response.data.recipe_id,
+                recipeImg: response.data.recipe_img,
+                recipeName: response.data.recipe_name,
+                recipeSource:response.data.recipe_source,
+                recipeAuthor: response.data.recipe_author,
+                recipeAuthorId: response.data.recipe_author_id,
+                recipeReview: response.data.recipe_review,
+    
+                recipeServings: response.data.recipe_servings,
+                recipeCuisine: response.data.recipe_cuisine,
+                recipeMealType: response.data.recipe_meal_type,
+                recipeTime: response.data.recipe_time,
+                recipePrepTime: response.data.recipe_prep_time,
+                recipeCookTime: response.data.recipe_cook_time,
+                recipeDes: response.data.recipe_description,
+    
+                recipeNutrition: response.data.recipe_nutrition,
+    
+                recipeIngredients: response.data.recipe_ingredients,
+    
+                recipeDirection: response.data.recipe_directions,
 
-        //         recipeNutrition: response.data[0].nutritional_info,
-
-        //         recipeIngredients: response.data.map(e => e.ingredient_name),
-
-        //         recipeDirection: response.data[0].directions,
-        //     })
-        // })
+            })
+        })
     }
 
     handleEdit = () => {
         // **go to edit page.
+        alert('Working on edit btn...');
     }
 
     handleDeleteWindow = () => {
@@ -56,7 +74,7 @@ class Recipe extends Component {
 
     handleDelete = () => {
         // **delete the recipe.
-
+        alert('Working on delete btn...');
         // **go back to search recipe page.
     }
 
@@ -103,6 +121,15 @@ class Recipe extends Component {
                 </div>
                 <div className='Recipe-ingredient-wrapper'>
                     {/* ** waiting for ingredient to be implemented. */}
+                    {this.state.recipeIngredients.map((e,i)=>{
+                        return(
+                            <div key={e.id}>
+                                <span>{e.amount}</span>
+                                <span>{e.unit}</span>
+                                <span>{e.name}</span>
+                            </div>
+                        )
+                    })}
                 </div>
                 <div className='Recipe-direction-wrapper'>
                     <div>{this.state.recipeDirection}</div>
