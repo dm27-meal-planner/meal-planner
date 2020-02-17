@@ -8,7 +8,6 @@ const getUserGroceryList = async (req, res) => {
 const addItemToList = async (req, res) => {
    const {user_id} = req.params;
    const db = req.app.get('db');
-   console.log(req.body);
    const userGroceryList = await req.body.map(element => {
       // price is given in cents 
       element.price = (element.price / 100).toFixed(2);
