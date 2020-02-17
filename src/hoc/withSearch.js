@@ -65,7 +65,7 @@ function withSearch(BaseComponent, searchBtnCb) {
         }
 
         handlePageChange = (iter) => {
-            if (this.state.page + iter != 0) {
+            if (this.state.page + iter !== 0) {
                 // switch page
                 this.setState({
                     page: this.state.page + iter

@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 
 class MealTypeCard extends Component {
-    constructor() {
-        super();
-    }
+
     render() {
         return (
             <div>
