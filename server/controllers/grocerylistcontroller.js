@@ -11,7 +11,7 @@ const addItemToList = async (req, res) => {
    const userGroceryList = await req.body.map(element => {
       // price is given in cents 
       element.price = (element.price / 100).toFixed(2);
-      // image link
+      // image link; user can specify image dimensions in x by y right before image
       element.image = `https://www.spoonacular.com/cdn/ingredients_100x100/${element.image}`
       return db.list_items.add_item(element.amount, element.unit, user_id, element.id, element.price, element.name, element.image)
    })
@@ -38,7 +38,7 @@ const listToFridge = async (req, res) => {
       db.grocerylist.transfer_to_fridge(element.quantity, element.unit, user_id, element.name, element.imageurl, element.spoon_id, element.list_item_id);
    })
    const remainList = await db.grocerylist.get_grocerylist(user_id);
-   res.sendStatus(200).json(remainList);
+   res.status(200).json(remainList);
 }
 
 module.exports = {

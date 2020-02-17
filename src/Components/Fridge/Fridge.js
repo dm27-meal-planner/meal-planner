@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
-import {getUserFridge, emptyFridge} from '../../redux/reducers/fridgeReducer';
+import { Link } from 'react-router-dom';
+import FridgeItem from './FridgeItem';
+import {getUserFridge, emptyFridge, deleteItem} from '../../redux/reducers/fridgeReducer';
 import {getUser} from '../../redux/reducers/userReducer';
 
 class Fridge extends Component{
@@ -12,6 +14,7 @@ class Fridge extends Component{
 
         }
         this.updateFridge=this.updateFridge.bind(this);
+        this.deleteItem=this.deleteItem.bind(this);
     }
 
     componentDidMount() {
@@ -27,12 +30,19 @@ class Fridge extends Component{
         this.props.getUserFridge(this.props.user_id);
     }
 
+    deleteItem = async (id) => {
+        await this.props.deleteItem(this.props.user_id, id);
+        this.updateFridge();
+    }
+
+    editItem = async (id, element) => {
+        
+    }
+
     render(){
         if (this.props.user_id === null) {
             return <Redirect to='/' />
         } else {
-            // check if user has a fridge or not; if they somehow do not,
-            // create one before returning anything
             return (
                 <div>
                     <h1>{this.props.username}'s Fridge</h1>
@@ -41,11 +51,10 @@ class Fridge extends Component{
                     {this.props.fridge.map((element, index) => {
                         return (
                             // If there's a spoon_id, perform an API search.
-                            <div key={index}>
-                                {element.ingredient_name}
-                                {element.quantity}
-                                {element.date_added}
-                                {element.unit}
+                            <div key={index} id='fridgeItem'>
+                                <FridgeItem element={element} 
+                                updateFridge={this.updateFridge}
+                                deleteItem={this.deleteItem}/>
                             </div>
                         )
                     })}<button onClick={() => {
@@ -54,6 +63,7 @@ class Fridge extends Component{
                     }}>Empty Fridge</button>
                     </div>
                     : <>Nothing here... Add items via Grocery List or manually!</>}
+                    <Link to='/grocerylist'>Add More Ingredients</Link>
                 </div>
             )
         }
@@ -68,4 +78,4 @@ const mapStateToProps = (reduxState) => {
     }
 }
 
-export default connect(mapStateToProps, {getUserFridge, getUser, emptyFridge})(Fridge) 
+export default connect(mapStateToProps, {getUserFridge, getUser, emptyFridge, deleteItem})(Fridge) 
