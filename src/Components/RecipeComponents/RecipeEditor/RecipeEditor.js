@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 // import { Redirect, Link } from 'react-router-dom'
 import axios from 'axios';
 import MealTypeCard from '../RecipeCards/MealTypeCard/MealTypeCard';
+import RecipeIngredientCard from '../RecipeCards/RecipeIngredientCard/RecipeIngredientCard';
 class RecipeEditor extends Component {
     constructor() {
         super();
@@ -207,6 +208,7 @@ class RecipeEditor extends Component {
                 <div className='third-column-wrapper'>
                     <div>
                         {/* **Ingredient list, waiting for design the common use one. */}
+                        <RecipeIngredientCard />
                     </div>
                     <div>
                         <span>Directions:</span>

@@ -5,9 +5,7 @@ import {getMostLikedRecipe, getRecentRecipes, getUserRecipe} from '../../../redu
 import TopFiveList from '../RecipeCards/TopFiveList/TopFiveList';
 
 class RecipeList extends Component{
-    constructor(){
-        super();
-    }
+
     componentDidMount(){
         this.props.getMostLikedRecipe();
         this.props.getRecentRecipes();
