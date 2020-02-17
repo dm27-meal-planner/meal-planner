@@ -142,7 +142,7 @@ const MealPlanCurrentWk = (props) => {
     const SaveChanges = () => {
         if(addedMeals.length){
             addedMeals.map(ele => {
-                props.addMeal(props.user_id, {date: ele.date, resourceid: ele.resourceId, title: ele.title, image: ele.image})
+                props.addMeal(props.user_id, {recipe_id: ele.apiId, date: ele.date, resourceid: ele.resourceId, title: ele.title, image: ele.image, fromApi: `${ele.source === 'api' ? true : false }` })
             })
             addMoreMeals([])
 
@@ -209,8 +209,8 @@ const MealPlanCurrentWk = (props) => {
 
                 console.log(allEvents)
 
-                addMoreMeals([...addedMeals, {id: +allEvents[allEvents.length - 1]._instance.instanceId, title: selectedRecipe.title, date: moment(date).format(), resourceId: resource.id, image: selectedRecipe.extendedProps.image}])
-                modifyEvent([...modifiedEvents, {id: +allEvents[allEvents.length - 1]._instance.instanceId, title: selectedRecipe.title, date: moment(date).format(), resourceId: resource.id, image: selectedRecipe.extendedProps.image}])
+                addMoreMeals([...addedMeals, {id: +allEvents[allEvents.length - 1]._instance.instanceId, title: selectedRecipe.title, date: moment(date).format(), resourceId: resource.id, image: selectedRecipe.extendedProps.image, source: selectedRecipe.extendedProps.source, apiId: selectedRecipe.id}])
+                modifyEvent([...modifiedEvents, {id: +allEvents[allEvents.length - 1]._instance.instanceId, title: selectedRecipe.title, date: moment(date).format(), resourceId: resource.id, image: selectedRecipe.extendedProps.image, source: selectedRecipe.extendedProps.source, apiId: selectedRecipe.id}])
 
 
             }}
@@ -288,12 +288,12 @@ const MealPlanCurrentWk = (props) => {
                     </div>
 
                 <ul id='search-result-container' >
-                    { results.length ?  results.map((ele, i) => {
-                        return <li key={i} onClick={() => selectRecipe(_.cloneDeep({id: ele.id, title: ele.title, extendedProps:{ image: `https://spoonacular.com/recipeImages/${ele.image}`}}))} className='search-result-block' >
+                    { props.seaching || props.categorySearching ? <img src={searching} alt='seraching' /> : results.length ?  results.map((ele, i) => {
+                        return <li key={i} onClick={() => selectRecipe(_.cloneDeep({id: ele.id, title: ele.title, extendedProps:{ image: `https://spoonacular.com/recipeImages/${ele.image}`, source: ele.source}}))} className='search-result-block' >
                             <img src={`https://spoonacular.com/recipeImages/${ele.image}`} alt='recipe'  width='70px'/>
                             <p>{ele.title}</p>
                         </li>
-                    }) :null}
+                    }): null}
                 </ul>
             </div>
             <CategroyCascader selectRecipe={selectRecipe} categorySelected={categorySelected} />
@@ -314,6 +314,7 @@ const mapStateToProps = (reduxState) => {
         meals: reduxState.mealplan.meals,
         searching: reduxState.mealplan.searching,
         searchResults: reduxState.mealplan.searchResults,
+        categorySearching: reduxState.mealplan.categorySearching,
         categoryResults: reduxState.mealplan.categoryResults,
         autoCompleteResults: reduxState.mealplan.autoCompleteResults
     }
