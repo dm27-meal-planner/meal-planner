@@ -107,7 +107,7 @@ class GroceryList extends Component{
                 {/* So shopping list and items to add to the list are separate. */}
                 {this.props.groceryList[0] ? 
                 <div id="groceryList">
-                    <ShoppingList groceryList={this.props.groceryList} />
+                    <ShoppingList user_id={this.props.user_id} groceryList={this.props.groceryList} />
                 </div>
                 : <>does not have stuff</>}
             </div>
