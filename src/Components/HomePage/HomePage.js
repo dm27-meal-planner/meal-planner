@@ -3,16 +3,16 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline'
-import moment from 'moment'
 import ReactDOM from 'react-dom'
 import { Popover } from 'antd'
-import 'antd/es/popover/style/css'
 import NextMeal from './NextMeal';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
+import { Redirect, withRouter } from 'react-router';
 import Clock from './Clock';
 import {getMealsForUser, addMeal} from '../../redux/reducers/mealplanReducer'
 import loadingAnimation from '../../animations/loading.gif'
+import { Link, HashRouter } from 'react-router-dom';
+import 'antd/es/popover/style/css'
 
 import './stylesheet/HomePage.scss'
 
@@ -32,7 +32,7 @@ const HomePage = (props) => {
     const parseMeals = (propsMeals) => {
         let meals = []
         propsMeals.map(ele => {
-            meals.push({title: ele.title, date: ele.date, resourceId:ele.resourceid, extendedProps: {image: ele.image}})
+            meals.push({title: ele.title, date: ele.date, resourceId:ele.resourceid, extendedProps: {image: ele.image, recipe_id: ele.recipe_id}})
         })
         changeEvents(meals)
     }
@@ -47,15 +47,17 @@ const HomePage = (props) => {
 
     const newEventRender = ({event, el}) =>{
         let newResource = (
-            <Popover title={`${event.title} for ${event._def.resourceIds[0]}`} content={<div><span>{event.title}</span><button>Go To Recipe</button></div>} trigger='click' >
-                <div style={{ position:'relative', backgroundImage: `url(${event.extendedProps.image || 'https://imbindonesia.com/images/placeholder/camera.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'90%', height:'100px', margin: '5px'}} >
-                    <div className='eventTitle'>
-                        <div className='toRecipe' style={{whiteSpace: 'pre-wrap'}} >{event.title}</div>
+            <HashRouter>
+                <Popover title={`${event.title} for ${event._def.resourceIds[0]}`} content={<div><span>{event.title}</span><Link to={`/recipe/${event.extendedProps.recipe_id}`} ><button>Go To Recipe</button></Link></div>} trigger='click' >
+                    <div style={{ position:'relative', backgroundImage: `url(${event.extendedProps.image || 'https://imbindonesia.com/images/placeholder/camera.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100%', height:'120px', margin: '0px', padding:'0px', borderRadius: '10px'}} >
+                        <div className='eventTitle' style={{borderBottomRightRadius: '10px', borderBottomLeftRadius: '10px'}}>
+                            <div className='toRecipe' style={{whiteSpace: 'pre-wrap', padding: '1px'}} >{event.title}</div>
+                        </div>
                     </div>
-                </div>
-            </Popover>
+                </Popover>
+            </HashRouter>
         )
-         ReactDOM.render(newResource, el)
+         ReactDOM.render(  newResource , el)
     }
     
 

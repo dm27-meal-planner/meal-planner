@@ -10,6 +10,12 @@
     justify-content: space-between;
 }
 
+.fc-event{
+    padding: 0px;
+    border: none;
+    margin: 5px;
+}
+
 
 .calendar-container {
 
@@ -66,14 +72,14 @@
 
 
 .eventTitle{
-    background-color: green;
+    background-color: rgba(0, 128, 0, 0.685);
     font-size: 15px;
     display: flex;
     justify-content: space-around;
     position: absolute;
     bottom: 0px;
     width: 100%;
-    color: rgba(255, 255, 255, 0.952);
+    color: rgb(255, 255, 255);
     font-weight: normal;
     opacity: .9;
 }

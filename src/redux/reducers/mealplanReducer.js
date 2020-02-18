@@ -10,7 +10,8 @@ const initialState = {
     categoryResults: [],
     autoCompleteResults: [],
     mealSearchResults: [],
-    altMealNutrition:[]
+    altMealNutrition:[],
+    mealSearching: false
 
 }
 
@@ -76,18 +77,18 @@ export function getNutrition(){
   }
 }
 
-export function searchFunction(searchTerm){
+export function searchFunction(searchTerm, pageNumber){
   return {
     type: SEARCH_RECIPES,
-    payload: axios.get(`/api/mealplan/search?searchTerm=${searchTerm}`)
+    payload: axios.get(`/api/mealplan/search?searchTerm=${searchTerm}&pageNumber=${pageNumber}`)
                     .then(res => res.data)
   }
 }
 
-export function searchByCategory(category){
+export function searchByCategory(category, pageNumber){
   return {
     type: SEARCH_BY_CATEGORY,
-    payload: axios.get(`/api/search/category?cuisine=${category}`)
+    payload: axios.get(`/api/search/category?cuisine=${category}&pageNumber=${pageNumber}`)
           .then(res => res.data)
   }
 }
@@ -178,10 +179,7 @@ export default function reducer(state = initialState, action){
           }
         }
         case `${CHANGE_IS_FOLLOWED}_FULFILLED`: {
-          console.log(state.meals)
           let copy = state.meals.slice()
-          console.log(copy.splice(copy.findIndex(ele => ele.mealplan_id === payload[0].mealplan_id), 1, payload[0]))
-          console.log(copy)
 
           return {
             ...state,
@@ -261,18 +259,21 @@ export default function reducer(state = initialState, action){
 
         case `${MEAL_SEARCH}_PENDING`: {
           return {
-            ...state
+            ...state,
+            mealSearching: true
           }
         }
         case `${MEAL_SEARCH}_FULFILLED`: {
           return {
             ...state,
-            mealSearchResults: payload.menuItems
+            mealSearchResults: payload.menuItems,
+            mealSearching: false
           }
         }
         case `${MEAL_SEARCH}_REJECTED`: {
           return {
-            ...state
+            ...state,
+            mealSearching: false
           }
         }
         case `${MEAL_NUTRITION}_PENDING`: {
