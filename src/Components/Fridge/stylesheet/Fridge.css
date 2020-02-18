@@ -43,6 +43,11 @@ table thead th, table tbody th {
   margin: 10px;
 }
 
+.ant-btn-primary {
+  background-color: #ff7676 !important;
+  border: none !important;
+}
+
 table {
   border: 1px solid black;
 }
