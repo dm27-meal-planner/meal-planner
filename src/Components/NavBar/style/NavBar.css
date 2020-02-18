@@ -1,0 +1,22 @@
+.navbar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding-top: 10px;
+}
+
+.navbar .site-title {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.navbar p {
+  color: green;
+}
+/*# sourceMappingURL=NavBar.css.map */

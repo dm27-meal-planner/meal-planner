@@ -74,8 +74,8 @@ app.get('/api/recipe/search', getRecipeByQuery);
 //fridge endpoints
 app.get('/api/fridge/:user_id', getUserFridge);
 app.post('/api/fridge/:user_id', addItem);
-// app.put(`/api/fridge/:user_id?item=${item_id}`, editItem);
-// app.delete(`/api/fridge/:user_id?item=${item_id}`, deleteItem);
+app.put(`/api/fridgeitem/:user_id`, editItem);
+app.delete(`/api/fridgeitem/:user_id`, deleteItem);
 app.delete('/api/fridge/:user_id', emptyFridge);
 
 //grocerylist endpoints

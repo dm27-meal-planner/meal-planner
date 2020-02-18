@@ -5,13 +5,6 @@ import withSearch from '../../../hoc/withSearch';
 import RecipeDetailCard from '../RecipeCards/RecipeDetailCard/RecipeDetailCard';
 
 class RecipeSearchResults extends Component {
-    constructor() {
-        super();
-    }
-
-    componentDidMount() {
-
-    }
 
     render() {
         let searchResultList = this.props.searchResults.map((r, i) => {

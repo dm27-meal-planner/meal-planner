@@ -8,6 +8,7 @@
 .home-page {
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
 }
 
 .fc-event{
@@ -16,6 +17,10 @@
     margin: 5px;
 }
 
+.calendarAndNextMeal {
+    display: flex;
+    flex-direction: row;
+}
 
 .calendar-container {
 

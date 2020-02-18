@@ -3,9 +3,7 @@ import RecipeOutlineCard from './RecipeOutlineCard/RecipeOutlineCard';
 import {Link} from 'react-router-dom'
 
 class TopFiveList extends Component {
-    constructor() {
-        super();
-    }
+
     render() {
         const recipeList = this.props.recipeList.map(r => {
             return (

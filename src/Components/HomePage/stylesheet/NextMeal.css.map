@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,UAAU,CAAA;EACN,UAAU,EAAE,IAAI;EAChB,MAAM,EAAE,eAAe;EACvB,KAAK,EAAE,KAAK;EACZ,YAAY,EAAE,IAAI;EAClB,KAAK,EAAE,GAAG;CACb",
+    "sources": [
+        "NextMeal.scss"
+    ],
+    "names": [],
+    "file": "NextMeal.css"
+}

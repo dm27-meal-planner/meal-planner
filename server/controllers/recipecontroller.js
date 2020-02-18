@@ -237,7 +237,8 @@ const addRecipe = async (req, res) => {
       recipeDirection,
       recipeMealType,
       recipeDes,
-      recipeNutrition
+      recipeNutrition,
+      
 
    } = req.body;
    if (!req.session.user) {

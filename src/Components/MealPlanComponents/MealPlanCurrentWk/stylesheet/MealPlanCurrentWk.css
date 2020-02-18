@@ -1,1 +1,119 @@
-/* No CSS *//*# sourceMappingURL=MealPlanCurrentWk.css.map */
+.calendar-container-mealplan-currentweek {
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+}
+
+.calendar-container-mealplan-currentweek h2 {
+  margin-left: 50px;
+}
+
+.calendar-container-mealplan-currentweek .fc-widget-content {
+  height: 130px;
+}
+
+#new-recipe-container {
+  border: black solid 2px;
+  height: 50%;
+  width: 30%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
+}
+
+#trash {
+  -webkit-transition: .5s;
+  transition: .5s;
+  font-size: 60px;
+}
+
+#trash:hover {
+  font-size: 100px;
+}
+
+#search-result-container {
+  list-style-type: none;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  max-height: 500px;
+  padding: 20px;
+  overflow-y: scroll;
+  border: black solid 2px;
+}
+
+.search-result-block {
+  margin-top: 5px;
+  border: solid black 2px;
+  border-radius: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 5px;
+  height: 80px;
+  height: 80px;
+  -webkit-box-shadow: 2px 2px 5px grey;
+          box-shadow: 2px 2px 5px grey;
+}
+
+.search-result-block p {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 60px;
+  width: 50%;
+  font-size: 15px;
+}
+
+.search-result-block img {
+  height: 100%;
+  border-radius: 10px;
+}
+
+#search-recipe {
+  background-image: url("../../../../icons/search-solid.svg");
+  background-repeat: no-repeat;
+  background-size: 15px;
+  background-position-y: 3px;
+  background-position-x: 3px;
+  border-radius: 5px;
+  border: solid;
+  padding-left: 30px;
+}
+
+button:disabled {
+  color: #d6d6d6;
+}
+
+.auto-complete-list {
+  border: #8b8b8b solid 2px;
+  border-radius: 8px;
+  list-style-type: none;
+  margin-left: auto;
+  margin-right: auto;
+  width: 22%;
+  padding: 5px;
+  max-height: 150px;
+  overflow-y: scroll;
+}
+
+.auto-complete-list li {
+  border: #a3a3a3 solid 2px;
+  border-radius: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5px;
+  width: 90%;
+  font-size: 15px;
+  color: grey;
+}
+
+.auto-complete-list li:hover {
+  cursor: pointer;
+  -webkit-box-shadow: 2px 2px 2px;
+          box-shadow: 2px 2px 2px;
+}
+/*# sourceMappingURL=MealPlanCurrentWk.css.map */

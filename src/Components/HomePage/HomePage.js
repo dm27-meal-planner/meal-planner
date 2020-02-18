@@ -9,6 +9,7 @@ import NextMeal from './NextMeal';
 import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router';
 import Clock from './Clock';
+import Fridge from '../Fridge/Fridge';
 import {getMealsForUser, addMeal} from '../../redux/reducers/mealplanReducer'
 import loadingAnimation from '../../animations/loading.gif'
 import { Link, HashRouter } from 'react-router-dom';
@@ -63,6 +64,7 @@ const HomePage = (props) => {
 
     return (
         <div className='home-page'>
+            <div className='calendarAndNextMeal'>
             <div className='calendar-container' >
                 <h1>{props.username}'s Weekly Meal Plan</h1>
                 <Clock />
@@ -90,7 +92,10 @@ const HomePage = (props) => {
             </div>
 
             <NextMeal />
-            
+            </div>
+            <div className="itemsInFridge">
+                <Fridge />
+            </div>
         </div>
     )
 }

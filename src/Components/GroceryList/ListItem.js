@@ -31,7 +31,6 @@ class ListItem extends React.Component{
                     <input name='amount' placeholder='qty' onChange={this.handleInputChange}/>
                     <button onClick={() => saveChanges(i, this.state.amount)} >Save Changes</button>
                 </div> : null}
-
                 <button onClick={() => this.setState({editMode: !this.state.editMode})}>✏</button>
                 <button onClick={() => removeItem(i)}>❌</button>
             </div>
