@@ -67,7 +67,7 @@ export default function reducer(state = initialState, action) {
       case `${DELETE_ITEM}_FULFILLED`:
          return {
             ...state,
-            // ingredients: payload.data
+            ingredients: payload.data
          }
       case `${EMPTY_FRIDGE}_FULFILLED`:
          return {

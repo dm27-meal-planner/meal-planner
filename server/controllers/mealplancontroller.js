@@ -102,7 +102,7 @@ const getNutrition = async (req, res) => {
 const autoCompleteTerm = async(req, res) => {
    const { searchTerm } = req.query
 
-   let result = await axios.get(`https://api.spoonacular.com/recipes/autocomplete?query=${searchTerm}&apiKey=${SPOON_API_KEY}&number=10`)
+   let result = await axios.get(`https://api.spoonacular.com/recipes/autocomplete?query=${searchTerm}&apiKey=${SPOON_API_KEY}&number=20`)
          .then(res => res.data)
 
    if(!result.length){
@@ -114,8 +114,9 @@ const autoCompleteTerm = async(req, res) => {
 
 const searchForRecipe = async (req, res) => {
    const { searchTerm } = req.query
+   const { pageNumber } = req.query
 
-   let result = await axios.get(`https://api.spoonacular.com/recipes/search?query=${searchTerm}&apiKey=${SPOON_API_KEY}&number=10`)
+   let result = await axios.get(`https://api.spoonacular.com/recipes/search?query=${searchTerm}&apiKey=${SPOON_API_KEY}&number=10&offset=${pageNumber * 10}`)
                .then(res => res.data)
 
    if(!result.results.length){
@@ -131,11 +132,14 @@ const searchForRecipe = async (req, res) => {
 
 const searchByCategory = async (req, res) => {
    const { cuisine } = req.query
+   const { pageNumber } = req.query
 
+   console.log(pageNumber)
 
-
-   let results = await axios.get(`https://api.spoonacular.com/recipes/search?cuisine=${cuisine}&apiKey=${SPOON_API_KEY}&number=10`)
+   let results = await axios.get(`https://api.spoonacular.com/recipes/search?cuisine=${cuisine}&apiKey=${SPOON_API_KEY}&number=10&offset=${pageNumber * 10}`)
             .then(res => res.data)
+
+            console.log(results)
 
    res.status(200).json(results)
 }
@@ -143,7 +147,7 @@ const searchByCategory = async (req, res) => {
 const searchMeal = async(req, res) => {
    const { searchTerm } = req.query
 
-   let result = await axios.get(`https://api.spoonacular.com/food/menuItems/search?query=${searchTerm}&apiKey=${SPOON_API_KEY}&number=5`)
+   let result = await axios.get(`https://api.spoonacular.com/food/menuItems/search?query=${searchTerm}&apiKey=${SPOON_API_KEY}&number=20`)
    .then(res => res.data)
 
    res.status(200).json(result)
@@ -171,5 +175,6 @@ module.exports = {
    searchByCategory,
    autoCompleteTerm,
    searchMeal,
-   mealNutrition   
+   mealNutrition
+      
 }

@@ -15,6 +15,7 @@ const CategoryCascader = (props) => {
 
         if(categorySelected){
             props.categorySelected(categorySelected)
+            props.changeCurrentCategory(categorySelected)
         }
 
         changeCategory(null)
