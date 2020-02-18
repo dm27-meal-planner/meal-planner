@@ -70,6 +70,7 @@ app.post('/api/recipe/addrecipe', addRecipe);
 app.delete('/api/recipe/:recipe_id', deleteRecipe);
 app.put('/api/recipe/editrecipe/:recipe_id', editRecipe);
 app.get('/api/recipe/search', getRecipeByQuery);
+app.get('/api/recipe/cuisinelist', getCuisineList);
 
 //fridge endpoints
 app.get('/api/fridge/:user_id', getUserFridge);
