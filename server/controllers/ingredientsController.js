@@ -21,6 +21,15 @@ module.exports = {
             res.status(200).json(result)
     },
 
+    // search both source ingredients.
+    searchBothIngredient:  async(req, res) => {
+        const name  = `%${req.body.name}%`
+        const db = req.app.get('db');
+        const localIngredient = await db.ingredients.get_local_ingredient(name)
+        res.status(200).json(localIngredient);
+
+    },
+
     getIngredientPrice: async(req ,res) => {
         const { id, amount, unit } = req.body
         
