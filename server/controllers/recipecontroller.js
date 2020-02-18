@@ -266,6 +266,7 @@ const getCuisineList = async (req, res) => {
    res.status(200).json(cuisineList);
 }
 
+
 module.exports = {
    getMostLikedRecipe,
    getRecentRecipe,
