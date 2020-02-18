@@ -5,13 +5,8 @@ const app = express();
 const session = require('express-session');
 const massive = require('massive');
 const {getUser, registerUser, loginUser, logoutUser, registerFirebase, loginFirebase} = require('./controllers/usercontroller');
-<<<<<<< HEAD
-const {getUserMeals, addMeal, editMeal, deleteMeal, changeFollowedPlan, getNutrition, searchForRecipe, searchByCategory, autoCompleteTerm, searchMeal, mealNutrition} = require('./controllers/mealplancontroller');
-const {getMostLikedRecipe, getRecentRecipe, getUserRecipe, getRecipeById, addRecipe, deleteRecipe, editRecipe, getRecipeByQuery, getCuisineList} = require('./controllers/recipecontroller');
-=======
 const {getUserMeals, addMeal, editMeal, deleteMeal, changeFollowedPlan, getNutrition, searchForRecipe, searchByCategory, autoCompleteTerm, searchMeal, mealNutrition, mealAutoComplete} = require('./controllers/mealplancontroller');
 const {getMostLikedRecipe, getRecentRecipe, getUserRecipe, getRecipeById, addRecipe, deleteRecipe, editRecipe, getRecipeByQuery} = require('./controllers/recipecontroller');
->>>>>>> master
 const {getUserFridge, addItem, editItem, deleteItem, emptyFridge} = require('./controllers/fridgecontroller');
 const {getUserGroceryList, addItemToList, editGroceryList, deleteGroceryItem, listToFridge} = require('./controllers/grocerylistcontroller');
 const {searchIngredient, addIngredient, getIngredientPrice} = require('./controllers/ingredientsController')
