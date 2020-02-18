@@ -1,5 +1,5 @@
 .calendar-container-mealplan-currentweek{
-    width: 70%;
+    width: 85%;
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
@@ -24,13 +24,15 @@
 }
 
 #trash{
-    transition: .5s;
-    font-size: 60px;
+    transition: .1s;
+    width: 70px;
+    height: 70px;
 
 }
 
 #trash:hover{
-    font-size: 100px
+    width: 120px;
+    height: 120px;
 }
 
 #search-result-container{
@@ -85,6 +87,24 @@
 
 button:disabled{
     color:rgb(214, 214, 214);
+}
+
+.nav-arrows{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    transform: .5s;
+}
+
+.nav-arrows img{
+    transition: .2s;
+
+}
+
+.nav-arrows img:hover{
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
 }
 
 .auto-complete-list{
