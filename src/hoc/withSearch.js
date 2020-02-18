@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getRecipeByQuery } from '../redux/reducers/recipeReducer';
 import { saveSearchCondition } from '../redux/reducers/recipeSearchReducer';
+import axios from 'axios';
+
 
 
 function withSearch(BaseComponent, searchBtnCb) {
@@ -13,18 +15,24 @@ function withSearch(BaseComponent, searchBtnCb) {
         constructor() {
             super();
             this.state = {
-                browseWindow: false,
+                browseWindowFlag: false,
                 name: '',
                 page: 1,
                 mealType: '',
                 cuisine: '',
+                cuisineList: [],
                 ingredient: '',
             }
             this.handleInputChange = this.handleInputChange.bind(this);
         }
 
-        componentDidMount(){
+        componentDidMount() {
             this.setLocalStateToProps();
+            axios.get('/api/recipe/cuisinelist').then(response=>{
+                this.setState({
+                    cuisineList: response.data,
+                })
+            })
         }
 
         setLocalStateToProps = () => {
@@ -39,7 +47,13 @@ function withSearch(BaseComponent, searchBtnCb) {
 
         handleInputChange(e) {
             this.setState({
-                name: e.target.value
+                [e.target.name]: e.target.value
+            });
+        }
+
+        handleWindow = (window) => {
+            this.setState({
+                [window]: !this.state[window]
             });
         }
 
@@ -54,10 +68,12 @@ function withSearch(BaseComponent, searchBtnCb) {
             });
             // send info to redux.
             if (this.state.name) {
-                let params = `name=${this.state.name}&page=${this.state.page}`
+                let params = `name=${this.state.name}&page=${this.state.page}`;
+                params += `meal_type=${this.state.mealType}&cuisine=${this.state.cuisine}`;
+                params += `ingredient=${this.state.ingredient}`;
                 this.props.getRecipeByQuery(params);
             }
-            // ** working: category search.
+            
 
             // after press search btn, exe the callback function
             // (mainly for redirect to certain page.)
@@ -77,25 +93,41 @@ function withSearch(BaseComponent, searchBtnCb) {
 
         render() {
             // need to check what kind of type search.
-            const browseWindow = this.state.browseWindow ? (<ul>
-                <li>Meal Type</li>
-                {/* <li>Dish Type</li> */}
-                <li>Cuisine</li>
-                <li>Ingredient</li>
+            const browseWindow = this.state.browseWindowFlag ? (<ul>
+                <li>
+                    <span>Meal Type:</span>
+                    <select name='mealType' onChange={this.handleInputChange} value={this.state.mealType}>
+                        <option value=''>Select Meal Type</option>
+                        <option value='breakfast'>Breakfast</option>
+                        <option value='lunch'>Lunch</option>
+                        <option value='dinner'>Dinner</option>
+                    </select>
+                </li>
+                <li>
+                    <span>Cuisine: </span>
+                    <select name='cuisine' onChange={this.handleInputChange} value={this.state.cuisine}>
+                        <option value=''>Select Cuisine</option>
+                        {this.state.cuisineList.map((ele, i) => <option value={ele.cuisine_name.toLowerCase()} key={ele.cuisine_id} >{ele.cuisine_name}</option>)}
+                    </select>
+                </li>
+                <li>
+                    <span>Ingredient: </span>
+                    <input name='ingredient' onChange={this.handleInputChange} placeholder='type ingredient here'  value={this.state.ingredient}/>    
+                </li>
             </ul>) : null;
 
             return (
                 <div>
                     <div>
                         {/* showing category window */}
-                        <button onClick={() => { this.setState({ browseWindow: !this.state.browseWindow }) }}>Browse</button>
+                        <button onClick={() => { this.handleWindow('browseWindowFlag') }}>Browse</button>
                         {browseWindow}
-                        <input onChange={this.handleInputChange} value={this.state.name} />
+                        <input onChange={this.handleInputChange} value={this.state.name} name='name' />
                         <button onClick={this.searchRecipes}>Search</button>
                     </div>
                     <div>
                         <button onClick={() => { this.handlePageChange(-1) }}>Previous page</button>
-                        {this.props.name?(<span>Current Page: {this.state.page} </span>):null}
+                        {this.props.name ? (<span>Current Page: {this.state.page} </span>) : null}
                         <button onClick={() => { this.handlePageChange(1) }}>Next page</button>
                     </div>
                     {/* BaseComponent getting the search result from redux */}
@@ -105,7 +137,7 @@ function withSearch(BaseComponent, searchBtnCb) {
         }
     }
 
-    const mapStateToProps = function (reduxState){
+    const mapStateToProps = function (reduxState) {
         return {
             name: reduxState.recipeSearch.name,
             page: reduxState.recipeSearch.page,
@@ -114,7 +146,7 @@ function withSearch(BaseComponent, searchBtnCb) {
             ingredient: reduxState.recipeSearch.ingredient,
         }
     }
-    
+
     return connect(mapStateToProps, { getRecipeByQuery, saveSearchCondition })(HOComponent)
 }
 
