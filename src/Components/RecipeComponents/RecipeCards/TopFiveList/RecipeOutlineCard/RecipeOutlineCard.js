@@ -15,7 +15,7 @@ class RecipeOutlineCard extends Component {
     render() {
         return (
             <div key={this.props.recipe.recipe_id}>
-                <img src={this.props.recipe.recipe_img} />
+                <img src={this.props.recipe.recipe_img} alt='recipe'/>
                 <span>{this.props.recipe.recipe_name}</span>
                 {this.props.editFlag ?
                     (

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios'
-import SearchItem from '../../../GroceryList/SearchItem';
-import ListItem from '../../../GroceryList/ListItem';
+import IngredientSearchCard from '../../RecipeCards/IngredientSearchCard/IngredientSearchCard';
+import IngredientListCard from '../../RecipeCards/IngredientListCard/IngredientListCard';
+import IngredientInputCard from '../IngredientInputCard/IngredientInputCard';
 
 class RecipeIngredientCard extends Component {
     constructor() {
@@ -9,8 +10,6 @@ class RecipeIngredientCard extends Component {
         this.state = {
             searchInput: '',
             searchResults: [],
-            // **  using props list instead.
-            list: [],
             editMode: false,
         }
     }
@@ -26,7 +25,10 @@ class RecipeIngredientCard extends Component {
                     searchResults: res.data
                 })
             })
-            .catch(err => console.log(err.response.data))
+            .catch(err => {
+                console.log(err.response.data);
+                alert('Search function currently not working. You may try it tomorrow.');
+            })
     }
 
 
@@ -38,37 +40,45 @@ class RecipeIngredientCard extends Component {
     render() {
         let searchResults = this.state.searchResults.map((ele, i) => {
             return (
-                <SearchItem name={ele.name} image={ele.image} 
+                <IngredientSearchCard name={ele.name} image={ele.image} 
                 possibleUnits={ele.possibleUnits} addToList={this.props.addToIngredients} 
                 id={ele.id} key={i} />
             )
         })
         let list = this.props.ingredients.map((ele, i) => {
             return (
-                <ListItem name={ele.name} image={ele.image} 
-                amount={ele.amount} unit={ele.unit}  
-                i={i} key={i} 
+                <IngredientListCard name={ele.name} amount={ele.amount} 
+                unit={ele.unit}  i={i} key={i} 
                 saveChanges={this.props.changeIngredient} 
                 removeItem={this.props.removeIngredient} />
             )
         })
         return (
             <div>
-                <span>Search the ingredients:</span>
-                <ul>
-                    {searchResults}
-                </ul>
-                <input name='searchInput' onChange={this.handleInputChange} />
-                <button onClick={this.getSearchResults}>search</button>
-                <ul>
-                    {list}
-                </ul>
-
+                <section>
+                    <span>Search the ingredients to add to the recipe:</span>
+                    <input name='searchInput' onChange={this.handleInputChange} />
+                    <button onClick={this.getSearchResults}>search</button>
+                    <ul>
+                        {searchResults}
+                    </ul>
+                </section>
+                <section>
+                    <span>Or enter customize ingredients:</span>
+                    <IngredientInputCard 
+                    addToIngredients={this.props.addToIngredients}
+                    />
+                </section>
+                <section>
+                    <span>The ingredients will be used in the recipe:</span>
+                    <ul>
+                        {list}
+                    </ul>
+                </section>
                 <div className="closeWindowBtn">
                     {/* close window btn */}
-                    <button onClick={() => {}}>Close</button>
+                    <button onClick={this.props.closeWindow}>Close</button>
                 </div>
-
             </div>
         )
     }

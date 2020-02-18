@@ -66,9 +66,9 @@ app.get('/api/recipe/mostliked', getMostLikedRecipe);
 app.get('/api/recipe/recentlyadded', getRecentRecipe);
 app.get('/api/recipe/userrecipe/:user_id', getUserRecipe);
 app.get('/api/recipe/id/:recipe_id', getRecipeById);
-app.post('/api/recipe/addrecipe', addRecipe);
+app.post('/api/recipe', addRecipe);
 app.delete('/api/recipe/:recipe_id', deleteRecipe);
-app.put('/api/recipe/editrecipe/:recipe_id', editRecipe);
+app.put('/api/recipe/:recipe_id', editRecipe);
 app.get('/api/recipe/search', getRecipeByQuery);
 // app.get('/api/recipe/cuisinelist', getCuisineList);
 
