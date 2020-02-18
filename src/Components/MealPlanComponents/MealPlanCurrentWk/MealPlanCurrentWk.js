@@ -14,7 +14,6 @@ import { addMeal, editMeal, deleteMeal, searchFunction, searchByCategory, autoCo
 import searching from '../../../animations/searching.gif'
 import searchIcon from '../../../icons/search-solid.svg'
 import loading from '../../../animations/loading.gif'
-import 'antd/es/popover/style/css'
 import './stylesheet/MealPlanCurrentWk.scss'
 import CategroyCascader from './CategroyCascader';
 import leftArrow from '../../../icons/left-arrow.png'

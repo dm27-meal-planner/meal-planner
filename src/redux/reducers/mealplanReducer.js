@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { compensateScroll } from '@fullcalendar/core'
 
 const initialState = {
     meals: [],
@@ -180,6 +181,8 @@ export default function reducer(state = initialState, action){
         }
         case `${CHANGE_IS_FOLLOWED}_FULFILLED`: {
           let copy = state.meals.slice()
+
+          copy.find(ele => payload[0].mealplan_id === ele.mealplan_id).followed_plan = payload[0].followed_plan
 
           return {
             ...state,
