@@ -1,0 +1,94 @@
+#GuestLanding {
+  background-color: lightblue;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#GuestLanding .intro {
+  width: 80%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+#GuestLanding .intro .text-in-image h1 {
+  color: black;
+}
+
+#GuestLanding .intro .calendar {
+  opacity: 0.5;
+  padding: 20px;
+}
+
+#GuestLanding .registerdetails {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: white;
+  margin: 20px;
+  padding: 10px;
+  border-radius: 20px;
+}
+
+#GuestLanding .registerdetails span {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+#GuestLanding .registerdetails input {
+  margin: 10px 5px;
+  width: 40%;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: 1px solid lightblue;
+}
+
+#GuestLanding .household {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 10px 0;
+}
+
+#GuestLanding .household h4 {
+  width: 50%;
+}
+
+#GuestLanding .household select {
+  height: 40%;
+}
+
+#GuestLanding .register {
+  margin: 10px;
+}
+/*# sourceMappingURL=GuestLanding.css.map */
