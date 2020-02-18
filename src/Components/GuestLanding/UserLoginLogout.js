@@ -69,9 +69,6 @@ class UserLoginLogout extends Component {
                   this.props.logoutUser();
                }}>Logout</button>
             </> : <Firebase />}
-             {/* : <div className="medialogin">
-                <div id="firebaseui-auth-container"></div>
-             </div>} */}
          </div>
       )
    }
