@@ -8,8 +8,13 @@
 .home-page {
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
 }
 
+.calendarAndNextMeal {
+    display: flex;
+    flex-direction: row;
+}
 
 .calendar-container {
 

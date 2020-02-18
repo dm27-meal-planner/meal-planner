@@ -30,9 +30,8 @@ class Fridge extends Component{
         this.props.getUserFridge(this.props.user_id);
     }
 
-    deleteItem = async (id) => {
-        await this.props.deleteItem(this.props.user_id, id);
-        this.updateFridge();
+    deleteItem = (id) => {
+        this.props.deleteItem(this.props.user_id, id);
     }
 
     editItem = async (id, element) => {
@@ -50,7 +49,7 @@ class Fridge extends Component{
                     <div id="fridgeHasStuff"> 
                     {this.props.fridge.map((element, index) => {
                         return (
-                            // If there's a spoon_id, perform an API search.
+                            // To-do: User can alter quantities in the fridge.
                             <div key={index} id='fridgeItem'>
                                 <FridgeItem element={element} 
                                 updateFridge={this.updateFridge}
