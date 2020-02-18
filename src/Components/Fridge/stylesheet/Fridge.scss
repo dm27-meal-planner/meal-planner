@@ -1,0 +1,54 @@
+%common-table {
+   border-right: 1px solid black;
+   padding: 10px;
+}
+
+#Fridge {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   width: 100%;
+
+   h1 {
+      margin: 0;
+   }
+   form {
+      margin: 10px;
+      width: 45%;
+      .searchName {
+         margin: 0 10px;
+         width: 50%;
+      }
+      .fridgeadd {
+         margin: 0 10px;
+      }
+   }
+
+   .emptyAll {
+      border: none;
+      background-color: red;
+      color: white;
+      border-radius: 5px;
+   }
+}
+table {
+   border: 1px solid black;
+   thead {
+      th {
+         border-bottom: 1px solid black;
+         @extend %common-table;
+      }
+   }
+   tbody {
+      th {
+         @extend %common-table;
+      }
+      input {
+         width: 40px;
+      }
+
+      img {
+         max-height: 75px;
+      }
+   }
+}

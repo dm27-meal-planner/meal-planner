@@ -24,18 +24,24 @@ class FridgeItem extends Component {
       const {editing} = this.state;
       if (editing) {message = 'Done'} else {message = 'Edit'}
       return (
-         <>
-         <img src={element.imageurl} alt={element.ingredient_name} />
-         <span>{element.ingredient_name} 
-         {editing ? <button onClick={() => deleteItem(element.fridge_item_id)}>Remove</button> : null}</span>
-         <span>{element.date_added} </span>
-         {editing ? <> <input type='number' name='quantity' min='1' value={this.state.quantity} onChange={this.handleInputChange} />
-         <span>{element.unit} </span>
-         </>: <>
-         <span>{element.quantity}</span>
-         <span>{element.unit} </span></>}
-         <button onClick={() => this.setState({editing: !editing})}>{message}</button>
-         </>
+         <tr className="fridgeitem">
+            <th>
+               <img src={element.imageurl} alt={element.ingredient_name} />
+               <span>{element.ingredient_name} 
+               {editing ? <button onClick={() => deleteItem(element.fridge_item_id)}>Remove</button> : null}</span>
+            </th>
+            <th>
+               <span>{element.date_added} </span>   
+            </th>
+            <th>
+               {editing ? <> <input type='number' name='quantity' min='1' value={this.state.quantity} onChange={this.handleInputChange} />
+               <span>{element.unit} </span>
+               </>: <>
+               <span>{element.quantity}</span>
+               <span>{element.unit} </span></>}
+               <button onClick={() => this.setState({editing: !editing})}>{message}</button>
+            </th>
+         </tr>
       )
    }
 }
