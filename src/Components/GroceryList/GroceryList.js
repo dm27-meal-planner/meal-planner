@@ -113,7 +113,7 @@ class GroceryList extends Component{
                 <div id="groceryList">
                     <ShoppingList user_id={this.props.user_id} groceryList={this.props.groceryList} />
                 </div>
-                : <>does not have stuff</>}
+                : <p>Your shopping list is empty!</p>}
             </div>
         )
     } 

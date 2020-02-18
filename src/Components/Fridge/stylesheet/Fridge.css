@@ -1,1 +1,60 @@
-/* No CSS *//*# sourceMappingURL=Fridge.css.map */
+table thead th, table tbody th {
+  border-right: 1px solid black;
+  padding: 10px;
+}
+
+#Fridge {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+}
+
+#Fridge h1 {
+  margin: 0;
+}
+
+#Fridge form {
+  margin: 10px;
+  width: 45%;
+}
+
+#Fridge form .searchName {
+  margin: 0 10px;
+  width: 50%;
+}
+
+#Fridge form .fridgeadd {
+  margin: 0 10px;
+}
+
+#Fridge .emptyAll {
+  border: none;
+  background-color: red;
+  color: white;
+  border-radius: 5px;
+}
+
+table {
+  border: 1px solid black;
+}
+
+table thead th {
+  border-bottom: 1px solid black;
+}
+
+table tbody input {
+  width: 40px;
+}
+
+table tbody img {
+  max-height: 75px;
+}
+/*# sourceMappingURL=Fridge.css.map */
