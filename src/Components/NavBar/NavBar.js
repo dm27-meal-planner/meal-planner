@@ -9,10 +9,12 @@ const NavBar = (props) => {
 
     if(!props.user_id){
         return(
-        <div style={{border: 'black solid 2px'}} >
-            <p>MealPlan</p>
-            <p>Recipe</p>
-            <UserLoginLogout />
+        <div style={{border: 'black solid 2px'}} className='navbar' >
+            <Link to='/' ><p>MealPlan</p></Link>
+            <div className="menuitems">
+                <Link to='/recipes'><p>Recipes</p></Link>
+                <UserLoginLogout />
+            </div>
         </div>
         )
     }

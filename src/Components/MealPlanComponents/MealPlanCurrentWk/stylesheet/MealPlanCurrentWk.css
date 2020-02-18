@@ -116,4 +116,52 @@ button:disabled {
   -webkit-box-shadow: 2px 2px 2px;
           box-shadow: 2px 2px 2px;
 }
+
+.nutrition-list {
+  padding: 0px;
+  width: 40%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.nutrition-list li {
+  width: 40%;
+  border: black solid 2px;
+  list-style-type: none;
+  margin-top: 10px;
+  padding: 5px;
+  text-align: left;
+  padding-left: 10px;
+  border-radius: 10px;
+}
+
+.alt-meals-list {
+  padding: 0px;
+  width: 15%;
+  margin-left: auto;
+  margin-right: auto;
+  border: black solid 2px;
+  max-height: 300px;
+  overflow-y: scroll;
+}
+
+.alt-meals-list li {
+  width: 80%;
+  border: black solid 2px;
+  list-style-type: none;
+  margin-top: 10px;
+  padding: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  padding-left: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.alt-meals-list li:hover {
+  cursor: pointer;
+  -webkit-box-shadow: 2px 2px 2px;
+          box-shadow: 2px 2px 2px;
+}
 /*# sourceMappingURL=MealPlanCurrentWk.css.map */

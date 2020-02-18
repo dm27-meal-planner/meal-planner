@@ -193,8 +193,6 @@ const MealPlanCurrentWk = (props) => {
             droppable={true}
             drop={({date, resource}) => {
 
-                console.log(date)
-
                 let calendarApi = calendarRef.current.getApi()
 
                 
@@ -206,8 +204,6 @@ const MealPlanCurrentWk = (props) => {
                 })
                 
                 let allEvents = calendarApi.getEvents()
-
-                console.log(allEvents)
 
                 addMoreMeals([...addedMeals, {id: +allEvents[allEvents.length - 1]._instance.instanceId, title: selectedRecipe.title, date: moment(date).format(), resourceId: resource.id, image: selectedRecipe.extendedProps.image, source: selectedRecipe.extendedProps.source, apiId: selectedRecipe.id}])
                 modifyEvent([...modifiedEvents, {id: +allEvents[allEvents.length - 1]._instance.instanceId, title: selectedRecipe.title, date: moment(date).format(), resourceId: resource.id, image: selectedRecipe.extendedProps.image, source: selectedRecipe.extendedProps.source, apiId: selectedRecipe.id}])
@@ -237,7 +233,6 @@ const MealPlanCurrentWk = (props) => {
                         return eventsCopy
                     })
                 } else if(editedMeals.some(ele => +ele.id === +event.id) && modifiedEvents.some(ele => moment(ele.date).format() === moment(event.start).format()) && editedMeals.some(ele => ele.resourceId === event._def.resourceIds[0])){
-                        console.log('exact')
                         editMoreMeals(() =>{
                             let eventsCopy = _.cloneDeep(editedMeals)
                             eventsCopy.splice(eventsCopy.findIndex(ele => +ele.id === +event.id), 1)
