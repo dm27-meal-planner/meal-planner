@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import FridgeItem from './FridgeItem';
+import {Popconfirm, Button } from 'antd';
 import {getUserFridge, emptyFridge, deleteItem} from '../../redux/reducers/fridgeReducer';
 import {getUser} from '../../redux/reducers/userReducer';
 import './stylesheet/Fridge.css';
@@ -19,7 +20,6 @@ class Fridge extends Component{
     }
 
     componentDidMount() {
-        this.props.getUser();
         if(this.props.user_id === null){
             return null;
         } else {
@@ -37,6 +37,10 @@ class Fridge extends Component{
 
     editItem = async (id, element) => {
         
+    }
+
+    emptyFridge = () => {
+        this.props.emptyFridge(this.props.user_id);
     }
 
     handleUserChange = (e) => {
@@ -77,10 +81,9 @@ class Fridge extends Component{
                                 })}
                             </tbody>
                         </table>
-                    <button className="emptyAll" onClick={() => {
-                        this.props.emptyFridge(this.props.user_id);
-                        this.updateFridge();
-                    }}>Empty Fridge</button>
+                    <Popconfirm placement="top" title="Are you sure you want to delete all the items in the fridge?" onConfirm={this.emptyFridge} okText="Delete" cancelText="No">
+                        <Button>Empty Fridge</Button>
+                    </Popconfirm>
                     </div>
                     : <>Nothing here... Add items via Grocery List or manually!</>}
                 </div>
