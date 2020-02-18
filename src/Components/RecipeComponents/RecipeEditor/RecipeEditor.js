@@ -9,10 +9,15 @@ class RecipeEditor extends Component {
         super();
         this.state = {
             // ---------first column
+            recipeId: '',
             recipeName: '',
             recipeImg: '',
+            recipeAuthor: '',
             recipeAuthorId: '',
 
+            recipeServings: 1,
+            recipeCuisine: '',
+            cuisineList: [],
             recipeMealType: '',
             mealTypeWindow: false,
 
@@ -70,6 +75,14 @@ class RecipeEditor extends Component {
                 }
             })
         }
+
+        // get cuisine list
+        axios.get('/api/recipe/cuisinelist').then(response => {
+            this.setState({
+                cuisineList: response.data,
+            })
+        })
+
     }
 
     handleUserInput = (e) => {
@@ -100,29 +113,33 @@ class RecipeEditor extends Component {
         }
     }
 
-    // handleDishTypeWindow = () => {
-    //     this.setState({
-    //         dishTypeWindow: !this.state.dishTypeWindow
-    //     })
-    // }
+    // For Ingredients
+    addToIngredients = async (ingredient) => {
+        this.setState({
+            recipeIngredients: [...this.state.recipeIngredients, ingredient]
+        });
+    }
+    removeIngredient = (i) => {
+        let list = this.state.recipeIngredients.slice();
+        list.splice(i, 1);
+        this.setState({
+            recipeIngredients: list
+        });
+    }
 
-    // handleDishTypeChange = (e) => {
-    //     if(e.target.checked){
-    //         // remove dish type
-    //         target.removeAttribute('checked');
-    //         // **
-    //     }else{
-    //         // add dish type
-    //         target.setAttribute('checked', true);
-    //         // **
-    //     }
-    // }
+    changeIngredient = (i, amount) => {
+        let list = this.state.recipeIngredients.slice(i)
+        list.splice(i, 1, { ...this.state.recipeIngredients[i], amount: amount })
+        this.setState({
+            recipeIngredients: list
+        })
+    }
 
 
     render() {
 
         let mealTypeWindow = this.state.mealTypeWindow ? (<div>
-            <MealTypeCard 
+            <MealTypeCard
                 recipeMealType={this.state.recipeMealType}
                 handleMealTypeChange={this.handleMealTypeChange}
                 handleMealTypeWindow={this.handleMealTypeWindow}
@@ -142,13 +159,7 @@ class RecipeEditor extends Component {
             <button onClick={this.handleMealTypeWindow}>Done </button> */}
         </div>) : null
 
-        // let dishTypeWindow = this.state.dishTypeWindow ? (<div>
-        //     <span>Select Many</span>
-        //     <ul>
-        //         <li><input type='checkbox' onClick={this.handleDishTypeChange} /></li>
-        //     </ul>
-        //     <button onClick={this.handleDishTypeWindow}>Done </button>
-        // </div>) : null
+
 
         return (
             <div>
@@ -168,11 +179,15 @@ class RecipeEditor extends Component {
                             <button onClick={this.handleMealTypeWindow}>Select</button>
                         </div>
                         {mealTypeWindow}
-                        {/* <div>
-                            <span>Dish Type</span>
-                            <button onClick={this.handleDishTypeWindow}>Select</button>
-                        </div>
-                        {dishTypeWindow} */}
+                        <span>Cuisine: </span>
+                        <select name='recipeCuisine' onChange={this.handleUserInput} value={this.state.recipeCuisine}>
+                            <option value=''>Select Cuisine</option>
+                            {this.state.cuisineList.map((ele, i) => <option value={ele.cuisine_name.toLowerCase()} key={ele.cuisine_id} >{ele.cuisine_name}</option>)}
+                        </select>
+                        <span>Serving: </span>
+                        <input name='recipeServings' onChange={this.handleUserInput}
+                            value={this.state.recipeServings} 
+                            type='number' min='1' step='1' />
                     </div>
                 </div>
                 <div className='second-column-wrapper'>
@@ -208,7 +223,13 @@ class RecipeEditor extends Component {
                 <div className='third-column-wrapper'>
                     <div>
                         {/* **Ingredient list, waiting for design the common use one. */}
-                        <RecipeIngredientCard />
+                        <RecipeIngredientCard 
+                        ingredients={this.state.recipeIngredients}
+                        changeIngredient={this.changeIngredient}
+                        addToIngredients={this.addToIngredients}
+                        removeIngredient={this.removeIngredient}
+                        
+                        />
                     </div>
                     <div>
                         <span>Directions:</span>

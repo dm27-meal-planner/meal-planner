@@ -29,33 +29,6 @@ class RecipeIngredientCard extends Component {
             .catch(err => console.log(err.response.data))
     }
 
-    addToList = async (ingredient) => {
-        let price = await axios.post('/api/ingredient/price',
-            { id: ingredient.id, amount: ingredient.amount, unit: ingredient.unit })
-            .then(res => res.data)
-        this.setState({
-            list: [...this.state.list, { ...ingredient, price: price }]
-        })
-    }
-    removeItem = (i) => {
-        let list = this.state.list.slice()
-
-        list.splice(i, 1)
-
-        this.setState({
-            list: list
-        })
-    }
-
-    saveChanges = (i, amount) => {
-        let list = this.state.list.slice(i)
-
-        list.splice(i, 1, { ...this.state.list[i], amount: amount })
-
-        this.setState({
-            list: list
-        })
-    }
 
     handleInputChange = (e) => {
         this.setState({
@@ -65,15 +38,18 @@ class RecipeIngredientCard extends Component {
     render() {
         let searchResults = this.state.searchResults.map((ele, i) => {
             return (
-                <SearchItem name={ele.name} image={ele.image} possibleUnits={ele.possibleUnits} addToList={this.addToList} id={ele.id} key={i} />
+                <SearchItem name={ele.name} image={ele.image} 
+                possibleUnits={ele.possibleUnits} addToList={this.props.addToIngredients} 
+                id={ele.id} key={i} />
             )
         })
-        let list = this.state.list.map((ele, i) => {
+        let list = this.props.ingredients.map((ele, i) => {
             return (
                 <ListItem name={ele.name} image={ele.image} 
-                amount={ele.amount} unit={ele.unit} 
-                price={ele.price} i={i} key={i} 
-                saveChanges={this.saveChanges} removeItem={this.removeItem} />
+                amount={ele.amount} unit={ele.unit}  
+                i={i} key={i} 
+                saveChanges={this.props.changeIngredient} 
+                removeItem={this.props.removeIngredient} />
             )
         })
         return (

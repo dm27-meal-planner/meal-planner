@@ -260,7 +260,11 @@ const editRecipe = async (req, res) => {
    res.status(200).json('OK');
 }
 
-
+const getCuisineList = async (req, res) => {
+   const db = req.app.get('db');
+   const cuisineList = await db.recipes.get_cuisine_list()
+   res.status(200).json(cuisineList);
+}
 
 module.exports = {
    getMostLikedRecipe,
@@ -270,5 +274,6 @@ module.exports = {
    addRecipe,
    deleteRecipe,
    editRecipe,
-   getRecipeByQuery
+   getRecipeByQuery,
+   getCuisineList
 }

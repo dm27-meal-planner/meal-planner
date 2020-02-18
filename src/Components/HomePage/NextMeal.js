@@ -17,17 +17,17 @@ const NextMeal = (props) => {
 
     const findNearestMeal = () => {
       if(+moment().format('H') >= 10 && +moment().format('H') <= 13){
-          changeCurrentMeal(props.meals.find(ele => ele.resourceid === 'lunch' && ele.date === moment().format()))
+          changeCurrentMeal(props.meals.find(ele => ele.resourceid === 'lunch' && moment(ele.date).format('DDD') === moment().format('DDD')))
           changeMealTime('Lunch')
         } else if(+moment().format('H') >= 14 && +moment().format('H') <= 15){
-          changeCurrentMeal(props.meals.find(ele => ele.resourceid === 'snack' && ele.date === moment().format()))
+          changeCurrentMeal(props.meals.find(ele => ele.resourceid === 'snack' && moment(ele.date).format('DDD') === moment().format('DDD')))
           changeMealTime('Snack')
 
         } else if(+moment().format('H') >= 16 && +moment().format('H') <= 21){
-          changeCurrentMeal(props.meals.find(ele => ele.resourceid === 'dinner' && ele.date === moment().format()))
+          changeCurrentMeal(props.meals.find(ele => ele.resourceid === 'dinner' && moment(ele.date).format('DDD') === moment().format('DDD')))
           changeMealTime('Dinner')
         } else {
-          changeCurrentMeal(props.meals.find(ele => ele.resourceid === 'breakfast' && ele.date === moment().format()) )
+          changeCurrentMeal(props.meals.find(ele => ele.resourceid === 'breakfast' && moment(ele.date).format('DDD') === moment().format('DDD')) )
           changeMealTime('Breakfast')
 
         }

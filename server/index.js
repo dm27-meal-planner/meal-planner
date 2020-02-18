@@ -5,7 +5,7 @@ const app = express();
 const session = require('express-session');
 const massive = require('massive');
 const {getUser, registerUser, loginUser, logoutUser, registerFirebase, loginFirebase} = require('./controllers/usercontroller');
-const {getUserMeals, addMeal, editMeal, deleteMeal, changeFollowedPlan, getNutrition, searchForRecipe, searchByCategory, autoCompleteTerm, searchMeal, mealNutrition} = require('./controllers/mealplancontroller');
+const {getUserMeals, addMeal, editMeal, deleteMeal, changeFollowedPlan, getNutrition, searchForRecipe, searchByCategory, autoCompleteTerm, searchMeal, mealNutrition, mealAutoComplete} = require('./controllers/mealplancontroller');
 const {getMostLikedRecipe, getRecentRecipe, getUserRecipe, getRecipeById, addRecipe, deleteRecipe, editRecipe, getRecipeByQuery} = require('./controllers/recipecontroller');
 const {getUserFridge, addItem, editItem, deleteItem, emptyFridge} = require('./controllers/fridgecontroller');
 const {getUserGroceryList, addItemToList, editGroceryList, deleteGroceryItem, listToFridge} = require('./controllers/grocerylistcontroller');
@@ -70,6 +70,7 @@ app.post('/api/recipe/addrecipe', addRecipe);
 app.delete('/api/recipe/:recipe_id', deleteRecipe);
 app.put('/api/recipe/editrecipe/:recipe_id', editRecipe);
 app.get('/api/recipe/search', getRecipeByQuery);
+app.get('/api/recipe/cuisinelist', getCuisineList);
 
 //fridge endpoints
 app.get('/api/fridge/:user_id', getUserFridge);

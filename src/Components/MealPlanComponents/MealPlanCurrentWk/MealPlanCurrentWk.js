@@ -9,13 +9,17 @@ import resourceTimelinePlugin from '@fullcalendar/resource-timeline'
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import ReactDOM from 'react-dom'
 import moment from 'moment'
-import { Popover, message, Cascader } from 'antd'
+import { Popover, message } from 'antd'
 import { addMeal, editMeal, deleteMeal, searchFunction, searchByCategory, autoCompleteSearch } from '../../../redux/reducers/mealplanReducer'
 import searching from '../../../animations/searching.gif'
 import searchIcon from '../../../icons/search-solid.svg'
+import loading from '../../../animations/loading.gif'
 import 'antd/es/popover/style/css'
 import './stylesheet/MealPlanCurrentWk.scss'
 import CategroyCascader from './CategroyCascader';
+import leftArrow from '../../../icons/left-arrow.png'
+import rightArrow from '../../../icons/right-arrow.png'
+import trash from '../../../icons/trash.png'
 
 
 
@@ -32,10 +36,10 @@ const MealPlanCurrentWk = (props) => {
     const [changesSaved, setToFalse] = useState(true)
     const [count, increment] = useState(1)
     const [results, updateResults] = useState([])
+    const [categoryResults, updateCategoryResults] = useState([])
     const [searchInput, updateInput] = useState('')
-
-
-    console.log(props)
+    const [pageNumber, changePageNumber] = useState(0)
+    const [currentCategory, changeCurrentCategory] = useState(null)
 
     let calendarRef = useRef()
 
@@ -47,9 +51,6 @@ const MealPlanCurrentWk = (props) => {
     }, [selectedRecipe])
 
 
-
-
-    
     useEffect(() => {
         if(editedMeals.length === 0 && deletedMeals.length === 0 && addedMeals.length === 0 ){
             setToFalse(true)
@@ -64,13 +65,16 @@ const MealPlanCurrentWk = (props) => {
 
     useEffect(() => {
         if(props.categoryResults.length){
-            updateResults(props.categoryResults)
+            updateCategoryResults(props.categoryResults)
+            updateResults([])
+
         }
     }, [props.categoryResults])
 
     useEffect(() => {
         if(props.searchResults.length){
             updateResults(props.searchResults)
+            updateCategoryResults([])
         }
     }, [props.searchResults])
 
@@ -78,10 +82,6 @@ const MealPlanCurrentWk = (props) => {
              props.autoCompleteSearch(searchInput)
     }, [searchInput])
 
-
-
-
-    
 
     const parseMeals = (propsMeals) => {
         let meals = []
@@ -92,22 +92,45 @@ const MealPlanCurrentWk = (props) => {
         modifyEvent(meals)
     }
 
-
-
     const handleAutoCompleteClick = (value) => {
-        props.searchFunction(value)
-        updateInput('')
+        props.searchFunction(value, 0)
+        updateInput(value)
+        changePageNumber(0)
     }
 
+    const nextPage = (value, pageNumber) => {
+        if(results.length){
+            props.searchFunction(value, pageNumber + 1)
+            changePageNumber(pageNumber + 1)
+            
+        } else {
+            props.searchByCategory(value, pageNumber + 1)
+            changePageNumber(pageNumber + 1)
+        }
+
+    }
+
+    const prevPage = (value, pageNumber) => {
+
+        if(pageNumber >= 1 && results.length){
+            props.searchFunction(value, pageNumber - 1)
+            changePageNumber(pageNumber - 1)
+        } else if(pageNumber >= 1 && categoryResults.length) {
+            props.searchByCategory(value, pageNumber - 1)
+            changePageNumber(pageNumber - 1)
+        } else {
+            alert('You are on the first page')
+        }
+    }
     const categorySelected = (value) => {
-         props.searchByCategory(value)
+         props.searchByCategory(value, 0)
+         changePageNumber(0)
     }
-
     const newEventRender = ({event, el}) => {
         let newResource = (
             <Popover title={`${event._def.resourceIds[0]} for ${moment(event.start).format('dddd')}`} content={<div><span>{event.title}</span><br /><button>Go To Recipe</button></div>} trigger='click' >
-                <div style={{ position:'relative', backgroundImage: `url(${event.extendedProps.image || selectedRecipe.extendedProps.image ||'https://www.heavydutydirect.ca/wp-content/uploads/2019/02/camera-placeholder-150x150.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100%', height:'100px', margin: '5px'}} >
-                    <div className='eventTitle'>
+                <div style={{ position:'relative', backgroundImage: `url(${event.extendedProps.image || selectedRecipe.extendedProps.image ||'https://www.heavydutydirect.ca/wp-content/uploads/2019/02/camera-placeholder-150x150.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100%', height:'100px',  margin: '0px', padding:'0px', borderRadius: '10px'}} >
+                    <div className='eventTitle' style={{borderBottomRightRadius: '10px', borderBottomLeftRadius: '10px'}}>
                         <div className='toRecipe' style={{whiteSpace: 'pre-wrap'}} >{event.title || selectedRecipe.title}</div>
                     </div>
                 </div>
@@ -118,8 +141,8 @@ const MealPlanCurrentWk = (props) => {
 
     const newDraggable = (selectedRecipe) => {
         let newinstance = (
-            <div className='fc-event' id={`new-event-${count}`} style={{ position:'relative', backgroundImage: `url(${selectedRecipe.extendedProps.image || 'https://imbindonesia.com/images/placeholder/camera.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100px', height:'100px', marginLeft: 'auto', marginRight:'auto'}} >
-                <div className='eventTitle'>
+            <div className='fc-event' id={`new-event-${count}`} style={{ position:'relative', backgroundImage: `url(${selectedRecipe.extendedProps.image || 'https://imbindonesia.com/images/placeholder/camera.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100px', height:'120px', marginLeft: 'auto', marginRight:'auto'}} >
+                <div className='eventTitle' style={{borderBottomRightRadius: '10px', borderBottomLeftRadius: '10px'}}>
                     <div className='toRecipe'>{initializeDnd ? selectedRecipe.title : 'Pick a recipe.' }</div>
                 </div>
             </div>
@@ -144,9 +167,7 @@ const MealPlanCurrentWk = (props) => {
             addedMeals.map(ele => {
                 props.addMeal(props.user_id, {recipe_id: ele.apiId, date: ele.date, resourceid: ele.resourceId, title: ele.title, image: ele.image, fromApi: `${ele.source === 'api' ? true : false }` })
             })
-            addMoreMeals([])
-
-            
+            addMoreMeals([])     
         } 
 
         if(editedMeals.length){
@@ -164,10 +185,7 @@ const MealPlanCurrentWk = (props) => {
 
         message.success('Changes have been saved!')
     }
-
-
-
-
+//------------------------------------------- JSX ----------------------------------------------------------
     if(!props.user_id){
         return <Redirect to='/' />
     }
@@ -194,9 +212,8 @@ const MealPlanCurrentWk = (props) => {
             drop={({date, resource}) => {
 
                 let calendarApi = calendarRef.current.getApi()
-
                 
-                calendarApi.addEvent({                    
+                calendarApi.addEvent({         
                     extendedProps: selectedRecipe.extendedProps,
                     start:date,
                     title: selectedRecipe.title,
@@ -259,12 +276,11 @@ const MealPlanCurrentWk = (props) => {
             }
             />
 
-
             <div>
                 <div id='new-recipe-container'>
                     <div className='fc-event' id='newEvent' style={{ position:'relative', backgroundImage: `url(https://imbindonesia.com/images/placeholder/camera.jpg)`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100px', height:'100px', marginLeft: 'auto', marginRight:'auto'}} >
                         <div className='eventTitle'>
-                            <div className='toRecipe'>Pick a recipe.</div>
+                            <div className='toRecipe'>Select a recipe.</div>
                         </div>
                     </div>
                 </div>
@@ -274,7 +290,7 @@ const MealPlanCurrentWk = (props) => {
 
             <div>
                     <div>
-                        <input  id='search-recipe' style = {{backgroundImage: `url(${props.searching ? searching : searchIcon})` }} name='search' value={searchInput}  onChange={e => updateInput(e.target.value)} />
+                        <input  id='search-recipe' style = {{backgroundImage: `url(${props.searching ? loading : searchIcon})` }} name='search' value={searchInput}  onChange={e => updateInput(e.target.value)} />
                         <ul className='auto-complete-list' style={{display: `${!props.autoCompleteResults.length ? 'none' : 'block'}`}} >
                             {props.autoCompleteResults.length ? props.autoCompleteResults.map((ele, i) => {
                                 return <li key={i} onClick={() => handleAutoCompleteClick(ele.title)} >{ele.title}</li>
@@ -283,23 +299,37 @@ const MealPlanCurrentWk = (props) => {
                     </div>
 
                 <ul id='search-result-container' >
-                    { props.seaching || props.categorySearching ? <img src={searching} alt='seraching' /> : results.length ?  results.map((ele, i) => {
+                        <p>Showing Results for: {results.length ? searchInput: categoryResults.length ? currentCategory : 'Nothing'}</p>
+                    { props.searching || props.categorySearching ? <img src={searching} alt='seraching' /> : results.length ?  results.map((ele, i) => {
                         return <li key={i} onClick={() => selectRecipe(_.cloneDeep({id: ele.id, title: ele.title, extendedProps:{ image: `https://spoonacular.com/recipeImages/${ele.image}`, source: ele.source}}))} className='search-result-block' >
                             <img src={`https://spoonacular.com/recipeImages/${ele.image}`} alt='recipe'  width='70px'/>
                             <p>{ele.title}</p>
                         </li>
-                    }): null}
+                    }) : categoryResults.length ? categoryResults.map((ele, i) => {
+                        return <li key={i} onClick={() => selectRecipe(_.cloneDeep({id: ele.id, title: ele.title, extendedProps:{ image: `https://spoonacular.com/recipeImages/${ele.image}`, source: ele.source}}))} className='search-result-block' >
+                            <img src={`https://spoonacular.com/recipeImages/${ele.image}`} alt='recipe'  width='70px'/>
+                            <p>{ele.title}</p>
+                    </li>}): null}
+
+                    {results.length ? <li className='nav-arrows'>
+                        <img onClick={() => prevPage(searchInput, pageNumber)} src={leftArrow} height='15px' width='15px' />
+                        <p>Page number: {pageNumber + 1}</p>
+                        <img src={rightArrow} onClick={() => nextPage(searchInput, pageNumber)} height='15px' width='15px'/>
+                    </li> : categoryResults.length ? <li className='nav-arrows'>
+                        <img onClick={() => prevPage(currentCategory, pageNumber)} src={leftArrow} height='15px' width='15px' />
+                        <p>Page number: {pageNumber + 1}</p>
+                        <img src={rightArrow} onClick={() => nextPage(currentCategory, pageNumber)} height='15px' width='15px'/>
+                    </li>: null}
                 </ul>
             </div>
-            <CategroyCascader selectRecipe={selectRecipe} categorySelected={categorySelected} />
+            <CategroyCascader selectRecipe={selectRecipe} categorySelected={categorySelected} changeCurrentCategory={changeCurrentCategory} />
 
-            <div id='trash' style={{position: 'fixed', bottom: '20px', right: '50px'}} >🗑</div>
+            <img id='trash' style={{position: 'fixed', bottom: '20px', right: '50px'}} src={trash} alt='delete-icon' />
             <Prompt 
             when={!changesSaved}
             message='Leaving will discard your unsaved changed. Are you sure you want to leave?'
             />
         </div>
-
     )
 }
 
