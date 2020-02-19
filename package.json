@@ -30,6 +30,7 @@
     "massive": "^6.1.4",
     "moment": "^2.24.0",
     "node-sass": "^4.13.1",
+    "querystring": "^0.2.0",
     "react": "^16.12.0",
     "react-chartjs-2": "^2.9.0",
     "react-dom": "^16.12.0",

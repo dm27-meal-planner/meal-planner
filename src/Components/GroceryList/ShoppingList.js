@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {getUserGroceryList, listToFridge} from '../../redux/reducers/grocerylistReducer';
 import {connect} from 'react-redux';
+import './stylesheet/GroceryList.css';
 import loading from '../../animations/loading.gif'
 
 class ShoppingList extends Component {
@@ -52,13 +53,13 @@ class ShoppingList extends Component {
          <>
             {this.state.shoppingList.map((element, index) => {
                return (
-                  <div key={element.list_item_id} onClick={() => this.purchasingItem(element)}>
-                     <img src={element.imageurl} alt='ingredient_image'/>
-                     <span>{element.name} </span>
-                     <span>{element.quantity} </span>
-                     <span>{element.unit} </span>
-                     <span>Estimated cost: ${element.price}</span>
-                  </div>
+                  <tr key={element.list_item_id}>
+                     <th onClick={() => this.purchasingItem(element)}>blank</th>
+                     <th><img src={element.imageurl} alt={element.name} />
+                     <span>{element.name}</span></th>
+                     <th>{element.quantity} {element.unit}</th>
+                     <th>${element.price}</th>
+                  </tr>
               )
             })}
             <button onClick={() => this.transferToFridge(this.state.purchasedItems)}>Add Selected Items to Fridge</button>

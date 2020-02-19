@@ -113,8 +113,8 @@ class RecipeEditor extends Component {
 
     handleSubmitClick = () => {
         // set the body for api
-        let prepTime = this.state.recipePrepTimeHour * 60 + this.state.recipePrepTimeMin;
-        let cookTime = this.state.recipeCookTimeHour * 60 + this.state.recipeCookTimeMin;
+        let prepTime = parseInt(this.state.recipePrepTimeHour) * 60 + parseInt(this.state.recipePrepTimeMin);
+        let cookTime = parseInt(this.state.recipeCookTimeHour) * 60 + parseInt(this.state.recipeCookTimeMin);
         let rObj = {
             recipeName: this.state.recipeName,
             recipeImg: this.state.recipeImg,
@@ -247,8 +247,8 @@ class RecipeEditor extends Component {
                     </div>
                     <div>
                         <span>Descriptions: </span>
-                        <textarea name='recipeDes' onChange={this.handleUserInput}>
-                            {this.state.recipeDes}
+                        <textarea name='recipeDes' onChange={this.handleUserInput} value={this.state.recipeDes}>
+                            
                         </textarea>
                     </div>
                     <div>
@@ -276,8 +276,8 @@ class RecipeEditor extends Component {
                     <div>
                         <span>Directions:</span>
                         <div>
-                            <textarea name='recipeDirection' onChange={this.handleUserInput} >
-                                {this.state.recipeDirection}
+                            <textarea name='recipeDirection' onChange={this.handleUserInput} value={this.state.recipeDirection}>
+                                
                             </textarea>
                         </div>
                     </div>
