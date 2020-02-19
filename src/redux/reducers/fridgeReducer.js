@@ -72,7 +72,7 @@ export default function reducer(state = initialState, action) {
       case `${EMPTY_FRIDGE}_FULFILLED`:
          return {
             ...state,
-            ingredients: payload.data
+            ingredients: []
          }
       default: return state;
    }

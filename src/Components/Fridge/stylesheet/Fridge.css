@@ -40,6 +40,12 @@ table thead th, table tbody th {
   background-color: red;
   color: white;
   border-radius: 5px;
+  margin: 10px;
+}
+
+.ant-btn-primary {
+  background-color: #ff7676 !important;
+  border: none !important;
 }
 
 table {

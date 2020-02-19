@@ -13,7 +13,6 @@ import Fridge from '../Fridge/Fridge';
 import {getMealsForUser, addMeal} from '../../redux/reducers/mealplanReducer'
 import loadingAnimation from '../../animations/loading.gif'
 import { Link, HashRouter } from 'react-router-dom';
-import 'antd/es/popover/style/css'
 
 import './stylesheet/HomePage.scss'
 

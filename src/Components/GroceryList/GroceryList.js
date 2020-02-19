@@ -23,8 +23,10 @@ class GroceryList extends Component{
     }
 
     componentDidUpdate = async (prevProps) => {
-        if (this.props.groceryList !== prevProps.groceryList) {
+        if (this.props.groceryList.length !== prevProps.groceryList.length) {
             await this.props.getUserGroceryList(this.props.user_id);
+        }else{
+            return false
         }
     }
     getSearchResults = () => {
@@ -109,6 +111,7 @@ class GroceryList extends Component{
                 : null}
                 <h1>My Shopping List</h1>
                 {/* So shopping list and items to add to the list are separate. */}
+                <p>Clicking on an item adds it to the purchased items list. Highlight it if it's in there.</p>
                 {this.props.groceryList[0] ? 
                 <div id="groceryList">
                     <ShoppingList user_id={this.props.user_id} groceryList={this.props.groceryList} />
