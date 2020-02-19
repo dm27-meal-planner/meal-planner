@@ -11,7 +11,7 @@ inner join recipe_ingredients ri
 on ri.recipe_id = r.recipe_id
 inner join ingredients i
 on ri.ingredient_id = i.ingredient_id
-where lower(r.name) = lower($1)
+where r.name ilike $1
 and lower($2) in ('', lower(r.meal_type))
 and lower($3) in ('', lower(c.cuisine_name))
 and lower($4) in ('', lower(i.ingredient_name) )

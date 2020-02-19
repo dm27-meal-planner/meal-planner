@@ -1,7 +1,7 @@
 select r.recipe_id, r.image recipe_img
 , r.name recipe_name, 'mealplan' recipe_source
 , u.username recipe_author, r.user_id recipe_author_id
-, 0 recipe_review, r.serving recipe_servings
+, 0 recipe_review, r.servings recipe_servings
 , c.cuisine_name recipe_cuisine, r.meal_type recipe_meal_type
 , r.prep_time::INTEGER + r.cook_time::INTEGER recipe_time
 , r.prep_time recipe_prep_time, r.cook_time recipe_cook_time

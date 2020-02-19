@@ -58,7 +58,7 @@ module.exports = {
                     res.status(400).json('Ingredient not found')
                 }
     
-                db.ingredients.add_ingredient(result.name, result.estimatedCost.value, result.nutrition.nutrients)
+                db.ingredients.add_ingredient(result.name, result.estimatedCost.value, result.nutrition.nutrients,null, null, null);
     
                 res.status(200).json(result)
         } else {
