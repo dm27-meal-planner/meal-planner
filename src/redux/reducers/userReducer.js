@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const initialState = {
-   username: '',
+   username: null,
    // is_Admin: false,
    email: null,
    user_id: null,
