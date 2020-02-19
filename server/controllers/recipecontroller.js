@@ -307,7 +307,7 @@ const addRecipe = async (req, res) => {
                console.log(err.response.data.message);
                spoonResult = [];
             })
-            .finally(()=>{
+            .finally(async ()=>{
                let addIngredient;
                if (spoonResult[0]) {
                   // success, using api info to add into ingredient database            
@@ -430,7 +430,7 @@ const editRecipe = async (req, res) => {
                console.log(err.response.data.message);
                spoonResult = [];
             })
-            .finally(()=>{
+            .finally(async ()=>{
                let addIngredient;
                if (spoonResult[0]) {
                   // success, using api info to add into ingredient database            
