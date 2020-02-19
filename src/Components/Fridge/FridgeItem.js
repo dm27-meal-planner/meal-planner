@@ -1,5 +1,10 @@
 import React, {Component} from 'react';
+<<<<<<< HEAD
 import moment from 'moment'
+=======
+import moment from 'moment';
+import './stylesheet/FridgeItem.css';
+>>>>>>> master
 
 class FridgeItem extends Component {
    constructor() {
@@ -26,20 +31,20 @@ class FridgeItem extends Component {
       if (editing) {message = 'Done'} else {message = 'Edit'}
       return (
          <tr className="fridgeitem">
-            <th>
+            <th className="individualFridgeItem">
                <img src={element.imageurl} alt={element.ingredient_name} />
                <span>{element.ingredient_name} 
                {editing ? <button onClick={() => deleteItem(element.fridge_item_id)}>Remove</button> : null}</span>
             </th>
-            <th>
+            <th className="individualFridgeDate">
                <span>{moment(element.date_added).fromNow()} </span>   
             </th>
-            <th>
+            <th className="individualFridgeQuantity">
                {editing ? <> <input type='number' name='quantity' min='1' value={this.state.quantity} onChange={this.handleInputChange} />
                <span>{element.unit} </span>
                </>: <>
                <span>{element.quantity}</span>
-               <span>{element.unit} </span></>}
+               <span>{element.unit}</span></>}
                <button onClick={() => this.setState({editing: !editing})}>{message}</button>
             </th>
          </tr>

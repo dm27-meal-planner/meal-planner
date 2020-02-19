@@ -29,7 +29,13 @@
       background-color: red;
       color: white;
       border-radius: 5px;
+      margin: 10px;
    }
+}
+
+.ant-btn-primary {
+   background-color: rgb(255, 118, 118) !important;
+   border: none !important;
 }
 table {
    border: 1px solid black;
