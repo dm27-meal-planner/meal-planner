@@ -19,7 +19,7 @@ const CategoryCascader = (props) => {
         }
 
         changeCategory(null)
-    })
+    },[categorySelected])
 
     
     let options = [
