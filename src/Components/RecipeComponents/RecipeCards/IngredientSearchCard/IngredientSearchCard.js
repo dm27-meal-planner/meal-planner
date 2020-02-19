@@ -2,6 +2,13 @@ import React from 'react'
 
 class IngredientSearchCard extends React.Component{
 
+    constructor(){
+        super();
+        this.state = {
+            amount: 0,
+            unit: ''
+        }
+    }
     handleInputChange = (e) => {
       this.setState({
           [e.target.name]: e.target.value 

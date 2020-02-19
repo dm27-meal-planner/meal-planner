@@ -1,4 +1,4 @@
-select ri.recipe_ingredient_id id, i.ingredient_name name
+select ri.recipe_ingredient_id id, i.ingredient_name as name,
 ri.quantity amount, ri.unit
 from ingredients i
 inner join recipe_ingredients ri
