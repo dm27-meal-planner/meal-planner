@@ -1,4 +1,5 @@
 const axios = require('axios');
+
 const { SPOON_API_KEY } = process.env
 
 // only get information from spoonacular since review system is not online yet.
@@ -233,19 +234,66 @@ const addRecipe = async (req, res) => {
    const {
       recipeName,
       recipeImg,
+
+      recipeServings,
+      recipeCuisine,
+      recipeMealType,
+
       recipePrepTime,
       recipeCookTime,
-      recipeDirection,
-      recipeMealType,
+
       recipeDes,
       recipeNutrition,
-      
+      recipeIngredients,
+      recipeDirection,
 
+      added_date
    } = req.body;
+   // **using middleware instead
    if (!req.session.user) {
       res.status(401).json("Please login!");
       return null;
    }
+   // add to recipe table
+   const db = req.app.get('db');
+   const userRecipe = await db.recipes.add_recipe(
+      req.session.user.user_id, recipeName, recipeImg, recipePrepTime, recipeCookTime,
+      recipeDirection, recipeMealType, recipeDes, JSON.stringify(recipeNutrition),
+      recipeServings, added_date, `%${recipeCuisine}%`
+   );
+   // get the recipe_id for recipe_ingredient
+   const recipeId = userRecipe[0].recipe_id;
+
+   // check each recipe ingredient
+   // ingredient: {name, amount, unit, id(spoon_id)}
+   for (let i = 0; i < recipeIngredients.length; i++) {
+      // search ingredient database
+      const ingredientFound = await db.ingredients.get_ingredient_by_name(recipeIngredients[i].name.toLowerCase());
+
+      if(!ingredientFound[0]){
+         // if not in database, go to spoon api to get the info
+          const result = await axios.get(`https://api.spoonacular.com/food/ingredients/${ingredientId}/information?apiKey=${SPOON_API_KEY}&amount=1`)
+              .then(res => res.data)
+  
+              // success, using api info to add into ingredient database
+              if(!result){
+                 res.status(400).json('Ingredient not found')
+               }
+               // fail, insert basic information to ingredient database.
+  
+              db.ingredients.add_ingredient(result.name, result.estimatedCost.value, result.nutrition.nutrients)
+  
+              res.status(200).json(result)
+      } else {
+         // in database
+          res.status(200).json(ingredientFound)
+      }
+      // now ingredient database has the info, insert into recipe_ingredient.
+      
+   }
+
+   res.status(200).json(userRecipe);
+
 
    res.status(200).json('OK');
 }

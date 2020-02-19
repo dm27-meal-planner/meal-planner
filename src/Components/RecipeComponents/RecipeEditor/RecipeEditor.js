@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
 // import { Redirect, Link } from 'react-router-dom'
 import axios from 'axios';
 import MealTypeCard from '../RecipeCards/MealTypeCard/MealTypeCard';
@@ -12,7 +13,7 @@ class RecipeEditor extends Component {
             recipeId: '',
             recipeName: '',
             recipeImg: '',
-            recipeAuthor: '',
+            // recipeAuthor: '',
             recipeAuthorId: '',
 
             recipeServings: 1,
@@ -33,6 +34,7 @@ class RecipeEditor extends Component {
 
             // ---------third column
             recipeIngredients: [],
+            ingredientWindow: false,
 
             recipeDirection: '',
         }
@@ -97,6 +99,12 @@ class RecipeEditor extends Component {
         })
     }
 
+    handleIngredientWindow = () => {
+        this.setState({
+            ingredientWindow: !this.state.ingredientWindow
+        })
+    }
+
     handleMealTypeChange = (e) => {
         this.setState({
             recipeMealType: e.currentTarget.value
@@ -104,12 +112,41 @@ class RecipeEditor extends Component {
     }
 
     handleSubmitClick = () => {
-        // add a new recipe
-        if (this.state.recipeAuthorId) {
+        // set the body for api
+        let prepTime = this.state.recipePrepTimeHour * 60 + this.state.recipePrepTimeMin;
+        let cookTime = this.state.recipeCookTimeHour * 60 + this.state.recipeCookTimeMin;
+        let rObj = {
+            recipeName: this.state.recipeName,
+            recipeImg: this.state.recipeImg,
 
-        } else {
+            recipeServings: this.state.recipeServings,
+            recipeCuisine: this.state.recipeCuisine,
+            recipeMealType: this.state.recipeMealType,
+
+            recipePrepTime: prepTime,
+            recipeCookTime: cookTime,
+
+            recipeDes: this.state.recipeDes,
+            recipeNutrition: this.state.recipeNutrition,
+            recipeIngredients: this.state.recipeIngredients,
+            recipeDirection: this.state.recipeDirection,
+
+            added_date: moment(new Date()).format(),
+        }
+        // check this is add or edit.
+        if (this.props.match.params.recipe_id) {
             // edit and save the recipe.
-
+            axios.put(`/api/recipe/${this.props.match.params.recipe_id}`, rObj)
+                .then(response => {
+                    alert('Save successfully!');
+                    this.props.history.push('/recipes');
+                });
+        } else {
+            // add a new recipe
+            axios.post('/api/recipe', rObj).then(response => {
+                alert('Added successfully!');
+                this.props.history.push('/recipes');
+            });
         }
     }
 
@@ -186,7 +223,7 @@ class RecipeEditor extends Component {
                         </select>
                         <span>Serving: </span>
                         <input name='recipeServings' onChange={this.handleUserInput}
-                            value={this.state.recipeServings} 
+                            value={this.state.recipeServings}
                             type='number' min='1' step='1' />
                     </div>
                 </div>
@@ -215,21 +252,26 @@ class RecipeEditor extends Component {
                         </textarea>
                     </div>
                     <div>
-                        <h3>Nutrition Information</h3>
+                        <span>Nutrition Information</span>
+                        <span>This will update after save the recipe.</span>
                         {/* **beautify later */}
                         <div>{JSON.stringify(this.state.recipeNutrition)} </div>
                     </div>
                 </div>
                 <div className='third-column-wrapper'>
                     <div>
-                        {/* **Ingredient list, waiting for design the common use one. */}
-                        <RecipeIngredientCard 
-                        ingredients={this.state.recipeIngredients}
-                        changeIngredient={this.changeIngredient}
-                        addToIngredients={this.addToIngredients}
-                        removeIngredient={this.removeIngredient}
-                        
-                        />
+                        <button onClick={this.handleIngredientWindow}>
+                            Open ingredient window
+                        </button>
+                        {this.state.ingredientWindow ? (
+                            <RecipeIngredientCard
+                                ingredients={this.state.recipeIngredients}
+                                changeIngredient={this.changeIngredient}
+                                addToIngredients={this.addToIngredients}
+                                removeIngredient={this.removeIngredient}
+                                closeWindow={this.handleIngredientWindow}
+                            />
+                        ) : null}
                     </div>
                     <div>
                         <span>Directions:</span>
