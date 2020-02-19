@@ -23,8 +23,10 @@ class GroceryList extends Component{
     }
 
     componentDidUpdate = async (prevProps) => {
-        if (this.props.groceryList !== prevProps.groceryList) {
+        if (this.props.groceryList.length !== prevProps.groceryList.length) {
             await this.props.getUserGroceryList(this.props.user_id);
+        }else{
+            return false
         }
     }
     getSearchResults = () => {

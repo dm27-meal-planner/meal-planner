@@ -297,7 +297,7 @@ const MealPlanExe = (props) => {
                 </div> : null}
 
 
-            {mealSelected ? <Bar className='graph' data={data} /> : null}
+            {mealSelected || daySelected ? <Bar className='graph' data={data} /> :null}
         </div>
     )
 }

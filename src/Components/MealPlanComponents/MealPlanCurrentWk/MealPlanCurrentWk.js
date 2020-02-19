@@ -10,7 +10,7 @@ import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import ReactDOM from 'react-dom'
 import moment from 'moment'
 import { Popover, message } from 'antd'
-import { addMeal, editMeal, deleteMeal, searchFunction, searchByCategory, autoCompleteSearch } from '../../../redux/reducers/mealplanReducer'
+import { addMeal, editMeal, deleteMeal, searchFunction, searchByCategory, autoCompleteSearch, clearSearchResults } from '../../../redux/reducers/mealplanReducer'
 import searching from '../../../animations/searching.gif'
 import searchIcon from '../../../icons/search-solid.svg'
 import loading from '../../../animations/loading.gif'
@@ -47,6 +47,8 @@ const MealPlanCurrentWk = (props) => {
             createDraggableRecipe(selectedRecipe)
 
         }
+
+
     }, [selectedRecipe])
 
 
@@ -75,11 +77,19 @@ const MealPlanCurrentWk = (props) => {
             updateResults(props.searchResults)
             updateCategoryResults([])
         }
+
+
     }, [props.searchResults])
 
     useEffect(() => {
              props.autoCompleteSearch(searchInput)
     }, [searchInput])
+
+    useEffect(() => {
+        return () => {
+                props.clearSearchResults()
+        }
+    },[])
 
 
     const parseMeals = (propsMeals) => {
@@ -164,7 +174,7 @@ const MealPlanCurrentWk = (props) => {
     const SaveChanges = () => {
         if(addedMeals.length){
             addedMeals.map(ele => {
-                props.addMeal(props.user_id, {recipe_id: ele.apiId, date: ele.date, resourceid: ele.resourceId, title: ele.title, image: ele.image, fromApi: `${ele.source === 'api' ? true : false }` })
+                props.addMeal(props.user_id, {recipe_id: ele.apiId, date: ele.date, resourceid: ele.resourceId, title: ele.title, image: ele.image, fromApi: ele.source === 'api' ? true : false })
             })
             addMoreMeals([])     
         } 
@@ -290,19 +300,19 @@ const MealPlanCurrentWk = (props) => {
             <div>
                     <div>
                         <input  id='search-recipe' style = {{backgroundImage: `url(${props.searching ? loading : searchIcon})` }} name='search' value={searchInput}  onChange={e => updateInput(e.target.value)} />
-                        <ul className='auto-complete-list' style={{display: `${!props.autoCompleteResults.length ? 'none' : 'block'}`}} >
-                            {props.autoCompleteResults.length ? props.autoCompleteResults.map((ele, i) => {
+                        {props.autoCompleteResults.length && searchInput ? <ul className='auto-complete-list' style={{display: `${!props.autoCompleteResults.length ? 'none' : 'block'}`}} >
+                            {props.autoCompleteResults.map((ele, i) => {
                                 return <li key={i} onClick={() => handleAutoCompleteClick(ele.title)} >{ele.title}</li>
-                            }): null}
-                        </ul>
+                            })}
+                        </ul>:null}
                     </div>
 
                 <ul id='search-result-container' >
                         <p>Showing Results for: {results.length ? searchInput: categoryResults.length ? currentCategory : 'Nothing'}</p>
                     { props.searching || props.categorySearching ? <img src={searching} alt='seraching' /> : results.length ?  results.map((ele, i) => {
-                        return <li key={i} onClick={() => selectRecipe(_.cloneDeep({id: ele.id, title: ele.title, extendedProps:{ image: `https://spoonacular.com/recipeImages/${ele.image}`, source: ele.source}}))} className='search-result-block' >
-                            <img src={`https://spoonacular.com/recipeImages/${ele.image}`} alt='recipe'  width='70px'/>
-                            <p>{ele.title}</p>
+                        return <li key={i} onClick={() => selectRecipe(_.cloneDeep({id: +`${ele.source === 'api'? ele.id : ele.recipe_id}`, title: `${ele.source === 'api'? ele.title : ele.name}`, extendedProps:{ image: `${ele.source === 'api'? `https://spoonacular.com/recipeImages/${ele.image}` : ele.image}`, source: ele.source}}))} className='search-result-block' >
+                            <img src={`${ele.source === 'api' ? `https://spoonacular.com/recipeImages/${ele.image}` : ele.image}`} alt='recipe'  width='70px'/>
+                            <p>{ele.title || ele.name}</p>
                         </li>
                     }) : categoryResults.length ? categoryResults.map((ele, i) => {
                         return <li key={i} onClick={() => selectRecipe(_.cloneDeep({id: ele.id, title: ele.title, extendedProps:{ image: `https://spoonacular.com/recipeImages/${ele.image}`, source: ele.source}}))} className='search-result-block' >
@@ -344,4 +354,4 @@ const mapStateToProps = (reduxState) => {
     }
 }
 
-export default connect(mapStateToProps, { addMeal, editMeal, deleteMeal, searchFunction, searchByCategory, autoCompleteSearch })(MealPlanCurrentWk)
+export default connect(mapStateToProps, { addMeal, editMeal, deleteMeal, searchFunction, searchByCategory, autoCompleteSearch, clearSearchResults })(MealPlanCurrentWk)

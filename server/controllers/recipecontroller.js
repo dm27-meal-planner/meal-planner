@@ -48,6 +48,7 @@ const getRecipeByQuery = async (req, res) => {
       // search from MealPlan database.
       const db = req.app.get('db');
       const mealPlanRecipes = await db.recipes.search_recipes(name, meal_type, cuisine, ingredient);
+      // const mealPlanRecipes = await db.recipes.search_recipes(name, '', '');
 
 
       let allRecipes = [];

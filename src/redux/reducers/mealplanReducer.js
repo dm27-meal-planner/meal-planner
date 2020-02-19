@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { compensateScroll } from '@fullcalendar/core'
 
 const initialState = {
     meals: [],
@@ -27,6 +26,7 @@ const SEARCH_BY_CATEGORY = 'SEARCH_BY_CATEGORY'
 const AUTO_COMPLETE = 'AUTO_COMPLETE'
 const MEAL_SEARCH = 'MEAL_SEARCH'
 const MEAL_NUTRITION = 'MEAL_NUTRTITION'
+const CLEAR_RESULTS = 'CLEAR_RESULTS'
 
 
 export function getMealsForUser(userid){
@@ -115,6 +115,13 @@ export function mealNutrition(id){
     type: MEAL_NUTRITION,
     payload: axios.get(`/api/mealplan/meal/nutrition?id=${id}`)
     .then(res => res.data)
+  }
+}
+
+export function clearSearchResults(){
+  return{
+    type: CLEAR_RESULTS,
+    payload: []
   }
 }
 
@@ -208,11 +215,10 @@ export default function reducer(state = initialState, action){
           }
         }
         case `${SEARCH_RECIPES}_FULFILLED`: {
-          console.log(payload)
           return {
             ...state,
             searching: false,
-            searchResults: payload.results
+            searchResults: payload
           }
         }
         case `${SEARCH_RECIPES}_REJECTED`: {
@@ -293,6 +299,13 @@ export default function reducer(state = initialState, action){
         case `${MEAL_NUTRITION}_REJECTED`: {
           return {
             ...state
+          }
+        }
+        case `${CLEAR_RESULTS}`: {
+          console.log('results cleared')
+          return {
+            ...state,
+            searchResults: []
           }
         }
 

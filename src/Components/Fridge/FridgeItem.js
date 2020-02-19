@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import moment from 'moment'
 
 class FridgeItem extends Component {
    constructor() {
@@ -31,7 +32,7 @@ class FridgeItem extends Component {
                {editing ? <button onClick={() => deleteItem(element.fridge_item_id)}>Remove</button> : null}</span>
             </th>
             <th>
-               <span>{element.date_added} </span>   
+               <span>{moment(element.date_added).fromNow()} </span>   
             </th>
             <th>
                {editing ? <> <input type='number' name='quantity' min='1' value={this.state.quantity} onChange={this.handleInputChange} />
