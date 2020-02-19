@@ -21,23 +21,49 @@ const addMeal = async (req, res) => {
    let nutritional_info = null
    const db = req.app.get('db')
 
+   let ingredients;
+   let directions;
+   let total_time;
+
    if(fromApi){
 
-      nutritional_info = await axios.get(`https://api.spoonacular.com/recipes/${recipe_id}/information?includeNutrition=true&apiKey=${SPOON_API_KEY}`)
-                  .then(res => JSON.stringify(res.data.nutrition.nutrients))
 
+
+      await axios.get(`https://api.spoonacular.com/recipes/${recipe_id}/information?includeNutrition=true&apiKey=${SPOON_API_KEY}`)
+                  .then(res => {
+                      nutritional_info = JSON.stringify(res.data.nutrition.nutrients)
+                      total_time = res.data.preparationMinutes + res.data.cookingMinutes
+                      ingredients = JSON.stringify(res.data.extendedIngredients.map(ele => {
+                        return {ingredient_id: ele.id, ingredient_name: ele.name, unit: ele.unit, amount: ele.amount, image: `https://www.spoonacular.com/cdn/ingredients_100x100/${ele.image}`}
+                     }))
+                      directions = JSON.stringify(res.data.analyzedInstructions[0].steps.map(ele => {
+                        return {step: ele.number, instruction: ele.step}
+                     }))
+                  })
       recipe_id = `s${recipe_id}`
+
    }else{
 
 
       nutritional_info = await db.mealplan.get_nutritional_info(recipe_id)
 
+      nutritional_info = JSON.stringify(nutritional_info[0].nutritional_info)
 
       recipe_id = `l${recipe_id}`
    }
 
 
-   const results = await db.mealplan.add_meal(user_id, date, JSON.stringify(nutritional_info[0].nutritional_info), false, resourceid, title, image, recipe_id)
+   JSON.parse(ingredients).map(async (ele) => {
+
+      let price = await axios.get(`https://api.spoonacular.com/food/ingredients/${ele.ingredient_id}/information?amount=${ele.amount}&unit=${ele.unit}&apiKey=${SPOON_API_KEY}`)
+                  .then(res => res.data.estimatedCost.value)
+
+      await db.list_items.add_item(ele.amount, ele.unit, user_id, ele.ingredient_id, (price / 100).toFixed(2), ele.ingredient_name, ele.image)
+
+   })
+
+
+   const results = await db.mealplan.add_meal(user_id, date, nutritional_info, false, resourceid, title, image, recipe_id, ingredients, directions, total_time)
 
 
    if (!results[0]){

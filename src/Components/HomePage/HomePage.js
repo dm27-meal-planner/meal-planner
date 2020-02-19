@@ -32,7 +32,7 @@ const HomePage = (props) => {
     const parseMeals = (propsMeals) => {
         let meals = []
         propsMeals.map(ele => {
-            meals.push({title: ele.title, date: ele.date, resourceId:ele.resourceid, extendedProps: {image: ele.image, recipe_id: ele.recipe_id, nutritional_info: ele.nutritional_info}})
+            meals.push({title: ele.title, date: ele.date, resourceId:ele.resourceid, extendedProps: {image: ele.image, recipe_id: ele.recipe_id, nutritional_info: ele.nutritional_info, ingredients: ele.ingredients, total_time: ele.total_time}})
         })
         changeEvents(meals)
     }
@@ -51,21 +51,44 @@ const HomePage = (props) => {
                 <Popover title={`${event.title} for ${event._def.resourceIds[0]}`} content={
                     <>
                         <div style={{display: 'flex', flexDirection: 'column', marginLeft: 'auto', marginRight:'auto'}}>
-                            <span style={{textAlign: 'center'}}>{event.title}</span>
+                            <span style={{textAlign: 'center'}}>{event.title} {event.extendedProps.total_time ? `${event.extendedProps.total_time} min.` : null}</span>
                             <Link style={{marginLeft: 'auto', marginRight:'auto', marginTop: '10px'}} to={`/recipe/${event.extendedProps.recipe_id}`}>
                                 <button>Go To Recipe</button>
                             </Link>
                         </div>
                         <Popover content={
                             <table>
+                                <tbody>
+
                                 {event.extendedProps.nutritional_info.slice(0,9).map((ele, i) => {
                                     return (<tr key={i} >
                                         <th><strong>{ele.title}</strong></th>
                                         <td>{ele.amount} {ele.unit}</td>
                                     </tr>)
                                 })}
+                                </tbody>
                             </table>} trigger={'hover'}>
                                 <button style={{width :'100%',marginLeft: 'auto', marginRight:'auto', marginTop: '10px'}}>Nutritional Info.</button>
+                        </Popover>
+                        <Popover content={
+                            <table>
+                                <tbody>
+                                    {event.extendedProps.ingredients ? event.extendedProps.ingredients.map((ele, i) => {
+                                        return (
+                                            <tr>
+                                                <th key={i}>
+                                                    <img src={ele.image} alt='ingredient-image' height='40px' width='40px'/>
+                                                </th>
+                                                <td>
+                                                    <span> <strong> {ele.amount} {ele.unit} {ele.ingredient_name} </strong> </span>
+                                                </td>
+                                            </tr>
+                                        )
+                                    }): null}
+                                </tbody>
+                            </table>
+                        } trigger='hover'>
+                                <button>ingredients</button>
                         </Popover>
                     </>
                         } trigger='hover' >
