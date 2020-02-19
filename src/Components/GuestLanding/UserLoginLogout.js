@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {getUser, loginUser, logoutUser, registerFirebase, loginFirebase} from '../../redux/reducers/userReducer';
 import { withRouter } from 'react-router';
 import Firebase from '../Firebase/Firebase';
+import {Popover} from 'antd';
 
 class UserLoginLogout extends Component {
    constructor() {
@@ -11,7 +12,7 @@ class UserLoginLogout extends Component {
       this.state = {
          userOrEmail: '',
          password: '',
-         renderAmount: 0
+         visible: false
       }
    }
 
@@ -25,6 +26,10 @@ class UserLoginLogout extends Component {
 
    handlePasswordInput = (value) => {
       this.setState({password: value});
+   }
+
+   handleVisibleChange = visible => {
+      this.setState({visible});
    }
 
    render() {
@@ -43,8 +48,8 @@ class UserLoginLogout extends Component {
 
       return(
          <div id="UserLoginLogout">
-            <h1>Login</h1>
-            <form onSubmit={() => {
+            <Popover
+               content={<form className="user" onSubmit={() => {
                this.props.loginUser(userOrEmail, password)
                this.setState({userOrEmail: '', password: ''})
             }}>
@@ -60,15 +65,13 @@ class UserLoginLogout extends Component {
                   required
                   onChange={e => this.handlePasswordInput(e.target.value)}/>
                <input type="submit" />
-            </form>
-
-            {this.props.username ? 
-            <>
-               <h1>Welcome, {this.props.username}!</h1> 
-               <button onClick={() => {
-                  this.props.logoutUser();
-               }}>Logout</button>
-            </> : <Firebase />}
+            </form>}
+            placement="bottomLeft"
+            trigger="click"
+            visible={this.state.visible}
+            onVisibleChange={this.handleVisibleChange}>
+               <h1 type="primary">Login</h1>
+            </Popover>
          </div>
       )
    }

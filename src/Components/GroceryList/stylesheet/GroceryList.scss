@@ -1,0 +1,21 @@
+table {
+   border: 1px solid black;
+   thead {
+      th {
+         border-bottom: 1px solid black;
+         @extend %common-table;
+      }
+   }
+   tbody {
+      th {
+         @extend %common-table;
+      }
+      input {
+         width: 40px;
+      }
+
+      img {
+         max-height: 75px;
+      }
+   }
+}
