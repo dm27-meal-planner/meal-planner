@@ -1,10 +1,6 @@
 import React, {Component} from 'react';
-<<<<<<< HEAD
-import moment from 'moment'
-=======
 import moment from 'moment';
 import './stylesheet/FridgeItem.css';
->>>>>>> master
 
 class FridgeItem extends Component {
    constructor() {
