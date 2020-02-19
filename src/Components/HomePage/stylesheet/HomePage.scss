@@ -5,6 +5,12 @@
 @import '~@fullcalendar/resource-timeline/main.css';
 
 
+.calendarAndNextMeal{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+
 .home-page {
     display: flex;
     justify-content: space-between;

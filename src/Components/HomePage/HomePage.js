@@ -32,7 +32,7 @@ const HomePage = (props) => {
     const parseMeals = (propsMeals) => {
         let meals = []
         propsMeals.map(ele => {
-            meals.push({title: ele.title, date: ele.date, resourceId:ele.resourceid, extendedProps: {image: ele.image, recipe_id: ele.recipe_id}})
+            meals.push({title: ele.title, date: ele.date, resourceId:ele.resourceid, extendedProps: {image: ele.image, recipe_id: ele.recipe_id, nutritional_info: ele.nutritional_info}})
         })
         changeEvents(meals)
     }
@@ -48,11 +48,31 @@ const HomePage = (props) => {
     const newEventRender = ({event, el}) =>{
         let newResource = (
             <HashRouter>
-                <Popover title={`${event.title} for ${event._def.resourceIds[0]}`} content={<div><span>{event.title}</span><Link to={`/recipe/${event.extendedProps.recipe_id}`} ><button>Go To Recipe</button></Link></div>} trigger='click' >
-                    <div style={{ position:'relative', backgroundImage: `url(${event.extendedProps.image || 'https://imbindonesia.com/images/placeholder/camera.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100%', height:'120px', margin: '0px', padding:'0px', borderRadius: '10px'}} >
-                        <div className='eventTitle' style={{borderBottomRightRadius: '10px', borderBottomLeftRadius: '10px'}}>
-                            <div className='toRecipe' style={{whiteSpace: 'pre-wrap', padding: '1px'}} >{event.title}</div>
+                <Popover title={`${event.title} for ${event._def.resourceIds[0]}`} content={
+                    <>
+                        <div style={{display: 'flex', flexDirection: 'column', marginLeft: 'auto', marginRight:'auto'}}>
+                            <span style={{textAlign: 'center'}}>{event.title}</span>
+                            <Link style={{marginLeft: 'auto', marginRight:'auto', marginTop: '10px'}} to={`/recipe/${event.extendedProps.recipe_id}`}>
+                                <button>Go To Recipe</button>
+                            </Link>
                         </div>
+                        <Popover content={
+                            <table>
+                                {event.extendedProps.nutritional_info.slice(0,9).map((ele, i) => {
+                                    return (<tr key={i} >
+                                        <th><strong>{ele.title}</strong></th>
+                                        <td>{ele.amount} {ele.unit}</td>
+                                    </tr>)
+                                })}
+                            </table>} trigger={'hover'}>
+                                <button style={{width :'100%',marginLeft: 'auto', marginRight:'auto', marginTop: '10px'}}>Nutritional Info.</button>
+                        </Popover>
+                    </>
+                        } trigger='hover' >
+                        <div style={{ position:'relative', backgroundImage: `url(${event.extendedProps.image || 'https://imbindonesia.com/images/placeholder/camera.jpg'})`, backgroundSize: '100% 100%', backgroundRepeat:'no-repeat', width:'100%', height:'120px', margin: '0px', padding:'0px', borderRadius: '10px'}} >
+                            <div className='eventTitle' style={{borderBottomRightRadius: '10px', borderBottomLeftRadius: '10px'}}>
+                                <div className='toRecipe' style={{whiteSpace: 'pre-wrap', padding: '1px'}} >{event.title}</div>
+                            </div>
                     </div>
                 </Popover>
             </HashRouter>

@@ -28,15 +28,23 @@ const addMeal = async (req, res) => {
 
       recipe_id = `s${recipe_id}`
    }else{
+
+
+      nutritional_info = await db.mealplan.get_nutritional_info(recipe_id)
+
+
       recipe_id = `l${recipe_id}`
    }
 
 
-   const results = await db.mealplan.add_meal(user_id, date, nutritional_info, false, resourceid, title, image, recipe_id)
+   const results = await db.mealplan.add_meal(user_id, date, JSON.stringify(nutritional_info[0].nutritional_info), false, resourceid, title, image, recipe_id)
+
 
    if (!results[0]){
      return res.status(400).json('Error adding meal to plan')
    }
+
+   // console.log(results)
 
    res.status(200).json(results);
 }
@@ -92,13 +100,11 @@ const getNutrition = async (req, res) => {
    if (recipe_id.startsWith('s')) {
       const id = recipe_id.slice(1);
       
+      let result = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=true&apiKey=${SPOON_API_KEY}`)
+      .then(res => res.data.nutrition.nutrients )
+      
+      res.status(200).json(result.slice(0,9))
    }
-
-
-  let result = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=true&apiKey=${SPOON_API_KEY}`)
-   .then(res => res.data.nutrition )
-
-   res.status(200).json(result)
 }
 
 const autoCompleteTerm = async(req, res) => {
@@ -149,9 +155,8 @@ const searchForRecipe = async (req, res) => {
                   .then(res => res.data.results)
                   result.forEach(ele => ele.source = 'api')
 
-
-      if(result.length){
-         res.status(400).json('No Results Found.')
+      if(!result.length){
+        return res.status(400).json('No Results Found.')
       }
          return res.status(200).json(result)
    }
@@ -160,8 +165,6 @@ const searchForRecipe = async (req, res) => {
 const searchByCategory = async (req, res) => {
    const { cuisine } = req.query
    const { pageNumber } = req.query
-
-   console.log(pageNumber)
 
    let results = await axios.get(`https://api.spoonacular.com/recipes/search?cuisine=${cuisine}&apiKey=${SPOON_API_KEY}&number=10&offset=${pageNumber * 10}`)
             .then(res => res.data)

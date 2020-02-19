@@ -55,7 +55,7 @@ app.post('/api/mealplan/:user_id', addMeal);
 app.put('/api/mealplan/:meal_id', editMeal);
 app.delete('/api/mealplan/:meal_id', deleteMeal);
 app.put('/api/mealplan/isfollowed/:meal_id', changeFollowedPlan)
-app.get('/api/mealplan/nutrition/pizza', getNutrition)
+app.get(`/api/mealplan/nutrition/:recipe_id`, getNutrition)
 app.get('/api/mealplan/search/autocomplete', autoCompleteTerm)
 app.get('/api/mealplan/search/meal', searchMeal)
 app.get('/api/mealplan/meal/nutrition', mealNutrition)
