@@ -2,10 +2,12 @@
    background-color: lightblue;
    display: flex;
    flex-direction: row;
+   flex-wrap: wrap;
    align-items: center;
+   justify-content: space-between;
 
    .intro {
-      width: 80%;
+      width: 55%;
       display: flex;
       flex-direction: column;
       .text-in-image {
@@ -23,6 +25,7 @@
       flex-direction: column;
       align-items: center;
       background-color: white;
+      width: 400px;
       margin: 20px;
       padding: 10px;
       border-radius: 20px;
@@ -34,7 +37,8 @@
 
       input {
          margin: 10px 5px;
-         width: 40%;
+         width: 60%;
+         text-align: center;
          border-top: none;
          border-right: none;
          border-left: none;
@@ -60,3 +64,5 @@
       margin: 10px;
    }
 }
+
+@media

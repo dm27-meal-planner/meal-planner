@@ -7,6 +7,7 @@ import {addItem} from '../../redux/reducers/fridgeReducer';
 import {getUserGroceryList, addItemToList, deleteGroceryItem} from '../../redux/reducers/grocerylistReducer';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
+import './stylesheet/GroceryList.css';
 
 class GroceryList extends Component{
     constructor(){
@@ -96,7 +97,7 @@ class GroceryList extends Component{
                 <ul>
                     {searchResults}
                 </ul>
-                GroceryList
+                <p>Ingredient Search</p>
                 <input name='searchInput' onChange={this.handleInputChange}/> 
                 <button onClick={this.getSearchResults}>search</button>
                 <ul>
@@ -112,7 +113,20 @@ class GroceryList extends Component{
                 <p>Clicking on an item adds it to the purchased items list. Highlight it if it's in there.</p>
                 {this.props.groceryList[0] ? 
                 <div id="groceryList">
-                    <ShoppingList user_id={this.props.user_id} groceryList={this.props.groceryList} />
+                    {/* <ShoppingList user_id={this.props.user_id} groceryList={this.props.groceryList} /> */}
+                    <table className="shoppingTable">
+                        <thead>
+                            <tr>
+                                <th>Buy</th>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Cost (estimate)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ShoppingList user_id={this.props.user_id} groceryList={this.props.groceryList} />
+                        </tbody>
+                    </table>
                 </div>
                 : <p>Your shopping list is empty!</p>}
             </div>
