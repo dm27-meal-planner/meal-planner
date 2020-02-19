@@ -1,4 +1,4 @@
-.navbar, .navbar .menuitems {
+.navbar, .navbar .menulinks {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -9,13 +9,15 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
 }
 
 .navbar {
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   padding: 10px 20px;
+  margin: 0;
+  background-color: #439a86;
 }
 
 .navbar .site-title {
@@ -24,10 +26,32 @@
 }
 
 .navbar p {
-  color: green;
+  font-size: 20px;
+  color: white;
+  margin: 0;
+  padding: 0 15px;
 }
 
-.navbar .menuitems {
-  margin: 0 20px;
+.navbar .menulinks p {
+  border-left: 1px solid black;
+}
+
+.navbar #UserLoginLogout p {
+  cursor: pointer;
+}
+
+@media screen and (max-width: 850px) {
+  .navbar {
+    display: none;
+  }
+  .hamburger {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 1098px) {
+  .navbar p {
+    font-size: 18px;
+  }
 }
 /*# sourceMappingURL=NavBar.css.map */

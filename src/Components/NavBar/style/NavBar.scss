@@ -2,24 +2,59 @@
     display: flex;
     align-items: center;
     flex-direction: row;
-    justify-content: space-between;
+}
+
+%hover-nochange {
+    text-decoration: none;
+    color: white;
 }
 
 .navbar {
     @extend %navcontent;
+    justify-content: space-between;
     padding: 10px 20px;
+    margin: 0;
+    background-color: #439a86;
 
     .site-title{
         font-weight: bold;
         font-size: 20px;
     }
+    p {
+        font-size: 20px;
+        color: white;
+        margin: 0;
+        padding: 0 15px;
+    }
+    .menulinks {
+        @extend %navcontent;
+        p  {
+            border-left: 1px solid black;
+        }
+    }
     
-    p{
-        color: green;
+    #UserLoginLogout {
+        p {
+            cursor: pointer;
+        }
+    }
+}
+
+// media query for mobile screen
+@media screen and (max-width: 850px) {
+    .navbar {
+        display: none;
     }
 
-    .menuitems {
-        @extend %navcontent;
-        margin: 0 20px;
+    .hamburger {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 1098px) {
+    .navbar {
+        p {
+            font-size: 18px;
+        }
     }
 }

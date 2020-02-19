@@ -4,6 +4,7 @@ import {getUser, loginUser, logoutUser, registerFirebase, loginFirebase} from '.
 import { withRouter } from 'react-router';
 import Firebase from '../Firebase/Firebase';
 import {Popover} from 'antd';
+import '../NavBar/style/NavBar.css';
 
 class UserLoginLogout extends Component {
    constructor() {
@@ -38,7 +39,7 @@ class UserLoginLogout extends Component {
       if(this.props.user_id){
          return (
             <>
-               <h1>Welcome, {this.props.username}!</h1> 
+               <p>Welcome, {this.props.username}!</p> 
                <button onClick={() => {
                   this.props.logoutUser();
                }}>Logout</button>
@@ -70,7 +71,7 @@ class UserLoginLogout extends Component {
             trigger="click"
             visible={this.state.visible}
             onVisibleChange={this.handleVisibleChange}>
-               <h1 type="primary">Login</h1>
+               <p type="primary">Login</p>
             </Popover>
          </div>
       )

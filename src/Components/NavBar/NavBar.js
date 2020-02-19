@@ -11,7 +11,7 @@ const NavBar = (props) => {
         return(
         <div style={{border: 'black solid 2px'}} className='navbar' >
             <Link to='/' ><p>MealPlan</p></Link>
-            <div className="menuitems">
+            <div className="menulinks">
                 <Link to='/recipes'><p>Recipes</p></Link>
                 <UserLoginLogout />
             </div>
@@ -21,15 +21,17 @@ const NavBar = (props) => {
 
     return(
         <div className='navbar' style={{border: 'black solid 2px'}} >
-            <p className='site-title'>MealPlan</p>
-
-        <Link to='/' ><p>Home</p></Link>
-        <Link to='/mealplan' ><p>Meal Plan</p></Link>
-        <Link to='/nutritional'><p>Meal Plan Nutrition</p></Link>
-        <Link to='/fridge' ><p>Fridge</p></Link>
-        <Link to='/grocerylist' ><p>Grocery List</p></Link>
-        <Link to='/recipes'><p>Recipes</p></Link>
-        <UserLoginLogout />
+            <span className="title">
+                <Link to='/' className='site-title'><p>MealPlan</p></Link>
+            </span>
+            <span className="menulinks">
+                <Link to='/mealplan' ><p>Meal Plan</p></Link>
+                <Link to='/nutritional'><p>Meal Plan Nutrition</p></Link>
+                <Link to='/fridge' ><p>Fridge</p></Link>
+                <Link to='/grocerylist' ><p>Grocery List</p></Link>
+                <Link to='/recipes'><p>Recipes</p></Link>
+                <UserLoginLogout />
+            </span>
 
         </div>
     )
