@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {getUserGroceryList, listToFridge} from '../../redux/reducers/grocerylistReducer';
 import {connect} from 'react-redux';
+import loading from '../../animations/loading.gif'
 
 class ShoppingList extends Component {
    constructor() {
@@ -14,6 +15,8 @@ class ShoppingList extends Component {
    componentDidMount = () => {
       this.updateGroceryList();
    }
+
+
 
    // The user should be able to check boxes in the shopping list so they can add items
    // that they actually shopped for
