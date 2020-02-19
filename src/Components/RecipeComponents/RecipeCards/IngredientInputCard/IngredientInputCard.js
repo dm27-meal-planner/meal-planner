@@ -7,7 +7,8 @@ class IngredientInputCard extends Component {
             amount: 0,
             unit: '',
             iName: '',
-            id: null
+            id: null,
+            spoon_id: null
         }
     }
 
@@ -39,13 +40,15 @@ class IngredientInputCard extends Component {
                         name: this.state.iName,
                         amount: this.state.amount,
                         unit: this.state.unit,
-                        id: null
+                        id: null,
+                        spoon_id: null
                     });
                     this.setState({
                         amount: 0,
                         unit: '',
                         iName: '',
-                        id: null
+                        id: null,
+                        spoon_id: null
                     })
 
                 }}>Add</button>

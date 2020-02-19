@@ -32,7 +32,8 @@ class IngredientSearchCard extends React.Component{
                         addToList({name: name, 
                             amount: this.state.amount, 
                             unit: this.state.unit, 
-                            id:this.props.id })
+                            spoon_id:this.props.id, 
+                            id: null})
                         }} 
                         disabled={!this.state.amount || !this.state.unit} >Add</button>
                 </div>
