@@ -1,10 +1,10 @@
 import axios from 'axios';
 
 const initialState = {
-   username: 'FoodLover',
+   username: null,
    // is_Admin: false,
    email: null,
-   user_id: 1,
+   user_id: null,
    household_size: null,
    message: '',
    uid: null
