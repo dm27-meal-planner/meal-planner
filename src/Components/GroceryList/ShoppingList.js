@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {getUserGroceryList, listToFridge} from '../../redux/reducers/grocerylistReducer';
+import {getUserGroceryList} from '../../redux/reducers/grocerylistReducer';
 import {connect} from 'react-redux';
 import './stylesheet/GroceryList.css';
 import loading from '../../animations/loading.gif'
@@ -17,14 +17,6 @@ class ShoppingList extends Component {
       this.updateGroceryList();
    }
 
-
-
-   // The user should be able to check boxes in the shopping list so they can add items
-   // that they actually shopped for
-   transferToFridge = async (list) => {
-      await this.props.listToFridge(this.props.user_id, list);
-      this.updateGroceryList();
-   }
 
    updateGroceryList = () => {
       this.setState({shoppingList: this.props.groceryList});
@@ -54,18 +46,17 @@ class ShoppingList extends Component {
             {this.state.shoppingList.map((element, index) => {
                return (
                   <tr key={element.list_item_id}>
-                     <th onClick={() => this.purchasingItem(element)}>blank</th>
+                     <th className="purchase" onClick={() => this.purchasingItem(element)}>blank</th>
                      <th><img src={element.imageurl} alt={element.name} />
                      <span>{element.name}</span></th>
                      <th>{element.quantity} {element.unit}</th>
                      <th>${element.price}</th>
                   </tr>
               )
-            })}
-            <button onClick={() => this.transferToFridge(this.state.purchasedItems)}>Add Selected Items to Fridge</button>
-         </>
+            })}         
+            </>
       )
    }
 }
 
-export default connect(undefined, {getUserGroceryList, listToFridge})(ShoppingList);
+export default connect(undefined, {getUserGroceryList})(ShoppingList);
