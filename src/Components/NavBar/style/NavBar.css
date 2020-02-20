@@ -54,4 +54,33 @@
     font-size: 18px;
   }
 }
+
+#login-button{
+  color: white;
+  border-radius: 10px;
+  border: none;
+  background: #007991;
+  transition: .2s;
+  padding: 10px;
+}
+
+#login-button:hover{
+  background: #00b1d4;
+  cursor: pointer;
+}
+
+.login-input{
+  width: 80%;
+  text-align: center;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: 1px solid lightblue;
+  transition: .2s;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
 /*# sourceMappingURL=NavBar.css.map */
