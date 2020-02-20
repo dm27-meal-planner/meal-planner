@@ -18,7 +18,8 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-around;
+    flex-wrap: wrap;
     .Recipe-name{
         width: 60%;
         font-size: x-large;

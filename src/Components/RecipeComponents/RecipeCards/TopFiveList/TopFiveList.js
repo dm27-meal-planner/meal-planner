@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import RecipeOutlineCard from './RecipeOutlineCard/RecipeOutlineCard';
-import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom';
+import './stylesheet/TopFiveList.scss';
 
 class TopFiveList extends Component {
 
@@ -13,8 +14,8 @@ class TopFiveList extends Component {
             )
         })
         return (
-            <div>
-                <span>{this.props.listName} </span>
+            <div className='TopFiveList-wrapper'>
+                <h2>{this.props.listName} </h2>
                 <div>
                     {recipeList}
                 </div>

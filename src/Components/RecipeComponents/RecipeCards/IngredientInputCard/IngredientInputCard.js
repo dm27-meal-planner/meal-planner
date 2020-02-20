@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './stylesheet/IngredientInputCard.scss';
 
 class IngredientInputCard extends Component {
     constructor() {

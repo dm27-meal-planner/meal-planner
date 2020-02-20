@@ -15,6 +15,7 @@ const ADD_RECIPE = "ADD_RECIPE";
 const DELETE_RECIPE = "DELETE_RECIPE";
 const EDIT_RECIPE = "EDIT_RECIPE";
 const GET_RECIPE_BY_QUERY = "GET_RECIPE_BY_QUERY";
+const CLEAR_SEARCH_RESULT = "CLEAR_SEARCH_RESULT";
 
 export function getMostLikedRecipe() {
    // console.log('enter most liked');
@@ -74,6 +75,11 @@ export function getRecipeByQuery(searchParams) {
       payload: axios.get(`/api/recipe/search?${searchParams}`)
    }
 }
+export function clearSearchResult() {
+   return {
+      type: CLEAR_SEARCH_RESULT,
+   }
+}
 
 export default function reducer(state = initialState, action) {
    const {type, payload} = action;
@@ -115,6 +121,11 @@ export default function reducer(state = initialState, action) {
          return {
             ...state,
             searchResults: payload.data
+         };
+      case `${CLEAR_SEARCH_RESULT}`:
+         return {
+            ...state,
+            searchResults: []
          };
       default: return state;
    }

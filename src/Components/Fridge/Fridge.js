@@ -68,7 +68,7 @@ class Fridge extends Component{
             return (
                 <div id="Fridge">
                     <h1>Your Fridge</h1>
-                    <form>
+                    <form onSubmit={(e)=>{e.preventDefault()}}>
                         <input className="searchName" name="searchName" placeholder="Search by name" value={this.state.searchName} onChange={this.handleUserChange} />
                         <Link className="fridgeadd" to='/grocerylist'>Add More Ingredients</Link>
                     </form>

@@ -132,7 +132,7 @@ const getRecipeByQuery = async (req, res) => {
                // return [];
             })
 
-            console.log(spoonacularRecipes)
+            // console.log(spoonacularRecipes)
             console.log(allRecipes)
          // combine two database
          // allRecipes = allRecipes.concat(spoonacularRecipes);

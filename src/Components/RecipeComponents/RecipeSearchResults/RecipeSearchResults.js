@@ -3,8 +3,23 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import withSearch from '../../../hoc/withSearch';
 import RecipeDetailCard from '../RecipeCards/RecipeDetailCard/RecipeDetailCard';
+import loading from '../../../animations/loading.gif';
+import './stylesheet/RecipeSearchResults.scss';
 
 class RecipeSearchResults extends Component {
+
+    constructor() {
+        super();
+        this.state = {
+            loading: true
+        }
+    }
+
+    componentDidMount() {
+        this.setState({
+            loading: false
+        })
+    }
 
     render() {
         let searchResultList = this.props.searchResults.map((r, i) => {
@@ -20,12 +35,20 @@ class RecipeSearchResults extends Component {
 
         let SearchBar = withSearch(() => {
             return (<div className='searchResultList'>
-                {searchResultList}
+                {this.props.searchResults.length?
+                searchResultList:
+                <h2>No result, please search other recipe.</h2>}
             </div>)
         }, () => { });
 
+        if (this.state.loading) {
+            return (
+                <img src={loading} alt='loading' />
+            )
+        }
+
         return (
-            <div>
+            <div className='RecipeSearchResult-wrapper'>
                 <SearchBar />
             </div>
         )
