@@ -33,14 +33,14 @@ class FridgeItem extends Component {
                {editing ? <button onClick={() => deleteItem(element.fridge_item_id)}>Remove</button> : null}</span>
             </th>
             <th className="individualFridgeDate">
-               <span>{moment(element.date_added).fromNow()} </span>   
+               <span>{moment(element.date_added).fromNow()}</span>   
             </th>
             <th className="individualFridgeQuantity">
                {editing ? <> <input type='number' name='quantity' min='1' value={this.state.quantity} onChange={this.handleInputChange} />
                <span>{element.unit} </span>
                </>: <>
-               <span>{element.quantity}</span>
-               <span>{element.unit}</span></>}
+               <span>{element.quantity} {element.unit}</span>
+               </>}
                <button onClick={() => this.setState({editing: !editing})}>{message}</button>
             </th>
          </tr>

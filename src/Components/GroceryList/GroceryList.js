@@ -4,7 +4,7 @@ import SearchItem from './SearchItem';
 import ListItem from './ListItem';
 import ShoppingList from './ShoppingList';
 import {addItem} from '../../redux/reducers/fridgeReducer';
-import {getUserGroceryList, addItemToList, deleteGroceryItem} from '../../redux/reducers/grocerylistReducer';
+import {getUserGroceryList, addItemToList, deleteGroceryItem, listToFridge} from '../../redux/reducers/grocerylistReducer';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import './stylesheet/GroceryList.css';
@@ -30,7 +30,9 @@ class GroceryList extends Component{
             return false
         }
     }
-    getSearchResults = () => {
+    getSearchResults = (e) => {
+
+        e.preventDefault()
          axios.post('/api/ingredient/search', {searchPhrase: this.state.searchInput})
                 .then(res => {
                     this.setState({
@@ -79,6 +81,13 @@ class GroceryList extends Component{
         this.setState({list: []});
     }
 
+    // The user should be able to check boxes in the shopping list so they can add items
+   // that they actually shopped for
+   transferToFridge = async (list) => {
+        await this.props.listToFridge(this.props.user_id, list);
+        this.updateGroceryList();
+    }
+
     render(){
         if(!this.props.user_id){
             return <Redirect to='/' />
@@ -96,12 +105,15 @@ class GroceryList extends Component{
         })
         return (
             <div>
-                <ul>
+                <form className="ingredientInput">
+                    <p>Ingredient Search</p>
+                    <input name='searchInput' onChange={this.handleInputChange}/> 
+                    <button onClick={this.getSearchResults}>Search</button>
+                </form>
+                {searchResults[0] ? 
+                <ul id="searchresults">
                     {searchResults}
-                </ul>
-                <p>Ingredient Search</p>
-                <input name='searchInput' onChange={this.handleInputChange}/> 
-                <button onClick={this.getSearchResults}>search</button>
+                </ul> : null}
                 <ul>
                     {list}
                 </ul>
@@ -114,7 +126,7 @@ class GroceryList extends Component{
                 {/* So shopping list and items to add to the list are separate. */}
                 <p>Clicking on an item adds it to the purchased items list. Highlight it if it's in there.</p>
                 {this.props.groceryList[0] ? 
-                <div id="groceryList">
+                <div id="grocery-list">
                     {/* <ShoppingList user_id={this.props.user_id} groceryList={this.props.groceryList} /> */}
                     <table className="shoppingTable">
                         <thead>
@@ -144,5 +156,5 @@ const mapStateToProps = (reduxState) => {
 }
 
 export default connect(mapStateToProps, 
-{getUserGroceryList, addItemToList, addItem, deleteGroceryItem})
+{getUserGroceryList, addItemToList, addItem})
 (GroceryList)

@@ -87,6 +87,7 @@ export function searchFunction(searchTerm, pageNumber){
 }
 
 export function searchByCategory(category, pageNumber){
+  console.log(category)
   return {
     type: SEARCH_BY_CATEGORY,
     payload: axios.get(`/api/search/category?cuisine=${category}&pageNumber=${pageNumber}`)
@@ -238,7 +239,7 @@ export default function reducer(state = initialState, action){
           return {
             ...state,
             categorySearching: false,
-            categoryResults: payload.results
+            categoryResults: payload
           }
         }
         case `${SEARCH_BY_CATEGORY}_REJECTED`: {
@@ -305,7 +306,8 @@ export default function reducer(state = initialState, action){
           console.log('results cleared')
           return {
             ...state,
-            searchResults: []
+            searchResults: [],
+            categoryResults: []
           }
         }
 

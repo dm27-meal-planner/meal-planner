@@ -21,22 +21,56 @@ const addMeal = async (req, res) => {
    let nutritional_info = null
    const db = req.app.get('db')
 
+   let ingredients;
+   let directions;
+   let total_time;
+
    if(fromApi){
 
-      nutritional_info = await axios.get(`https://api.spoonacular.com/recipes/${recipe_id}/information?includeNutrition=true&apiKey=${SPOON_API_KEY}`)
-                  .then(res => JSON.stringify(res.data.nutrition.nutrients))
 
+
+      await axios.get(`https://api.spoonacular.com/recipes/${recipe_id}/information?includeNutrition=true&apiKey=${SPOON_API_KEY}`)
+                  .then(res => {
+                      nutritional_info = JSON.stringify(res.data.nutrition.nutrients)
+                      total_time = res.data.preparationMinutes + res.data.cookingMinutes
+                      ingredients = JSON.stringify(res.data.extendedIngredients.map(ele => {
+                        return {ingredient_id: ele.id, ingredient_name: ele.name, unit: ele.unit, amount: ele.amount, image: `https://www.spoonacular.com/cdn/ingredients_100x100/${ele.image}`}
+                     }))
+                      directions = JSON.stringify(res.data.analyzedInstructions[0].steps.map(ele => {
+                        return {step: ele.number, instruction: ele.step}
+                     }))
+                  })
       recipe_id = `s${recipe_id}`
+
    }else{
+
+
+      nutritional_info = await db.mealplan.get_nutritional_info(recipe_id)
+
+      nutritional_info = JSON.stringify(nutritional_info[0].nutritional_info)
+
       recipe_id = `l${recipe_id}`
    }
 
 
-   const results = await db.mealplan.add_meal(user_id, date, nutritional_info, false, resourceid, title, image, recipe_id)
+   
+   
+   const results = await db.mealplan.add_meal(user_id, date, nutritional_info, false, resourceid, title, image, recipe_id, ingredients, directions, total_time)
+   
+   JSON.parse(ingredients).map(async (ele) => {
+
+      let price = await axios.get(`https://api.spoonacular.com/food/ingredients/${ele.ingredient_id}/information?amount=${ele.amount}&unit=${ele.unit}&apiKey=${SPOON_API_KEY}`)
+                  .then(res => res.data.estimatedCost.value)
+
+      await db.list_items.add_item(ele.amount, ele.unit, user_id, ele.ingredient_id, (price / 100).toFixed(2), ele.ingredient_name, ele.image, results[results.length - 1].mealplan_id)
+
+   })
 
    if (!results[0]){
      return res.status(400).json('Error adding meal to plan')
    }
+
+   // console.log(results)
 
    res.status(200).json(results);
 }
@@ -77,9 +111,6 @@ const changeFollowedPlan = async(req, res) => {
    const db = req.app.get('db')
 
    const results = await db.mealplan.change_followed_plan(followed_plan, meal_id)
-
-   console.log(results)
-
    if(!results[0]){
       return res.status(400).json('Meal was not updated')
    }
@@ -92,13 +123,11 @@ const getNutrition = async (req, res) => {
    if (recipe_id.startsWith('s')) {
       const id = recipe_id.slice(1);
       
+      let result = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=true&apiKey=${SPOON_API_KEY}`)
+      .then(res => res.data.nutrition.nutrients )
+      
+      res.status(200).json(result.slice(0,9))
    }
-
-
-  let result = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=true&apiKey=${SPOON_API_KEY}`)
-   .then(res => res.data.nutrition )
-
-   res.status(200).json(result)
 }
 
 const autoCompleteTerm = async(req, res) => {
@@ -149,9 +178,8 @@ const searchForRecipe = async (req, res) => {
                   .then(res => res.data.results)
                   result.forEach(ele => ele.source = 'api')
 
-
-      if(result.length){
-         res.status(400).json('No Results Found.')
+      if(!result.length){
+        return res.status(400).json('No Results Found.')
       }
          return res.status(200).json(result)
    }
@@ -160,15 +188,43 @@ const searchForRecipe = async (req, res) => {
 const searchByCategory = async (req, res) => {
    const { cuisine } = req.query
    const { pageNumber } = req.query
+   
+   const db = req.app.get('db')
 
-   console.log(pageNumber)
+   let localResults = await db.mealplan.search_by_cuisine(cuisine)
 
-   let results = await axios.get(`https://api.spoonacular.com/recipes/search?cuisine=${cuisine}&apiKey=${SPOON_API_KEY}&number=10&offset=${pageNumber * 10}`)
-            .then(res => res.data)
+   if(localResults.length >= (pageNumber + 1) * 10){
+      localResults.forEach(ele => ele.source = 'db')
+      return res.status(200).json(localResults.slice(pageNumber * 10, pageNumber * 10 + 10))
+   }
 
-            console.log(results)
+   if(localResults.length < (pageNumber + 1) * 10 && localResults.length > (pageNumber * 10)){
+      let result = await axios.get(`https://api.spoonacular.com/recipes/search?cuisine=${cuisine}&apiKey=${SPOON_API_KEY}&number=${10 - localResults.length}`)
+      .then(res => res.data.results)
+      localResults.forEach(ele => ele.source = 'db')
+      result.forEach(ele => ele.source = 'api')
+      let combinedRes = [...localResults.slice((pageNumber * 10)), ...result]
+      return res.status(200).json(combinedRes)
+   }
 
-   res.status(200).json(results)
+   if(localResults.length > 0 && localResults.length < (pageNumber * 10)){
+     let result = await axios.get(`https://api.spoonacular.com/recipes/search?cuisine=${cuisine}&apiKey=${SPOON_API_KEY}&number=10&offset=${(10 * pageNumber - localResults.length) + 10 * (Math.floor(localResults.length/10))}`)
+      .then(res => res.data.results)
+      result.forEach(ele => ele.source = 'api')
+
+      return res.status(200).json(result)
+   }
+
+   if(!localResults.length){
+      let result = await axios.get(`https://api.spoonacular.com/recipes/search?cuisine=${cuisine}&apiKey=${SPOON_API_KEY}&number=10&offset=${pageNumber * 10}`)
+                  .then(res => res.data.results)
+                  result.forEach(ele => ele.source = 'api')
+
+      if(!result.length){
+        return res.status(400).json('No Results Found.')
+      }
+         return res.status(200).json(result)
+   }
 }
 
 const searchMeal = async(req, res) => {

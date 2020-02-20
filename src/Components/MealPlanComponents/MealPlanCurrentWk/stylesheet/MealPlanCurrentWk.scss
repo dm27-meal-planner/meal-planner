@@ -1,12 +1,29 @@
 .calendar-container-mealplan-currentweek{
-    width: 100%;
+    width: 90%;
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
     h2{
-        margin-left: 50px;
+        margin-left: 80px;
+    }
+
+    .save-changes{
+        background: #e9d985;
+        padding: 5px;
+        width: 10%;
+        float: right;
+        margin-left: 20px;
+        border-radius: 10px;
+    }
+    .save-changes:disabled{
+        border: none;
+        background: rgb(218, 218, 218);
+        color: ivory;
+
     }
 }
+
+
 
 .calendar-container-mealplan-currentweek .fc-widget-content{
 
@@ -14,11 +31,13 @@
 }
 
 #new-recipe-container{
-    border: black solid 2px;
+    border-bottom: black solid 2px;
     height: 50%;
-    width: 30%;
+    width: 20%;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 10px;
+    margin-top: 10px;
     padding: 10px
     
 }
@@ -30,21 +49,45 @@
 
 }
 
+.search-options{
+    display: flex;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: space-evenly;
+    margin-top: 20px;
+}
+
 #trash:hover{
     width: 120px;
     height: 120px;
 }
-
+    ::-webkit-scrollbar {
+        width: 10px;
+      }
+       
+      ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+      }
+       
+      ::-webkit-scrollbar-thumb {
+        background-color: darkgrey;
+        outline: 1px solid slategrey;
+        border-radius: 8px;
+      }
 #search-result-container{
     list-style-type: none;
     margin-left: auto;
     margin-right: auto;
-    width: 50%;
-    max-height: 500px;
+    width: 40%;
+    height: 500px;
 
     padding: 20px;
     overflow-y: scroll;
     border: black solid 2px;
+    border-radius: 10px;
+
+
 }
 
 .search-result-block{
@@ -57,17 +100,21 @@
     height: 80px;
     height: 80px;
     box-shadow: 2px 2px 5px grey;
+
+
     p{
         margin-top: auto;
         margin-bottom: auto;
         margin-right: 60px;
         width: 50%;
         font-size: 15px;
+
         
     }
     img{
         height: 100%;
         border-radius: 10px;
+
     }
 }
 
@@ -87,6 +134,8 @@
 
 button:disabled{
     color:rgb(214, 214, 214);
+    border: white solid;
+
 }
 
 .nav-arrows{
@@ -94,6 +143,8 @@ button:disabled{
     justify-content: space-between;
     margin-top: 10px;
     transform: .5s;
+
+    
 }
 
 .nav-arrows img{

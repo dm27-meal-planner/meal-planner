@@ -1,12 +1,25 @@
+%common-table {
+   border-right: 1px solid black;
+   padding: 5px;
+}
+
 table {
-   border: 1px solid black;
+   border: none;
+   margin: 0px;
    thead {
       th {
          border-bottom: 1px solid black;
          @extend %common-table;
+
+         .purchase {
+            width: 50px;
+         }
       }
    }
    tbody {
+      img {
+         margin-right: 10px;
+      }
       th {
          @extend %common-table;
       }
@@ -17,5 +30,60 @@ table {
       img {
          max-height: 75px;
       }
+   }
+}
+
+#grocery-list {
+   display: flex;
+   align-items: center;
+   flex-direction: column;
+}
+
+#searchresults {
+   border: 2px solid black;
+   padding: 10px;
+   border-radius: 20px;
+   margin: 20px auto;
+   align-items: center;
+   width: 90%;
+   .searchitem {
+      display: flex;
+      width: 95%;
+      margin: 10px auto;
+      align-items: center;
+      justify-content: space-evenly;
+      border: 1px solid black;
+      border-radius: 10px;
+      height: 80px;
+      box-shadow: 2px 2px 5px grey;
+      img {
+         max-height: 75px;
+      }
+      .name {
+         text-align: center;
+         width: 200px;
+      }
+      .image-content {
+         width: 100px;
+      }
+      .user-content {
+         input {
+            margin: 5px;
+            width: 50px;
+         }
+         select {
+            margin: 5px;
+         }
+         button {
+            margin: 5px;
+         }
+      }
+   }
+}
+
+.ingredientInput {
+   margin: 10px;
+   input {
+      margin-right: 20px;
    }
 }
