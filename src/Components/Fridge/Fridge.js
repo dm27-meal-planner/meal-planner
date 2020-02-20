@@ -7,6 +7,7 @@ import moment from 'moment';
 import {Popconfirm, Button } from 'antd';
 import {getUserFridge, emptyFridge, deleteItem} from '../../redux/reducers/fridgeReducer';
 import {getUser} from '../../redux/reducers/userReducer';
+import loading from '../../animations/loading.gif'
 import './stylesheet/Fridge.css';
 
 class Fridge extends Component{
@@ -14,30 +15,31 @@ class Fridge extends Component{
         super();
 
         this.state = {
-            searchName: ''
+            searchName: '',
+            loading: true
         }
         this.updateFridge=this.updateFridge.bind(this);
         this.deleteItem=this.deleteItem.bind(this);
     }
 
     componentDidMount = () => {
+        console.log(this.props.user_id)
         if(this.props.user_id === null){
             return null;
         } else {
              this.updateFridge();
 
              this.props.fridge.forEach(ele => {
-
                  if(moment().format('DDD') > moment(ele.meal_date).format('DDD')){
                     this.props.deleteItem(this.props.user_id, ele.fridge_item_id)
                  }
                 })
-
         } 
     }
 
     updateFridge() {
         this.props.getUserFridge(this.props.user_id);
+        this.setState({loading: false})
     }
 
     deleteItem = (id) => {
@@ -59,7 +61,10 @@ class Fridge extends Component{
     render(){
         if (this.props.user_id === null) {
             return <Redirect to='/' />
-        } else {
+        } else if(this.state.loading){
+            return <img scr={loading} alt='loading'/>
+        }else{
+
             return (
                 <div id="Fridge">
                     <h1>Your Fridge</h1>

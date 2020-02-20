@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {getUserGroceryList, listToFridge, deleteGroceryItemByMeal, deleteGroceryItemById} from '../../redux/reducers/grocerylistReducer';
 import {connect} from 'react-redux';
 import './stylesheet/GroceryList.css';
+import _ from 'lodash'
 import loading from '../../animations/loading.gif'
 
 class ShoppingList extends Component {
@@ -17,8 +18,16 @@ class ShoppingList extends Component {
       this.updateGroceryList();
    }
 
+   componentDidUpdate = (prevProps) => {
+      if(!_.isEqual(prevProps, this.props)){
+         console.log('props changed')
+         this.updateGroceryList()
+      }
+   }
+
 
    updateGroceryList = () => {
+      this.setState({purchasedItems: []})
       this.setState({shoppingList: this.props.groceryList});
    }
 
@@ -65,14 +74,12 @@ class ShoppingList extends Component {
                      <th>${element.price}</th>
                   </tr>
               )
-            })}         
+            })}
+               <button onClick={() => this.props.listToFridge(this.props.user_id, this.state.purchasedItems)}>Add Selected Items to Fridge</button>         
             </>
       )
    }
 }
 
-<<<<<<< HEAD
+
 export default connect(undefined, {getUserGroceryList, listToFridge, deleteGroceryItemById, deleteGroceryItemByMeal})(ShoppingList);
-=======
-export default connect(undefined, {getUserGroceryList})(ShoppingList);
->>>>>>> master

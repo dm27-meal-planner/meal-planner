@@ -3,10 +3,10 @@ table thead th, table tbody th {
   padding: 5px;
 }
 
-table {
+/* table {
   border: none;
   margin: 10px;
-}
+} */
 
 table thead th {
   border-bottom: 1px solid black;

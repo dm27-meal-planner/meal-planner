@@ -45,11 +45,11 @@ const deleteGroceryItem = async (req, res) => {
 const listToFridge = async (req, res) => {
    const {user_id} = req.params;
    const db = req.app.get('db');
+   let remainList
    // should be whatever is left
-   const transferDone = await req.body.map(element => {
-      db.grocerylist.transfer_to_fridge(element.quantity, element.unit, user_id, element.name, element.imageurl, element.spoon_id, element.list_item_id, element.mealplan_id);
+    req.body.map(async (element) => {
+     remainList = await db.grocerylist.transfer_to_fridge(element.quantity, element.unit, user_id, element.name, element.imageurl, element.spoon_id, element.list_item_id, element.mealplan_id);
    })
-   const remainList = await db.grocerylist.get_grocerylist(user_id);
    res.status(200).json(remainList);
 }
 

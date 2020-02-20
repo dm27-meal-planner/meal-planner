@@ -200,6 +200,10 @@ const MealPlanCurrentWk = (props) => {
     }
     return (
         <div className='calendar-container-mealplan-currentweek' >
+            <div className='buttondiv' >
+                <button className='save-changes' onClick={SaveChanges} disabled={changesSaved} >Save Changes</button>
+            </div>
+
             <FullCalendar
             ref={calendarRef} 
             defaultView="resourceTimelineWeek"
@@ -258,7 +262,8 @@ const MealPlanCurrentWk = (props) => {
                         eventsCopy.find(ele => +ele.id === +event._instance.instanceId ).resourceId = event._def.resourceIds[0]
                         return eventsCopy
                     })
-                } else if(editedMeals.some(ele => +ele.id === +event.id) && modifiedEvents.some(ele => moment(ele.date).format() === moment(event.start).format()) && editedMeals.some(ele => ele.resourceId === event._def.resourceIds[0])){
+                } else if(editedMeals.some(ele => +ele.id === +event.id) && modifiedEvents.some(ele => moment(ele.date).format() === moment(event.start).format()) && modifiedEvents.some(ele => ele.resourceId === event._def.resourceIds[0])){
+   
                         editMoreMeals(() =>{
                             let eventsCopy = _.cloneDeep(editedMeals)
                             eventsCopy.splice(eventsCopy.findIndex(ele => +ele.id === +event.id), 1)
@@ -295,16 +300,18 @@ const MealPlanCurrentWk = (props) => {
                 </div>
             </div>
 
-            <button onClick={SaveChanges} disabled={changesSaved} >Save Changes</button>
 
             <div>
-                    <div>
-                        <input  id='search-recipe' style = {{backgroundImage: `url(${props.searching ? loading : searchIcon})` }} name='search' value={searchInput}  onChange={e => updateInput(e.target.value)} />
-                        {props.autoCompleteResults.length && searchInput ? <ul className='auto-complete-list' style={{display: `${!props.autoCompleteResults.length ? 'none' : 'block'}`}} >
-                            {props.autoCompleteResults.map((ele, i) => {
-                                return <li key={i} onClick={() => handleAutoCompleteClick(ele.title)} >{ele.title}</li>
-                            })}
-                        </ul>:null}
+                    <div className='search-options'>
+                        <form onSubmit={e => {e.preventDefault(); handleAutoCompleteClick(searchInput)}}>
+                            <input list='autocomplete'  id='search-recipe' style = {{backgroundImage: `url(${props.searching ? loading : searchIcon})` }} name='search' value={searchInput}  onChange={e => updateInput(e.target.value)} />
+                            {props.autoCompleteResults.length && searchInput ? <datalist id='autocomplete' style={{height: '200px', overflowY: 'scroll'}}  >
+                                {props.autoCompleteResults.slice(0,10).map((ele, i) => {
+                                    return <option key={i} onClick={() => handleAutoCompleteClick(ele.title)} >{ele.title}</option>
+                                })}
+                            </datalist>:null}
+                        </form>
+                        <CategroyCascader selectRecipe={selectRecipe} categorySelected={categorySelected} changeCurrentCategory={changeCurrentCategory} />
                     </div>
 
                 <ul id='search-result-container' >
@@ -315,9 +322,9 @@ const MealPlanCurrentWk = (props) => {
                             <p>{ele.title || ele.name}</p>
                         </li>
                     }) : categoryResults.length ? categoryResults.map((ele, i) => {
-                        return <li key={i} onClick={() => selectRecipe(_.cloneDeep({id: ele.id, title: ele.title, extendedProps:{ image: `https://spoonacular.com/recipeImages/${ele.image}`, source: ele.source}}))} className='search-result-block' >
-                            <img src={`https://spoonacular.com/recipeImages/${ele.image}`} alt='recipe'  width='70px'/>
-                            <p>{ele.title}</p>
+                        return <li key={i} onClick={() => selectRecipe(_.cloneDeep({id: +`${ele.source === 'api'? ele.id : ele.recipe_id}`, title: `${ele.source === 'api'? ele.title : ele.name}`, extendedProps:{ image: `${ele.source === 'api'? `https://spoonacular.com/recipeImages/${ele.image}` : ele.image}`, source: ele.source}}))} className='search-result-block' >
+                            <img src={`${ele.source === 'api' ? `https://spoonacular.com/recipeImages/${ele.image}` : ele.image}`} alt='recipe'  width='70px'/>
+                            <p>{ele.title || ele.name}</p>
                     </li>}): null}
 
                     {results.length ? <li className='nav-arrows'>
@@ -331,7 +338,7 @@ const MealPlanCurrentWk = (props) => {
                     </li>: null}
                 </ul>
             </div>
-            <CategroyCascader selectRecipe={selectRecipe} categorySelected={categorySelected} changeCurrentCategory={changeCurrentCategory} />
+            
 
             <img id='trash' style={{position: 'fixed', bottom: '20px', right: '50px'}} src={trash} alt='delete-icon' />
             <Prompt 

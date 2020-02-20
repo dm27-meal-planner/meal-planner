@@ -9,7 +9,6 @@ import NextMeal from './NextMeal';
 import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router';
 import Clock from './Clock';
-import Fridge from '../Fridge/Fridge';
 import {getMealsForUser, addMeal} from '../../redux/reducers/mealplanReducer'
 import loadingAnimation from '../../animations/loading.gif'
 import { Link, HashRouter } from 'react-router-dom';
@@ -136,7 +135,6 @@ const HomePage = (props) => {
             <NextMeal />
             </div>
             <div className="itemsInFridge">
-                <Fridge />
             </div>
         </div>
     )

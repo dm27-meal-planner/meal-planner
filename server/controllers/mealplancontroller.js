@@ -111,9 +111,6 @@ const changeFollowedPlan = async(req, res) => {
    const db = req.app.get('db')
 
    const results = await db.mealplan.change_followed_plan(followed_plan, meal_id)
-
-   console.log(results)
-
    if(!results[0]){
       return res.status(400).json('Meal was not updated')
    }
@@ -191,13 +188,43 @@ const searchForRecipe = async (req, res) => {
 const searchByCategory = async (req, res) => {
    const { cuisine } = req.query
    const { pageNumber } = req.query
+   
+   const db = req.app.get('db')
 
-   let results = await axios.get(`https://api.spoonacular.com/recipes/search?cuisine=${cuisine}&apiKey=${SPOON_API_KEY}&number=10&offset=${pageNumber * 10}`)
-            .then(res => res.data)
+   let localResults = await db.mealplan.search_by_cuisine(cuisine)
 
-            console.log(results)
+   if(localResults.length >= (pageNumber + 1) * 10){
+      localResults.forEach(ele => ele.source = 'db')
+      return res.status(200).json(localResults.slice(pageNumber * 10, pageNumber * 10 + 10))
+   }
 
-   res.status(200).json(results)
+   if(localResults.length < (pageNumber + 1) * 10 && localResults.length > (pageNumber * 10)){
+      let result = await axios.get(`https://api.spoonacular.com/recipes/search?cuisine=${cuisine}&apiKey=${SPOON_API_KEY}&number=${10 - localResults.length}`)
+      .then(res => res.data.results)
+      localResults.forEach(ele => ele.source = 'db')
+      result.forEach(ele => ele.source = 'api')
+      let combinedRes = [...localResults.slice((pageNumber * 10)), ...result]
+      return res.status(200).json(combinedRes)
+   }
+
+   if(localResults.length > 0 && localResults.length < (pageNumber * 10)){
+     let result = await axios.get(`https://api.spoonacular.com/recipes/search?cuisine=${cuisine}&apiKey=${SPOON_API_KEY}&number=10&offset=${(10 * pageNumber - localResults.length) + 10 * (Math.floor(localResults.length/10))}`)
+      .then(res => res.data.results)
+      result.forEach(ele => ele.source = 'api')
+
+      return res.status(200).json(result)
+   }
+
+   if(!localResults.length){
+      let result = await axios.get(`https://api.spoonacular.com/recipes/search?cuisine=${cuisine}&apiKey=${SPOON_API_KEY}&number=10&offset=${pageNumber * 10}`)
+                  .then(res => res.data.results)
+                  result.forEach(ele => ele.source = 'api')
+
+      if(!result.length){
+        return res.status(400).json('No Results Found.')
+      }
+         return res.status(200).json(result)
+   }
 }
 
 const searchMeal = async(req, res) => {
