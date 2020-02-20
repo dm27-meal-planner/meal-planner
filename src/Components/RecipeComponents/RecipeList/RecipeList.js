@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import withSearch from '../../../hoc/withSearch';
-import {getMostLikedRecipe, getRecentRecipes, getUserRecipe} from '../../../redux/reducers/recipeReducer';
+import {getMostLikedRecipe, getRecentRecipes, getUserRecipe, clearSearchResult} from '../../../redux/reducers/recipeReducer';
 import TopFiveList from '../RecipeCards/TopFiveList/TopFiveList';
+import './stylesheet/RecipeList.scss'
 
 class RecipeList extends Component{
 
@@ -12,6 +13,8 @@ class RecipeList extends Component{
         if(this.props.user_id){
             this.props.getUserRecipe(this.props.user_id);
         }
+        // clear search result
+        this.props.clearSearchResult();
     }
 
     redirectToSearchResult = ()=>{
@@ -23,12 +26,14 @@ class RecipeList extends Component{
         // console.log(SearchBar);
         
         return (
-            <div>
+            <div className='RecipeList-wrapper'>
                 <SearchBar />
                 {/* {withSearch(<div></div>, this.redirectToSearchResult)} */}
-                <TopFiveList listName='Recently Added' recipeList={this.props.recentlyAddedRecipes} editFlag={false}/>
-                <TopFiveList listName='Your Recipes' recipeList={this.props.userRecipes} editFlag={true}/>
-                <TopFiveList listName='Most Liked' recipeList={this.props.mostLiked} editFlag={false}/>
+                <main>
+                    <TopFiveList listName='Recently Added' recipeList={this.props.recentlyAddedRecipes} editFlag={false}/>
+                    <TopFiveList listName='Your Recipes' recipeList={this.props.userRecipes} editFlag={true}/>
+                    <TopFiveList listName='Most Liked' recipeList={this.props.mostLiked} editFlag={false}/>
+                </main>
             </div>
         )
     }
@@ -44,4 +49,4 @@ const mapStateToProps = function (reduxState){
     }
 }
 
-export default connect(mapStateToProps, {getMostLikedRecipe, getRecentRecipes, getUserRecipe}) (RecipeList);
+export default connect(mapStateToProps, {getMostLikedRecipe, getRecentRecipes, getUserRecipe, clearSearchResult}) (RecipeList);

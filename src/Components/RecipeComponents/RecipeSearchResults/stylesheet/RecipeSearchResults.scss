@@ -1,0 +1,15 @@
+.searchResultList{
+    width: 1000px;
+    border: black 2px solid;
+    border-radius: 10px;
+    margin: auto;
+    display: flex;
+    justify-content: space-around;
+    h2{
+        margin-top: 10px;
+    }
+    a{
+        color: black;
+        text-decoration: none;
+    }
+}

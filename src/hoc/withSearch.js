@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { getRecipeByQuery } from '../redux/reducers/recipeReducer';
 import { saveSearchCondition } from '../redux/reducers/recipeSearchReducer';
 import axios from 'axios';
-
+import { Modal } from 'antd';
+import './stylesheet/withSearch.scss';
 
 
 function withSearch(BaseComponent, searchBtnCb) {
@@ -28,7 +29,7 @@ function withSearch(BaseComponent, searchBtnCb) {
 
         componentDidMount() {
             this.setLocalStateToProps();
-            axios.get('/api/recipe/cuisinelist').then(response=>{
+            axios.get('/api/recipe/cuisinelist').then(response => {
                 this.setState({
                     cuisineList: response.data,
                 })
@@ -73,11 +74,19 @@ function withSearch(BaseComponent, searchBtnCb) {
                 params += `ingredient=${this.state.ingredient}`;
                 this.props.getRecipeByQuery(params);
             }
-            
+
 
             // after press search btn, exe the callback function
             // (mainly for redirect to certain page.)
             searchBtnCb();
+        }
+
+        handleSearchOnClick = () => {
+            this.setState({
+                page: 1
+            }, () => {
+                this.searchRecipes();
+            });
         }
 
         handlePageChange = (iter) => {
@@ -93,9 +102,11 @@ function withSearch(BaseComponent, searchBtnCb) {
 
         render() {
             // need to check what kind of type search.
-            const browseWindow = this.state.browseWindowFlag ? (<ul>
+            const browseWindow = 
+            // this.state.browseWindowFlag ? 
+            (<ul className='browseWindow'>
                 <li>
-                    <span>Meal Type:</span>
+                    <span>Meal Type: </span>
                     <select name='mealType' onChange={this.handleInputChange} value={this.state.mealType}>
                         <option value=''>Select Meal Type</option>
                         <option value='breakfast'>Breakfast</option>
@@ -112,24 +123,35 @@ function withSearch(BaseComponent, searchBtnCb) {
                 </li>
                 <li>
                     <span>Ingredient: </span>
-                    <input name='ingredient' onChange={this.handleInputChange} placeholder='type ingredient here'  value={this.state.ingredient}/>    
+                    <input name='ingredient' onChange={this.handleInputChange} placeholder='type ingredient here' value={this.state.ingredient} />
                 </li>
-            </ul>) : null;
+            </ul>) 
+            // : null;
 
             return (
-                <div>
+                <div className='withSearch-wrapper'>
                     <div>
                         {/* showing category window */}
                         <button onClick={() => { this.handleWindow('browseWindowFlag') }}>Browse</button>
-                        {browseWindow}
+                        {/* {browseWindow} */}
+                        <Modal
+                            title="Category Search"
+                            visible={this.state.browseWindowFlag}
+                            onOk={() => { this.handleWindow('browseWindowFlag') }}
+                            onCancel={() => { this.handleWindow('browseWindowFlag') }}
+                        >
+                            {browseWindow}
+                        </Modal>
                         <input onChange={this.handleInputChange} value={this.state.name} name='name' />
-                        <button onClick={this.searchRecipes}>Search</button>
+                        <button onClick={this.handleSearchOnClick}>Search</button>
                     </div>
-                    <div>
-                        <button onClick={() => { this.handlePageChange(-1) }}>Previous page</button>
-                        {this.props.name ? (<span>Current Page: {this.state.page} </span>) : null}
-                        <button onClick={() => { this.handlePageChange(1) }}>Next page</button>
-                    </div>
+                    {this.props.searchResults.length ? (
+                        <div>
+                            <button onClick={() => { this.handlePageChange(-1) }}>Previous page</button>
+                            <span>Current Page: {this.state.page} </span>
+                            <button onClick={() => { this.handlePageChange(1) }}>Next page</button>
+                        </div>
+                    ) : null}
                     {/* BaseComponent getting the search result from redux */}
                     <BaseComponent />
                 </div>
@@ -144,6 +166,7 @@ function withSearch(BaseComponent, searchBtnCb) {
             mealType: reduxState.recipeSearch.mealType,
             cuisine: reduxState.recipeSearch.cuisine,
             ingredient: reduxState.recipeSearch.ingredient,
+            searchResults: reduxState.recipe.searchResults,
         }
     }
 

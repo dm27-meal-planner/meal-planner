@@ -3,6 +3,7 @@ import axios from 'axios'
 import IngredientSearchCard from '../../RecipeCards/IngredientSearchCard/IngredientSearchCard';
 import IngredientListCard from '../../RecipeCards/IngredientListCard/IngredientListCard';
 import IngredientInputCard from '../IngredientInputCard/IngredientInputCard';
+import './stylesheet/RecipeIngredientCard.scss';
 
 class RecipeIngredientCard extends Component {
     constructor() {
@@ -75,10 +76,10 @@ class RecipeIngredientCard extends Component {
                         {list}
                     </ul>
                 </section>
-                <div className="closeWindowBtn">
                     {/* close window btn */}
+                {/* <div className="closeWindowBtn">
                     <button onClick={this.props.closeWindow}>Close</button>
-                </div>
+                </div> */}
             </div>
         )
     }

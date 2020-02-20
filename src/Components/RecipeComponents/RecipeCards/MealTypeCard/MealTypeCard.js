@@ -17,7 +17,7 @@ class MealTypeCard extends Component {
                         checked={this.props.recipeMealType === 'dinner'}
                         onChange={this.props.handleMealTypeChange} /> Dinner </li>
                 </ul>
-                <button onClick={this.props.handleMealTypeWindow}>Done </button>
+                {/* <button onClick={this.props.handleMealTypeWindow}>Done </button> */}
             </div>
         )
     }
