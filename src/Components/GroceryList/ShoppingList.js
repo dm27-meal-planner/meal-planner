@@ -18,14 +18,6 @@ class ShoppingList extends Component {
    }
 
 
-
-   // The user should be able to check boxes in the shopping list so they can add items
-   // that they actually shopped for
-   transferToFridge = async (list) => {
-      await this.props.listToFridge(this.props.user_id, list);
-      this.updateGroceryList();
-   }
-
    updateGroceryList = () => {
       this.setState({shoppingList: this.props.groceryList});
    }
@@ -73,11 +65,14 @@ class ShoppingList extends Component {
                      <th>${element.price}</th>
                   </tr>
               )
-            })}
-            <button onClick={() => this.transferToFridge(this.state.purchasedItems)}>Add Selected Items to Fridge</button>
-         </>
+            })}         
+            </>
       )
    }
 }
 
+<<<<<<< HEAD
 export default connect(undefined, {getUserGroceryList, listToFridge, deleteGroceryItemById, deleteGroceryItemByMeal})(ShoppingList);
+=======
+export default connect(undefined, {getUserGroceryList})(ShoppingList);
+>>>>>>> master
