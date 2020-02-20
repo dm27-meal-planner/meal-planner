@@ -39,6 +39,8 @@
 }
 table {
    border: 1px solid black;
+   margin: 20px;
+   box-shadow: 2px 2px 5px grey;
    thead {
       th {
          border-bottom: 1px solid black;
@@ -55,6 +57,11 @@ table {
 
       img {
          max-height: 75px;
+      }
+      .individualFridgeQuantity {
+         button {
+            margin-left: 5px;
+         }
       }
    }
 }
