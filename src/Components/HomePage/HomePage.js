@@ -79,7 +79,7 @@ const HomePage = (props) => {
                                                     <img src={ele.image} alt='ingredient-image' height='40px' width='40px'/>
                                                 </th>
                                                 <td>
-                                                    <span> <strong> {ele.amount} {ele.unit} {ele.ingredient_name} </strong> </span>
+                                                    <span> <strong> {+ele.amount.toFixed(2)} {ele.unit} {ele.ingredient_name} </strong> </span>
                                                 </td>
                                             </tr>
                                         )

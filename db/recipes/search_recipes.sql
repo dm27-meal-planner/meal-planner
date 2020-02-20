@@ -7,9 +7,9 @@ inner join users u
 on u.user_id = r.user_id
 inner join cuisine c
 on r.cuisine_id = c.cuisine_id
-inner join recipe_ingredients ri
+LEFT join recipe_ingredients ri
 on ri.recipe_id = r.recipe_id
-inner join ingredients i
+LEFT join ingredients i
 on ri.ingredient_id = i.ingredient_id
 where r.name ilike $1
 and lower($2) in ('', lower(r.meal_type))

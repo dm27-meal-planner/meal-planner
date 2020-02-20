@@ -50,7 +50,8 @@ class UserLoginLogout extends Component {
       return(
          <div id="UserLoginLogout">
             <Popover
-               content={<form className="user" onSubmit={() => {
+               content={<form className="user" onSubmit={(e) => {
+               e.preventDefault();   
                this.props.loginUser(userOrEmail, password)
                this.setState({userOrEmail: '', password: ''})
             }}>

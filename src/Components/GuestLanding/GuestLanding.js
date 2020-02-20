@@ -78,7 +78,7 @@ class GuestLanding extends Component{
                         <h1>Take the food out of foodplan.</h1>
                     </div>
                     <img className="calendar" src="lt16410086.png" alt="calendar" />
-                    <img className="clock" src="icons8-clock-64 (1).png" alt="clock" />
+                    <img className="clock" src="clock.png" alt="clock" />
                 </div>
                 <div className = "registerdetails">
                     <span>Register today. It's free.</span>
