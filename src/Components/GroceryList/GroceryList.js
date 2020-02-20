@@ -4,7 +4,7 @@ import SearchItem from './SearchItem';
 import ListItem from './ListItem';
 import ShoppingList from './ShoppingList';
 import {addItem} from '../../redux/reducers/fridgeReducer';
-import {getUserGroceryList, addItemToList, deleteGroceryItem} from '../../redux/reducers/grocerylistReducer';
+import {getUserGroceryList, addItemToList} from '../../redux/reducers/grocerylistReducer';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import './stylesheet/GroceryList.css';
@@ -144,5 +144,5 @@ const mapStateToProps = (reduxState) => {
 }
 
 export default connect(mapStateToProps, 
-{getUserGroceryList, addItemToList, addItem, deleteGroceryItem})
+{getUserGroceryList, addItemToList, addItem})
 (GroceryList)

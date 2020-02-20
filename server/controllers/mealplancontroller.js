@@ -53,18 +53,18 @@ const addMeal = async (req, res) => {
    }
 
 
+   
+   
+   const results = await db.mealplan.add_meal(user_id, date, nutritional_info, false, resourceid, title, image, recipe_id, ingredients, directions, total_time)
+   
    JSON.parse(ingredients).map(async (ele) => {
 
       let price = await axios.get(`https://api.spoonacular.com/food/ingredients/${ele.ingredient_id}/information?amount=${ele.amount}&unit=${ele.unit}&apiKey=${SPOON_API_KEY}`)
                   .then(res => res.data.estimatedCost.value)
 
-      await db.list_items.add_item(ele.amount, ele.unit, user_id, ele.ingredient_id, (price / 100).toFixed(2), ele.ingredient_name, ele.image)
+      await db.list_items.add_item(ele.amount, ele.unit, user_id, ele.ingredient_id, (price / 100).toFixed(2), ele.ingredient_name, ele.image, results[results.length - 1].mealplan_id)
 
    })
-
-
-   const results = await db.mealplan.add_meal(user_id, date, nutritional_info, false, resourceid, title, image, recipe_id, ingredients, directions, total_time)
-
 
    if (!results[0]){
      return res.status(400).json('Error adding meal to plan')

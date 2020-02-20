@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 import FridgeItem from './FridgeItem';
+import moment from 'moment';
 import {Popconfirm, Button } from 'antd';
 import {getUserFridge, emptyFridge, deleteItem} from '../../redux/reducers/fridgeReducer';
 import {getUser} from '../../redux/reducers/userReducer';
@@ -19,11 +20,19 @@ class Fridge extends Component{
         this.deleteItem=this.deleteItem.bind(this);
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         if(this.props.user_id === null){
             return null;
         } else {
-            this.updateFridge();
+             this.updateFridge();
+
+             this.props.fridge.forEach(ele => {
+
+                 if(moment().format('DDD') > moment(ele.meal_date).format('DDD')){
+                    this.props.deleteItem(this.props.user_id, ele.fridge_item_id)
+                 }
+                })
+
         } 
     }
 

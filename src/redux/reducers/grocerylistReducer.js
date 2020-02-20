@@ -25,11 +25,19 @@ export function addItemToList (user_id, list) {
    }
 }
 
-export function deleteGroceryItem (user_id, list) {
+export function deleteGroceryItemById (user_id, list_item_id) {
    return {
       type: DELETE_GROCERY_ITEM,
       // you can access anything even in a delete request by specfying an object with a key prop of data
-      payload: axios.delete(`/api/grocerylist/${user_id}`, {data: list})
+      payload: axios.delete(`/api/grocerylist/${user_id}?list_item_id=${list_item_id}`)
+   }
+}
+
+export function deleteGroceryItemByMeal (user_id, mealplan_id) {
+   return {
+      type: DELETE_GROCERY_ITEM,
+      // you can access anything even in a delete request by specfying an object with a key prop of data
+      payload: axios.delete(`/api/grocerylist/${user_id}?mealplan_id=${mealplan_id}`)
    }
 }
 
