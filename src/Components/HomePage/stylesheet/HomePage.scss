@@ -15,6 +15,8 @@
     display: flex;
     justify-content: space-between;
     flex-direction: column;
+    background: #d1f5ca;
+    height: 95vh;
 }
 
 .fc-event{
@@ -47,6 +49,7 @@
 
 .fc-unthemed{
     width: 100%;
+    background-color: white;
 
 
 }
