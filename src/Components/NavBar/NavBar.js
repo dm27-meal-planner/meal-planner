@@ -33,10 +33,10 @@ class NavBar extends Component {
                     <UserLoginLogout />
                 </div>
                 <img onClick={this.toggleMenu} className="hamburger" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/1200px-Hamburger_icon.svg.png" alt="oof" />
-            </div>
-            <div className={`dropdown-nav ${this.state.menuStatus}`}>
-                <Link onClick={this.toggleMenu} to='/recipes'><p>Recipes</p></Link>
-                <UserLoginLogout />
+                <div className={`dropdown-nav ${this.state.menuStatus}`}>
+                    <Link onClick={this.toggleMenu} to='/recipes'><p>Recipes</p></Link>
+                    <UserLoginLogout />
+                </div>
             </div>
             </>
             )
@@ -57,14 +57,14 @@ class NavBar extends Component {
                     <UserLoginLogout />
                 </div>
                 <img onClick={this.toggleMenu} className="hamburger" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/1200px-Hamburger_icon.svg.png" alt="oof" />
-            </div>
-            <div className={`dropdown-nav ${this.state.menuStatus}`}>
-                <Link onClick={this.toggleMenu} to='/mealplan' ><p>Meal Plan</p></Link>
-                <Link onClick={this.toggleMenu} to='/nutritional'><p>Meal Plan Nutrition</p></Link>
-                <Link onClick={this.toggleMenu} to='/fridge' ><p>Fridge</p></Link>
-                <Link onClick={this.toggleMenu} to='/grocerylist' ><p>Grocery List</p></Link>
-                <Link onClick={this.toggleMenu} to='/recipes'><p>Recipes</p></Link>
-                <UserLoginLogout />
+                <div className={`dropdown-nav ${this.state.menuStatus}`}>
+                    <Link onClick={this.toggleMenu} to='/mealplan' ><p>Meal Plan</p></Link>
+                    <Link onClick={this.toggleMenu} to='/nutritional'><p>Meal Plan Nutrition</p></Link>
+                    <Link onClick={this.toggleMenu} to='/fridge' ><p>Fridge</p></Link>
+                    <Link onClick={this.toggleMenu} to='/grocerylist' ><p>Grocery List</p></Link>
+                    <Link onClick={this.toggleMenu} to='/recipes'><p>Recipes</p></Link>
+                    <UserLoginLogout />
+                </div>
             </div>
             </>
         )
