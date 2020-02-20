@@ -34,7 +34,7 @@ class Fridge extends Component{
                     this.props.deleteItem(this.props.user_id, ele.fridge_item_id)
                  }
                 })
-        } 
+        }
     }
 
     updateFridge() {
@@ -64,7 +64,6 @@ class Fridge extends Component{
         } else if(this.state.loading){
             return <img scr={loading} alt='loading'/>
         }else{
-
             return (
                 <div id="Fridge">
                     <h1>Your Fridge</h1>

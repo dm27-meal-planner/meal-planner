@@ -70,7 +70,10 @@ class ShoppingList extends Component {
                      </th>
                      <th><img src={element.imageurl} alt={element.name} />
                      <span>{element.name}</span></th>
-                     <th>{element.quantity.toFixed(2)} {element.unit}</th>
+                     {/* <th>{parseFloat(element.quantity).toFixed(2)} {element.unit}</th> */}
+                     {Number.isInteger(element.quantity) ? 
+                     <th>{element.quantity} {element.unit}</th>
+                     : <th>{parseFloat(element.quantity).toFixed(2)} {element.unit}</th>}
                      <th>${element.price}</th>
                   </tr>
               )
