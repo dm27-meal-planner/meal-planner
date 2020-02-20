@@ -307,7 +307,7 @@ const addRecipe = async (req, res) => {
                console.log(err.response.data.message);
                spoonResult = [];
             })
-            .finally(async ()=>{
+            .finally(async () => {
                let addIngredient;
                if (spoonResult[0]) {
                   // success, using api info to add into ingredient database            
@@ -334,7 +334,23 @@ const addRecipe = async (req, res) => {
       // now ingredient database has the info, insert into recipe_ingredient.
       await db.recipes.add_recipe_ingredient(ingredientId, recipeId, recipeIngredients[i].amount, recipeIngredients[i].unit);
    }
-   res.status(200).json(userRecipe);
+
+   console.log('recipeIngredients: ', recipeIngredients);
+   console.log('recipeServings: ', recipeServings);
+   
+   getTotalNutrition(recipeIngredients, recipeServings, (result)=>{
+      // update the nutrition for ingredient if it get the info from api.
+      console.log('result: ', result);
+      
+      if (result.length){
+         db.recipes.update_recipe_nutrition(JSON.stringify(result), recipeId).then(response=>{
+            res.status(200).json(response);
+         })
+      }else{
+         res.status(200).json(userRecipe);
+      } 
+   })
+   // res.status(200).json(userRecipe);
 }
 
 const editRecipe = async (req, res) => {
@@ -430,7 +446,7 @@ const editRecipe = async (req, res) => {
                console.log(err.response.data.message);
                spoonResult = [];
             })
-            .finally(async ()=>{
+            .finally(async () => {
                let addIngredient;
                if (spoonResult[0]) {
                   // success, using api info to add into ingredient database            
@@ -457,7 +473,17 @@ const editRecipe = async (req, res) => {
       // now ingredient database has the info, insert into recipe_ingredient.
       await db.recipes.add_recipe_ingredient(ingredientId, recipeId, recipeIngredients[i].amount, recipeIngredients[i].unit);
    }
-   res.status(200).json(updRecipe);
+   getTotalNutrition(recipeIngredients, recipeServings, (result)=>{
+      // update the nutrition for ingredient if it get the info from api.
+      if (result.length){
+         db.recipes.update_recipe_nutrition(JSON.stringify(result), recipeId).then(response=>{
+            res.status(200).json(response);
+         })
+      }else{
+         res.status(200).json(updRecipe);
+      } 
+   })
+   // res.status(200).json(updRecipe);
 
 }
 
@@ -503,6 +529,71 @@ const getCuisineList = async (req, res) => {
 }
 
 
+// ***** TEST NUTRITION API
+const testNutrition = (req,res)=>{
+   const {ingredients, servings} = req.body;
+   getTotalNutrition(ingredients, servings, (result)=>{
+      res.status(200).json(result);
+   });
+}
+
+// ***** THIS FUNCTION IS NOT EXPORT TO INDEX.JS
+const getTotalNutrition = (ingredients, servings, cb) => {
+   const config = {
+      headers: {
+         'Content-Type': 'application/x-www-form-urlencoded'
+      }
+   }
+   let promise = [];
+   let result = [];
+   // go through the ingredient list
+   for (let i = 0; i < ingredients.length; i++) {
+      // get the nutrition info from api
+      // ingredient: {name, amount, unit, id(recipe_ingredient_id), spoon_id}
+      // nutrition example: 
+      // {"unit": "cal", "title": "Calories", "amount": "268.74", "percentOfDailyNeeds": "13.44"}
+      let spoonObj = {
+         ingredientList: `${ingredients[i].amount} ${ingredients[i].unit} ${ingredients[i].name}`,
+         servings: servings,
+         includeNutrition: true,
+      }
+      let p = axios.post(`https://api.spoonacular.com/recipes/parseIngredients?apiKey=${SPOON_API_KEY}`,
+         qs.stringify(spoonObj), config);
+      // add them on the promise array
+      promise.push(p);
+   }
+
+   Promise.all(promise)
+      .then(nutritionList => {
+         // [[{unit, title, amount, percentOfDailyNeeds},{unit, title, amount, percentOfDailyNeeds}],[],[]...]
+         // return the result array which has nutrition object.
+         // console.log('nutritionList: ',nutritionList);
+         
+         nutritionList.forEach(arr => {
+            console.log('nutrition:', arr.data[0].nutrition.nutrients);
+            
+            arr.data[0].nutrition.nutrients.slice(0,9).forEach(n => {
+               console.log('n:',n);
+               
+               let match = result.find(r => r.title === n.title);
+               if (match) {
+                  match.amount = parseFloat(match.amount).toFixed(2) + parseFloat(n.amount).toFixed(2);
+               } else {
+                  result.push(n);
+               }
+            })
+         });
+         cb(result);
+      })
+      .catch(err => {
+         // error: may hit api limit, return an empty object.
+         console.log('err: ', err);
+         console.log('message: ',err.response.data.message);
+         cb([]);
+      })
+
+}
+
 module.exports = {
    getMostLikedRecipe,
    getRecentRecipe,
@@ -512,5 +603,6 @@ module.exports = {
    deleteRecipe,
    editRecipe,
    getRecipeByQuery,
-   getCuisineList
+   getCuisineList,
+   testNutrition
 }
