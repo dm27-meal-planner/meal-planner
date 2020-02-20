@@ -4,9 +4,9 @@ const qs = require('querystring');
 const { SPOON_API_KEY } = process.env
 
 // only get information from spoonacular since review system is not online yet.
-const getMostLikedRecipe = async (req, res) => {
+const getMostLikedRecipe = (req, res) => {
    const condition = `apiKey=${SPOON_API_KEY}&type=main+course&sort=meta-score&sortDirection=desc&number=5&addRecipeInformation=true`
-   await axios.get(`https://api.spoonacular.com/recipes/complexSearch?${condition}`)
+   axios.get(`https://api.spoonacular.com/recipes/complexSearch?${condition}`)
       .then(response => {
          result = response.data.results.map((r) => {
             return {
@@ -106,7 +106,8 @@ const getRecipeByQuery = async (req, res) => {
          condition += `&offset=${offset}`;
 
 
-         const spoonacularRecipes = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?${condition}`)
+         // const spoonacularRecipes = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?${condition}`)
+         axios.get(`https://api.spoonacular.com/recipes/complexSearch?${condition}`)
             .then(response => {
                result = response.data.results.map((r) => {
                   return {
@@ -120,19 +121,22 @@ const getRecipeByQuery = async (req, res) => {
                   }
                });
                // res.status(200).json(result);
-               return result;
+               // return result;
+               allRecipes = allRecipes.concat(spoonacularRecipes);
+               res.status(200).json(allRecipes);
             })
             .catch(err => {
                // res.status(400).json(err.response.data.message)
                console.log(err.response.data.message);
-               return [];
+               res.status(200).json(allRecipes);
+               // return [];
             })
 
             console.log(spoonacularRecipes)
             console.log(allRecipes)
          // combine two database
-         allRecipes = allRecipes.concat(spoonacularRecipes);
-         res.status(200).json(allRecipes);
+         // allRecipes = allRecipes.concat(spoonacularRecipes);
+         // res.status(200).json(allRecipes);
       }
    } else {
       // not entering the name, return error.
@@ -295,39 +299,60 @@ const addRecipe = async (req, res) => {
                'Content-Type': 'application/x-www-form-urlencoded'
             }
          }
-         let spoonResult = await axios.post(`https://api.spoonacular.com/recipes/parseIngredients?apiKey=${SPOON_API_KEY}`, qs.stringify(spoonObj), config)
-            .then(res => res.data)
+         // let spoonResult = await axios.post(`https://api.spoonacular.com/recipes/parseIngredients?apiKey=${SPOON_API_KEY}`, qs.stringify(spoonObj), config)
+         let spoonResult;
+         axios.post(`https://api.spoonacular.com/recipes/parseIngredients?apiKey=${SPOON_API_KEY}`, qs.stringify(spoonObj), config)
+            .then(res => {
+               spoonResult = res.data;
+            })
             .catch(err => {
                console.log(err.response.data.message);
-               return [];
+               spoonResult = [];
+            })
+            .finally(async () => {
+               let addIngredient;
+               if (spoonResult[0]) {
+                  // success, using api info to add into ingredient database            
+                  addIngredient = await db.ingredients.add_ingredient(
+                     recipeIngredients[i].name.toLowerCase(),
+                     null, null, spoonResult[0].id, spoonResult[0].image, true
+                  );
+               } else {
+                  // fail, insert basic information to ingredient database.
+                  //  ** for future: if check_api is false, go to api to update the info.(update the check_api part)
+                  addIngredient = await db.ingredients.add_ingredient(
+                     recipeIngredients[i].name.toLowerCase(),
+                     null, null, null, null, false
+                  );
+               }
+               ingredientId = addIngredient[0].ingredient_id;
             });
-         // console.log('spoonResult: ',spoonResult);
 
-         let addIngredient;
-         if (spoonResult[0]) {
-            // success, using api info to add into ingredient database            
-            addIngredient = await db.ingredients.add_ingredient(
-               recipeIngredients[i].name.toLowerCase(),
-               null, null, spoonResult[0].id, spoonResult[0].image, true
-            );
-         } else {
-            // fail, insert basic information to ingredient database.
-            //  ** for future: if check_api is false, go to api to update the info.(update the check_api part)
-            addIngredient = await db.ingredients.add_ingredient(
-               recipeIngredients[i].name.toLowerCase(),
-               null, null, null, null, false
-            );
-         }
-         ingredientId = addIngredient[0].ingredient_id;
       } else {
          // in database
          ingredientId = ingredientFound[0].ingredient_id;
          // ** for future: if check_api is false, go to api to update the info.
       }
       // now ingredient database has the info, insert into recipe_ingredient.
-      db.recipes.add_recipe_ingredient(ingredientId, recipeId, recipeIngredients[i].amount, recipeIngredients[i].unit);
+      await db.recipes.add_recipe_ingredient(ingredientId, recipeId, recipeIngredients[i].amount, recipeIngredients[i].unit);
    }
-   res.status(200).json(userRecipe);
+
+   console.log('recipeIngredients: ', recipeIngredients);
+   console.log('recipeServings: ', recipeServings);
+   
+   getTotalNutrition(recipeIngredients, recipeServings, (result)=>{
+      // update the nutrition for ingredient if it get the info from api.
+      console.log('result: ', result);
+      
+      if (result.length){
+         db.recipes.update_recipe_nutrition(JSON.stringify(result), recipeId).then(response=>{
+            res.status(200).json(response);
+         })
+      }else{
+         res.status(200).json(userRecipe);
+      } 
+   })
+   // res.status(200).json(userRecipe);
 }
 
 const editRecipe = async (req, res) => {
@@ -395,8 +420,6 @@ const editRecipe = async (req, res) => {
    // console.log('recipeIngredients:',recipeIngredients);
 
    for (let i = 0; i < recipeIngredients.length; i++) {
-
-
       // search ingredient database
       let ingredientFound = await db.ingredients.get_ingredient_by_name(recipeIngredients[i].name.toLowerCase());
       let ingredientId;
@@ -415,44 +438,59 @@ const editRecipe = async (req, res) => {
                'Content-Type': 'application/x-www-form-urlencoded'
             }
          }
-         let spoonResult = await axios.post(`https://api.spoonacular.com/recipes/parseIngredients?apiKey=${SPOON_API_KEY}`, qs.stringify(spoonObj), config)
-            .then(res => res.data)
+         // let spoonResult = await axios.post(`https://api.spoonacular.com/recipes/parseIngredients?apiKey=${SPOON_API_KEY}`, qs.stringify(spoonObj), config)
+         let spoonResult;
+         axios.post(`https://api.spoonacular.com/recipes/parseIngredients?apiKey=${SPOON_API_KEY}`, qs.stringify(spoonObj), config)
+            .then(res => {
+               spoonResult = res.data;
+            })
             .catch(err => {
                console.log(err.response.data.message);
-               return [];
+               spoonResult = [];
+            })
+            .finally(async () => {
+               let addIngredient;
+               if (spoonResult[0]) {
+                  // success, using api info to add into ingredient database            
+                  addIngredient = await db.ingredients.add_ingredient(
+                     recipeIngredients[i].name.toLowerCase(),
+                     null, null, spoonResult[0].id, spoonResult[0].image, true
+                  );
+               } else {
+                  // fail, insert basic information to ingredient database.
+                  //  ** for future: if check_api is false, go to api to update the info.(update the check_api part)
+                  addIngredient = await db.ingredients.add_ingredient(
+                     recipeIngredients[i].name.toLowerCase(),
+                     null, null, null, null, false
+                  );
+               }
+               ingredientId = addIngredient[0].ingredient_id;
             });
-         // console.log('spoonResult: ',spoonResult);
 
-         let addIngredient;
-         if (spoonResult[0]) {
-            // success, using api info to add into ingredient database            
-            addIngredient = await db.ingredients.add_ingredient(
-               recipeIngredients[i].name.toLowerCase(),
-               null, null, spoonResult[0].id, spoonResult[0].image, true
-            );
-         } else {
-            // fail, insert basic information to ingredient database.
-            //  ** for future: if check_api is false, go to api to update the info.(update the check_api part)
-            addIngredient = await db.ingredients.add_ingredient(
-               recipeIngredients[i].name.toLowerCase(),
-               null, null, null, null, false
-            );
-         }
-         ingredientId = addIngredient[0].ingredient_id;
       } else {
          // in database
          ingredientId = ingredientFound[0].ingredient_id;
          // ** for future: if check_api is false, go to api to update the info.
       }
       // now ingredient database has the info, insert into recipe_ingredient.
-      db.recipes.add_recipe_ingredient(ingredientId, recipeId, recipeIngredients[i].amount, recipeIngredients[i].unit);
+      await db.recipes.add_recipe_ingredient(ingredientId, recipeId, recipeIngredients[i].amount, recipeIngredients[i].unit);
    }
-   res.status(200).json(updRecipe);
+   getTotalNutrition(recipeIngredients, recipeServings, (result)=>{
+      // update the nutrition for ingredient if it get the info from api.
+      if (result.length){
+         db.recipes.update_recipe_nutrition(JSON.stringify(result), recipeId).then(response=>{
+            res.status(200).json(response);
+         })
+      }else{
+         res.status(200).json(updRecipe);
+      } 
+   })
+   // res.status(200).json(updRecipe);
 
 }
 
 const deleteRecipe = async (req, res) => {
-   
+
    if (!req.params.recipe_id.startsWith('m')) {
       res.status(400).json('Not legal recipe id!');
       return null;
@@ -479,7 +517,7 @@ const deleteRecipe = async (req, res) => {
    }
    // delete recipe_ingredients first
    await db.recipes.delete_recipe_ingredient(recipe_id);
-   
+
    // delete recipes second
    const deleteRecipe = await db.recipes.delete_recipe(recipe_id);
 
@@ -493,6 +531,71 @@ const getCuisineList = async (req, res) => {
 }
 
 
+// ***** TEST NUTRITION API
+const testNutrition = (req,res)=>{
+   const {ingredients, servings} = req.body;
+   getTotalNutrition(ingredients, servings, (result)=>{
+      res.status(200).json(result);
+   });
+}
+
+// ***** THIS FUNCTION IS NOT EXPORT TO INDEX.JS
+const getTotalNutrition = (ingredients, servings, cb) => {
+   const config = {
+      headers: {
+         'Content-Type': 'application/x-www-form-urlencoded'
+      }
+   }
+   let promise = [];
+   let result = [];
+   // go through the ingredient list
+   for (let i = 0; i < ingredients.length; i++) {
+      // get the nutrition info from api
+      // ingredient: {name, amount, unit, id(recipe_ingredient_id), spoon_id}
+      // nutrition example: 
+      // {"unit": "cal", "title": "Calories", "amount": "268.74", "percentOfDailyNeeds": "13.44"}
+      let spoonObj = {
+         ingredientList: `${ingredients[i].amount} ${ingredients[i].unit} ${ingredients[i].name}`,
+         servings: servings,
+         includeNutrition: true,
+      }
+      let p = axios.post(`https://api.spoonacular.com/recipes/parseIngredients?apiKey=${SPOON_API_KEY}`,
+         qs.stringify(spoonObj), config);
+      // add them on the promise array
+      promise.push(p);
+   }
+
+   Promise.all(promise)
+      .then(nutritionList => {
+         // [[{unit, title, amount, percentOfDailyNeeds},{unit, title, amount, percentOfDailyNeeds}],[],[]...]
+         // return the result array which has nutrition object.
+         // console.log('nutritionList: ',nutritionList);
+         
+         nutritionList.forEach(arr => {
+            console.log('nutrition:', arr.data[0].nutrition.nutrients);
+            
+            arr.data[0].nutrition.nutrients.slice(0,9).forEach(n => {
+               console.log('n:',n);
+               
+               let match = result.find(r => r.title === n.title);
+               if (match) {
+                  match.amount = parseFloat(match.amount).toFixed(2) + parseFloat(n.amount).toFixed(2);
+               } else {
+                  result.push(n);
+               }
+            })
+         });
+         cb(result);
+      })
+      .catch(err => {
+         // error: may hit api limit, return an empty object.
+         console.log('err: ', err);
+         console.log('message: ',err.response.data.message);
+         cb([]);
+      })
+
+}
+
 module.exports = {
    getMostLikedRecipe,
    getRecentRecipe,
@@ -502,5 +605,6 @@ module.exports = {
    deleteRecipe,
    editRecipe,
    getRecipeByQuery,
-   getCuisineList
+   getCuisineList,
+   testNutrition
 }
