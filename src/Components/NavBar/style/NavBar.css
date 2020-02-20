@@ -3,22 +3,65 @@
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+.dropdown-nav {
+  display: none;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  text-align: center;
+  position: absolute;
+  width: 100vw;
+  -webkit-transition: -webkit-transform 0.5s;
+  transition: -webkit-transform 0.5s;
+  transition: transform 0.5s;
+  transition: transform 0.5s, -webkit-transform 0.5s;
+  border-right: 2px solid black;
+  border-bottom: 2px solid black;
+  border-left: 2px solid black;
+  z-index: 1000;
+  padding-bottom: 10px;
+}
+
+.dropdown-nav p {
+  font-size: 20px;
+  color: white;
+  margin: 0;
+  padding: 10px 15px;
+}
+
+.closed {
+  background-color: #439a86;
+  -webkit-transform: translateY(-500px);
+          transform: translateY(-500px);
+}
+
+.opened {
+  background-color: #439a86;
+  -webkit-transform: translateY(50px);
+          transform: translateY(50px);
 }
 
 .navbar {
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  position: fixed;
+  width: 100%;
   padding: 10px 20px;
   margin: 0;
   background-color: #439a86;
-  height: 5vh;
 }
 
 .navbar .site-title {
@@ -29,28 +72,68 @@
 .navbar p {
   font-size: 20px;
   color: white;
+  margin: 0;
+  padding: 0 15px;
 }
 
 .navbar .menulinks p {
   border-left: 1px solid black;
 }
 
-.navbar #UserLoginLogout p {
+#UserLoginLogout p {
   cursor: pointer;
 }
 
-@media screen and (max-width: 850px) {
-  .navbar {
-    display: none;
-  }
-  .hamburger {
-    display: block;
-  }
+.navbar img {
+  height: 27px;
+  display: none;
 }
 
 @media screen and (max-width: 1098px) {
   .navbar p {
     font-size: 18px;
   }
+}
+
+@media screen and (max-width: 1006px) {
+  .navbar .menulinks {
+    display: none;
+  }
+  .navbar img {
+    display: block;
+  }
+  .dropdown-nav {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+#login-button {
+  color: white;
+  border-radius: 10px;
+  border: none;
+  background: #007991;
+  -webkit-transition: .2s;
+  transition: .2s;
+  padding: 10px;
+}
+
+#login-button:hover {
+  background: #00b1d4;
+  cursor: pointer;
+}
+
+.login-input {
+  width: 80%;
+  text-align: center;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-bottom: 1px solid lightblue;
+  -webkit-transition: .2s;
+  transition: .2s;
+  margin-left: auto;
+  margin-right: auto;
 }
 /*# sourceMappingURL=NavBar.css.map */
