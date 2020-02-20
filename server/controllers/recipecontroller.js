@@ -44,14 +44,15 @@ const getRecipeByQuery = async (req, res) => {
    // now can only search one ingredient.
    const { name, meal_type, cuisine, ingredient } = req.query;
    const page = req.query.page ? parseInt(req.query.page) : 1;
+   console.log(req.query)
    // one page shows 10 records
    // start from meal plan database
-   if (name) {
+   if (true) {
       // search from MealPlan database.
       const db = req.app.get('db');
       // console.log('name:', `%${name.replace(' ','%')}%`);
 
-      const mealPlanRecipes = await db.recipes.search_recipes(`%${name.replace(' ', '%')}%`, meal_type ? meal_type : '', cuisine ? cuisine : '', ingredient ? ingredient : '');
+      const mealPlanRecipes = await db.recipes.search_recipes(name ? `%${name.replace(' ', '%')}%` : '%', meal_type ? meal_type : '', cuisine ? cuisine : '', ingredient ? ingredient : '');
 
       // console.log(mealPlanRecipes);
 
@@ -104,8 +105,6 @@ const getRecipeByQuery = async (req, res) => {
          condition += `&number=${number}`;
          condition += `&offset=${offset}`;
 
-         console.log(condition);
-
 
          // const spoonacularRecipes = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?${condition}`)
          axios.get(`https://api.spoonacular.com/recipes/complexSearch?${condition}`)
@@ -132,6 +131,9 @@ const getRecipeByQuery = async (req, res) => {
                res.status(200).json(allRecipes);
                // return [];
             })
+
+            console.log(spoonacularRecipes)
+            console.log(allRecipes)
          // combine two database
          // allRecipes = allRecipes.concat(spoonacularRecipes);
          // res.status(200).json(allRecipes);

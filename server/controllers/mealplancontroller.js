@@ -16,14 +16,17 @@ const getUserMeals = async (req, res) => {
 
 const addMeal = async (req, res) => {
    const {user_id} = req.params;
-   const {date, resourceid, title, image, fromApi} = req.body;
+   const {date, resourceid, title, image, fromApi, household} = req.body;
    let {recipe_id} = req.body
    let nutritional_info = null
    const db = req.app.get('db')
 
+   console.log(req.body)
+
    let ingredients;
    let directions;
    let total_time;
+   let servings
 
    if(fromApi){
 
@@ -33,8 +36,10 @@ const addMeal = async (req, res) => {
                   .then(res => {
                       nutritional_info = JSON.stringify(res.data.nutrition.nutrients)
                       total_time = res.data.preparationMinutes + res.data.cookingMinutes
+                      servings = res.data.servings
                       ingredients = JSON.stringify(res.data.extendedIngredients.map(ele => {
-                        return {ingredient_id: ele.id, ingredient_name: ele.name, unit: ele.unit, amount: ele.amount, image: `https://www.spoonacular.com/cdn/ingredients_100x100/${ele.image}`}
+
+                        return {ingredient_id: ele.id, ingredient_name: ele.name, unit: ele.unit, amount: (+ele.amount/+servings) * household, image: `https://www.spoonacular.com/cdn/ingredients_100x100/${ele.image}`}
                      }))
                       directions = JSON.stringify(res.data.analyzedInstructions[0].steps.map(ele => {
                         return {step: ele.number, instruction: ele.step}
@@ -55,12 +60,15 @@ const addMeal = async (req, res) => {
 
    
    
-   const results = await db.mealplan.add_meal(user_id, date, nutritional_info, false, resourceid, title, image, recipe_id, ingredients, directions, total_time)
+   const results = await db.mealplan.add_meal(user_id, date, nutritional_info, false, resourceid, title, image, recipe_id, ingredients, directions, +total_time)
    
    JSON.parse(ingredients).map(async (ele) => {
 
+
       let price = await axios.get(`https://api.spoonacular.com/food/ingredients/${ele.ingredient_id}/information?amount=${ele.amount}&unit=${ele.unit}&apiKey=${SPOON_API_KEY}`)
                   .then(res => res.data.estimatedCost.value)
+
+                  console.log(ele.amount)
 
       await db.list_items.add_item(ele.amount, ele.unit, user_id, ele.ingredient_id, (price / 100).toFixed(2), ele.ingredient_name, ele.image, results[results.length - 1].mealplan_id)
 

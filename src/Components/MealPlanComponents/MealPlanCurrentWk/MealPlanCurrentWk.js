@@ -174,7 +174,7 @@ const MealPlanCurrentWk = (props) => {
     const SaveChanges = () => {
         if(addedMeals.length){
             addedMeals.map(ele => {
-                props.addMeal(props.user_id, {recipe_id: ele.apiId, date: ele.date, resourceid: ele.resourceId, title: ele.title, image: ele.image, fromApi: ele.source === 'api' ? true : false })
+                props.addMeal(props.user_id, {recipe_id: ele.apiId, date: ele.date, resourceid: ele.resourceId, title: ele.title, image: ele.image, household:props.household ,fromApi: ele.source === 'api' ? true : false })
             })
             addMoreMeals([])     
         } 
@@ -352,6 +352,7 @@ const MealPlanCurrentWk = (props) => {
 const mapStateToProps = (reduxState) => {
     return {
         user_id: reduxState.user.user_id,
+        household: reduxState.user.household_size,
         meals: reduxState.mealplan.meals,
         searching: reduxState.mealplan.searching,
         searchResults: reduxState.mealplan.searchResults,

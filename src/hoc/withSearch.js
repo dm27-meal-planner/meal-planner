@@ -67,9 +67,9 @@ function withSearch(BaseComponent, searchBtnCb) {
                 ingredient: this.state.ingredient,
             });
             // send info to redux.
-            if (this.state.name) {
-                let params = `name=${this.state.name}&page=${this.state.page}`;
-                params += `meal_type=${this.state.mealType}&cuisine=${this.state.cuisine}`;
+            if (true) {
+                let params = `name=${this.state.name}&page=${this.state.page}&`;
+                params += `meal_type=${this.state.mealType}&cuisine=${this.state.cuisine}&`;
                 params += `ingredient=${this.state.ingredient}`;
                 this.props.getRecipeByQuery(params);
             }

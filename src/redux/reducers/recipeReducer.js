@@ -111,6 +111,7 @@ export default function reducer(state = initialState, action) {
             ...state,
          };
       case `${GET_RECIPE_BY_QUERY}_FULFILLED`:
+         console.log(payload.data)
          return {
             ...state,
             searchResults: payload.data
