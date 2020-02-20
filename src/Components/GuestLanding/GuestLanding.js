@@ -75,10 +75,10 @@ class GuestLanding extends Component{
                 : <> */}
                 <div className = "intro">
                     <div className="text-in-image">
-                        <h1>Take the food out of foodplan.</h1>
+                        <h1>Meal Thyme</h1>
+                        <h2>Meal planning made simple.</h2>
                     </div>
-                    <img className="calendar" src="lt16410086.png" alt="calendar" />
-                    <img className="clock" src="clock.png" alt="clock" />
+
                 </div>
                 <div className = "registerdetails">
                     <span>Register today. It's free.</span>
@@ -91,7 +91,7 @@ class GuestLanding extends Component{
                     <input placeholder="Password" name="password" type="password" value={this.state.password} onChange={this.handleUserInput} />
                     <input placeholder="Retype password" name="passwordconfirm" type="password" value={this.state.passwordconfirm} onChange={this.handleUserInput} />
                     <div className = "household">
-                        <h4>How many people you are cooking for. This can be changed later.</h4>
+                        <h4>Household Size:</h4>
                         <select id="householdSizeSelect" onChange={e => {this.setState({household_size: e.target.value})}}>
                             {familySize.map((element, index) => {
                                 return(
