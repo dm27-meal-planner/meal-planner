@@ -27,17 +27,29 @@ const editGroceryList = async (req, res) => {
 
 const deleteGroceryItem = async (req, res) => {
    const {user_id} = req.params;
-   res.status(200).json('OK');
+   const {mealplan_id, list_item_id} = req.query
+
+   const db = req.app.get('db')
+
+   if(mealplan_id){
+     const result = await db.list_items.delete_item_by_meal(user_id, mealplan_id)
+     return  res.status(200).json(result);
+   } else if(list_item_id) {
+     const result = await db.list_items.delete_item_by_id(user_id, list_item_id)
+     return  res.status(200).json(result);
+   } else {
+      return res.status(400).json('Error deleting list items.')
+   }
 }
 
 const listToFridge = async (req, res) => {
    const {user_id} = req.params;
    const db = req.app.get('db');
+   let remainList
    // should be whatever is left
-   const transferDone = await req.body.map(element => {
-      db.grocerylist.transfer_to_fridge(element.quantity, element.unit, user_id, element.name, element.imageurl, element.spoon_id, element.list_item_id);
+    req.body.map(async (element) => {
+     remainList = await db.grocerylist.transfer_to_fridge(element.quantity, element.unit, user_id, element.name, element.imageurl, element.spoon_id, element.list_item_id, element.mealplan_id);
    })
-   const remainList = await db.grocerylist.get_grocerylist(user_id);
    res.status(200).json(remainList);
 }
 

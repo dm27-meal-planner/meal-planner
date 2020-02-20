@@ -30,7 +30,9 @@ class GroceryList extends Component{
             return false
         }
     }
-    getSearchResults = () => {
+    getSearchResults = (e) => {
+
+        e.preventDefault()
          axios.post('/api/ingredient/search', {searchPhrase: this.state.searchInput})
                 .then(res => {
                     this.setState({
@@ -139,7 +141,6 @@ class GroceryList extends Component{
                             <ShoppingList user_id={this.props.user_id} groceryList={this.props.groceryList} />
                         </tbody>
                     </table>
-                    <button onClick={() => this.transferToFridge(this.state.purchasedItems)}>Add Selected Items to Fridge</button>
                 </div>
                 : <p>Your shopping list is empty!</p>}
             </div>
@@ -155,5 +156,5 @@ const mapStateToProps = (reduxState) => {
 }
 
 export default connect(mapStateToProps, 
-{getUserGroceryList, addItemToList, addItem, deleteGroceryItem})
+{getUserGroceryList, addItemToList, addItem})
 (GroceryList)
