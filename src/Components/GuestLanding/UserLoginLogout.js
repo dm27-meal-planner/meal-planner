@@ -40,7 +40,7 @@ class UserLoginLogout extends Component {
          return (
             <>
                <p>Welcome, {this.props.username}!</p> 
-               <button onClick={() => {
+               <button className="logoutbutton" onClick={() => {
                   this.props.logoutUser();
                }}>Logout</button>
             </>

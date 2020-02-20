@@ -1,40 +1,74 @@
-import React from 'react'
+import React, {Component} from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import UserLoginLogout from '../GuestLanding/UserLoginLogout'
 
-import './style/NavBar.scss'
+import './style/NavBar.css'
 
-const NavBar = (props) => {
+class NavBar extends Component {
+    constructor () {
+        super();
 
-    if(!props.user_id){
-        return(
-        <div style={{border: 'black solid 2px'}} className='navbar' >
-            <Link to='/' ><p>MealPlan</p></Link>
-            <div className="menulinks">
-                <Link to='/recipes'><p>Recipes</p></Link>
-                <UserLoginLogout />
-            </div>
-        </div>
-        )
+        this.state = {
+            menuStatus: 'closed'
+        }
     }
 
-    return(
-        <div className='navbar' style={{border: 'black solid 2px'}} >
-            <span className="title">
-                <Link to='/' className='site-title'><p>MealPlan</p></Link>
-            </span>
-            <span className="menulinks">
-                <Link to='/mealplan' ><p>Meal Plan</p></Link>
-                <Link to='/nutritional'><p>Meal Plan Nutrition</p></Link>
-                <Link to='/fridge' ><p>Fridge</p></Link>
-                <Link to='/grocerylist' ><p>Grocery List</p></Link>
-                <Link to='/recipes'><p>Recipes</p></Link>
-                <UserLoginLogout />
-            </span>
+    toggleMenu = () => {
+        if (this.state.menuStatus === "closed") {
+           this.setState({menuStatus: "opened"});
+        } else {
+           this.setState({menuStatus: "closed"});
+        }
+    }
 
-        </div>
-    )
+    render() {
+        if(!this.props.user_id){
+            return(
+            <>
+            <div style={{border: 'black solid 2px'}} className='navbar' >
+                <Link to='/' ><p>MealPlan</p></Link>
+                <div className="menulinks">
+                    <Link to='/recipes'><p>Recipes</p></Link>
+                    <UserLoginLogout />
+                </div>
+                <img onClick={this.toggleMenu} className="hamburger" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/1200px-Hamburger_icon.svg.png" alt="oof" />
+            </div>
+            <div className={`dropdown-nav ${this.state.menuStatus}`}>
+                <Link onClick={this.toggleMenu} to='/recipes'><p>Recipes</p></Link>
+                <UserLoginLogout />
+            </div>
+            </>
+            )
+        }
+    
+        return(
+            <>
+            <div className='navbar' style={{border: 'black solid 2px'}} >
+                <div className="title">
+                    <Link to='/' className='site-title'><p>MealPlan</p></Link>
+                </div>
+                <div className="menulinks">
+                    <Link to='/mealplan' ><p>Meal Plan</p></Link>
+                    <Link to='/nutritional'><p>Meal Plan Nutrition</p></Link>
+                    <Link to='/fridge' ><p>Fridge</p></Link>
+                    <Link to='/grocerylist' ><p>Grocery List</p></Link>
+                    <Link to='/recipes'><p>Recipes</p></Link>
+                    <UserLoginLogout />
+                </div>
+                <img onClick={this.toggleMenu} className="hamburger" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Hamburger_icon.svg/1200px-Hamburger_icon.svg.png" alt="oof" />
+            </div>
+            <div className={`dropdown-nav ${this.state.menuStatus}`}>
+                <Link onClick={this.toggleMenu} to='/mealplan' ><p>Meal Plan</p></Link>
+                <Link onClick={this.toggleMenu} to='/nutritional'><p>Meal Plan Nutrition</p></Link>
+                <Link onClick={this.toggleMenu} to='/fridge' ><p>Fridge</p></Link>
+                <Link onClick={this.toggleMenu} to='/grocerylist' ><p>Grocery List</p></Link>
+                <Link onClick={this.toggleMenu} to='/recipes'><p>Recipes</p></Link>
+                <UserLoginLogout />
+            </div>
+            </>
+        )
+    }
 }
 
 const mapStateToProps = (reduxState) => {
