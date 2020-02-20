@@ -3,18 +3,21 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  background-image: url("../../../icons/guestlanding.jpg");
+  background-position: center;
+  background-size: cover;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
   -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
+  flex-wrap: wrap;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
 }
 
 #GuestLanding .intro {
@@ -22,14 +25,29 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  margin: auto;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.text-in-image {
+  background: white;
+  margin-left: 40px;
+  border-radius: 10px;
 }
 
 #GuestLanding .intro .text-in-image h1 {
-  color: black;
+  color: #000000;
+  font-family: 'Permanent Marker', cursive;
+  font-size: 80px;
+}
+
+#GuestLanding .intro .text-in-image h2 {
+  color: #000000;
+  font-family: 'Permanent Marker', cursive;
+  font-size: 50px;
 }
 
 #GuestLanding .intro .calendar {
@@ -43,16 +61,35 @@
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   background-color: white;
   width: 400px;
-  margin: 20px;
+  margin: 20px 40px;
   padding: 10px;
   border-radius: 20px;
+  margin-right: 30px;
+}
+
+#GuestLanding .registerdetails button {
+  color: white;
+  border-radius: 10px;
+  border: none;
+  background: #007991;
+  -webkit-transition: .2s;
+  transition: .2s;
+  padding: 10px;
+}
+
+#GuestLanding .registerdetails button:hover {
+  background: #00b1d4;
+  cursor: pointer;
+  padding-left: 30px;
+  padding-right: 30px;
+  letter-spacing: 2px;
 }
 
 #GuestLanding .registerdetails span {
@@ -68,6 +105,14 @@
   border-right: none;
   border-left: none;
   border-bottom: 1px solid lightblue;
+  -webkit-transition: .2s;
+  transition: .2s;
+}
+
+#GuestLanding .registerdetails input:focus {
+  padding: 10px;
+  outline: none;
+  border-bottom: 3px solid #46d1ff;
 }
 
 #GuestLanding .household {
@@ -76,14 +121,14 @@
   display: flex;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
   -webkit-box-pack: space-evenly;
-      -ms-flex-pack: space-evenly;
-          justify-content: space-evenly;
+  -ms-flex-pack: space-evenly;
+  justify-content: space-evenly;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   margin: 10px 0;
 }
 
@@ -97,5 +142,11 @@
 
 #GuestLanding .register {
   margin: 10px;
+}
+
+@media screen and (max-width: 1000px) {
+  #GuestLanding .registerdetails {
+    margin: 20px auto;
+  }
 }
 /*# sourceMappingURL=GuestLanding.css.map */

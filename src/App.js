@@ -9,7 +9,9 @@ function App() {
   return (
     <div className="App">
       <NavBar />
-      {routes}
+      <div className="content">
+        {routes}
+      </div>
       {/* <GroceryList /> */}
     </div>
   );

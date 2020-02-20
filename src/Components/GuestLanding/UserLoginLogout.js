@@ -40,7 +40,7 @@ class UserLoginLogout extends Component {
          return (
             <>
                <p>Welcome, {this.props.username}!</p> 
-               <button onClick={() => {
+               <button className="logoutbutton" onClick={() => {
                   this.props.logoutUser();
                }}>Logout</button>
             </>
@@ -50,23 +50,23 @@ class UserLoginLogout extends Component {
       return(
          <div id="UserLoginLogout">
             <Popover
-               content={<form className="user" onSubmit={(e) => {
+               content={<form style={{display: 'flex', flexDirection:'column', height: '200px', justifyContent:'space-evenly'}} className="user" onSubmit={(e) => {
                e.preventDefault();   
                this.props.loginUser(userOrEmail, password)
                this.setState({userOrEmail: '', password: ''})
             }}>
-               <input placeholder="Name/Email"
+               <input className='login-input' placeholder="Name/Email"
                   value={userOrEmail}
                   id="userInput"
                   required
                   onChange={e => this.handleUserInput(e.target.value)}/>
-               <input placeholder="Password" 
+               <input  className='login-input' placeholder="Password" 
                   value={password}
                   type="password"
                   id="passwordInput"
                   required
                   onChange={e => this.handlePasswordInput(e.target.value)}/>
-               <input type="submit" />
+               <input type="submit" value='Login' id='login-button' style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto'}} />
             </form>}
             placement="bottomLeft"
             trigger="click"
