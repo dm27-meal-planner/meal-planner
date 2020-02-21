@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import AddToMealPlanCard from '../RecipeCards/AddToMealPlanCard/AddToMealPlanCard';
 import loading from '../../../animations/loading.gif'
-import { Rate } from 'antd'
+import { Rate, Modal } from 'antd';
+import moment from 'moment';
 import './stylesheet/Recipe.scss'
 class Recipe extends Component {
     constructor() {
@@ -32,7 +33,10 @@ class Recipe extends Component {
             recipeIngredients: [],
 
             recipeDirection: '',
-            loading:true
+            loading: true,
+            // for add to Meal plan btn
+            MPdate: '',
+            MPmealType: '',
         }
     }
 
@@ -81,16 +85,57 @@ class Recipe extends Component {
     }
 
     handleDelete = () => {
-        // **delete the recipe.
-        alert('Working on delete btn...');
-        // go back to search recipe page.
-        this.props.history.push('/recipes');
+        // delete the recipe.
+        axios.delete(`/api/recipe/${this.props.match.params.recipe_id}`).then(response => {
+            alert('Delete successfully!');
+            // go back to search recipe page.
+            this.props.history.push('/recipes');
+        })
     }
 
 
     handleMPWindow = () => {
         this.setState({
             addMPWindowFlag: !this.state.addMPWindowFlag
+        })
+    }
+
+    handleUserInput = (e) => {
+        this.setState({
+            [e.target.name]: e.target.value
+        })
+    }
+
+    handleMealTypeChange = (e) => {
+        this.setState({
+            MPmealType: e.currentTarget.value
+        })
+    }
+
+    addToMP = () => {
+        // add to meal plan.
+        let mpObject = {
+            recipe_id: this.state.recipeId,
+            date: moment(this.state.MPdate).format(),
+            resourceid: this.state.MPmealType,
+            // nutritional_info: JSON.stringify(this.props.recipeNutrition),
+            title: this.state.recipeName,
+            image: this.state.recipeImg,
+            fromApi: this.props.match.params.recipe_id.startsWith('s'),
+            household: 1
+        }
+        console.log(mpObject);
+        axios.post(`/api/mealplan/7`, mpObject).then(response => {
+            alert('Added to Meal Plan!');
+            this.setState({
+                addMPWindowFlag: false
+            })
+        }).catch(err => {
+            console.log(err);
+            alert(err.message);
+            this.setState({
+                addMPWindowFlag: false
+            })
         })
     }
 
@@ -102,29 +147,33 @@ class Recipe extends Component {
                 <button onClick={() => { this.handleDeleteWindow() }} >Delete</button>
             </div>) : null;
         // delete window
-        let deleteWindow = this.state.deleteWindowFlag ?
+        let deleteWindow =
+            // this.state.deleteWindowFlag ?
             (<div className='delete-window'>
                 <div>
                     Are you sure you want to delete this recipe? This cannot be undone!
                 </div>
-                <div>
+                {/* <div>
                     <button onClick={() => { this.handleDeleteWindow() }}>Go back</button>
                     <button onClick={() => { this.handleDelete() }}>Delete</button>
-                </div>
-            </div>) : null;
+                </div> */}
+            </div>)
+        // : null;
         // add to meal plan window
-        let addMPWindow = this.state.addMPWindowFlag ?
-            (<AddToMealPlanCard 
-                recipeId={this.props.match.params.recipe_id}
-                recipeNutrition={this.state.recipeNutrition}
-                recipeMealType={this.state.recipeMealType}
-                recipeName={this.state.recipeName}
-                recipeImg={this.state.recipeImg}
-                />) : null;
+        // let addMPWindow = 
+        // this.state.addMPWindowFlag ?
+        // (<AddToMealPlanCard
+        //     recipeId={this.props.match.params.recipe_id}
+        //     recipeNutrition={this.state.recipeNutrition}
+        //     recipeMealType={this.state.recipeMealType}
+        //     recipeName={this.state.recipeName}
+        //     recipeImg={this.state.recipeImg}
+        // />) 
+        // : null;
         // ** beautify later
         let nutrition = JSON.stringify(this.state.recipeNutrition);
 
-        if(this.state.loading){
+        if (this.state.loading) {
             return (
                 <img src={loading} alt='loading' />
             )
@@ -141,50 +190,78 @@ class Recipe extends Component {
                             <div className='Recipe-name'>{this.state.recipeName} </div>
                             <img className='Recipe-img' src={this.state.recipeImg} alt='Recipe-img' />
                             {recipeModifyButtons}
-                            {deleteWindow}
-                            {addMPWindow}
+                            {/* {deleteWindow} */}
+                            <Modal
+                                title="Delete warning"
+                                visible={this.state.deleteWindowFlag}
+                                onOk={this.handleDelete}
+                                onCancel={this.handleDeleteWindow}
+                            >
+                                {deleteWindow}
+                            </Modal>
+
+                            {/* {addMPWindow} */}
+                            <Modal
+                                title="Add to Meal Plan"
+                                visible={this.state.addMPWindowFlag}
+                                onOk={this.addToMP}
+                                onCancel={this.handleMPWindow}
+                            >
+                                <AddToMealPlanCard
+                                    // recipeId={this.props.match.params.recipe_id}
+                                    // recipeNutrition={this.state.recipeNutrition}
+                                    // recipeMealType={this.state.recipeMealType}
+                                    // recipeName={this.state.recipeName}
+                                    // recipeImg={this.state.recipeImg}
+                                    MPdate={this.state.MPdate}
+                                    MPmealType={this.state.MPmealType}
+                                    handleUserInput={this.handleUserInput}
+                                    handleMealTypeChange={this.handleMealTypeChange}
+                                />
+                            </Modal>
                             <Rate className='rating' disabled value={this.state.recipeReview} />
                         </div>
-                            <button id='add-to-recipe' onClick={this.handleMPWindow}>Add to Meal Plan</button>
-                        </div>
-                        <div className='Recipe-info-wrapper'>
-                            <ul>
-                                <li><b>Time to make:</b> <p>{this.state.recipeCookTime} minutes</p> </li>
-                                <li><b>Meal Type:</b> <p>{this.state.recipeMealType}</p></li>
-                                <li><b>Dish Type:</b> <p>{this.state.recipeDishType}</p></li>
-                                <li><b>Description:</b> <p >{this.state.recipeDes}</p></li>
-                            </ul>
-                        </div>
-                        <div className='Recipe-nutrition-wrapper'>
-                            <table>
-                                    {JSON.parse(nutrition).slice(0,9).map(ele =>{
-                                    return(
-                                        <tr>
-                                            <th>{ele.title}</th>
-                                            <td>{ele.amount} {ele.unit}</td>
-                                        </tr>
-                                    ) 
-                                    })
-                                    }
-                            </table>
-                        </div>
+                        <button id='add-to-recipe' onClick={this.handleMPWindow} disabled={!this.props.user_id}>Add to Meal Plan</button>
+                    </div>
+                    <div className='Recipe-info-wrapper'>
+                        <ul>
+                            <li><b>Time to make:</b> <p>{this.state.recipeCookTime} minutes</p> </li>
+                            <li><b>Meal Type:</b> <p>{this.state.recipeMealType}</p></li>
+                            <li><b>Cuisine:</b> <p>{this.state.recipeCuisine}</p></li>
+                            <li><b>Servings:</b> <p>{this.state.recipeServings}</p></li>
+                            <li><b>Description:</b> <p >{this.state.recipeDes}</p></li>
+                        </ul>
+                    </div>
+                    <div className='Recipe-nutrition-wrapper'>
+                        <table>
+                            {JSON.parse(nutrition).slice(0, 9).map(ele => {
+                                return (
+                                    <tr>
+                                        <th>{ele.title}</th>
+                                        <td>{parseFloat(ele.amount).toFixed(2)} {ele.unit}</td>
+                                    </tr>
+                                )
+                            })
+                            }
+                        </table>
+                    </div>
                 </div>
                 <div className='bottom-level'>
                     <div className='Recipe-ingredient-wrapper'>
                         {/* ** waiting for ingredient to be implemented. */}
                         <ul >
-                        {this.state.recipeIngredients.map((e, i) => {
-                            return (
+                            {this.state.recipeIngredients.map((e, i) => {
+                                return (
                                     <li key={i} ><i>{e.amount} {e.unit}</i> {e.name}</li>
-                                    )
-                                })}
+                                )
+                            })}
                         </ul>
                     </div>
                     <div className='Recipe-direction-wrapper'>
                         <ul>
                             {this.state.recipeDirection.split(/([0-9]\.)/g).map(ele => {
                                 return <li> {ele} </li>
-                        })}
+                            })}
                         </ul>
                     </div>
                 </div>

@@ -43,6 +43,11 @@ class RecipeEditor extends Component {
     }
 
     componentDidMount() {
+
+        if(!this.props.user_id){
+            this.props.history.push('/home');
+        }
+
         // edit: need to bring data from database.
         if (this.props.match.params.recipe_id) {
             let sourceId = this.props.match.params.recipe_id;
@@ -79,6 +84,8 @@ class RecipeEditor extends Component {
                 }
             })
         }
+
+
 
         // get cuisine list
         axios.get('/api/recipe/cuisinelist').then(response => {
@@ -307,7 +314,7 @@ class RecipeEditor extends Component {
                                     return (
                                         <tr>
                                             <th>{ele.title}</th>
-                                            <td>{ele.amount} {ele.unit}</td>
+                                            <td>{parseFloat(ele.amount).toFixed(2)} {ele.unit}</td>
                                         </tr>
                                     )
                                 })
@@ -355,7 +362,7 @@ class RecipeEditor extends Component {
                     </div>
                     
                 </div>
-                <button onClick={this.handleSubmitClick} >Submit</button>
+                <button onClick={this.handleSubmitClick} className='submitBtn' >Submit</button>
             </div>
         )
     }

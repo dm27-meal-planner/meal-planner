@@ -55,12 +55,14 @@ class RecipeIngredientCard extends Component {
             )
         })
         return (
-            <div>
+            <div className='RecipeIngredientCard-wrapper'>
                 <section>
-                    <span>Search the ingredients to add to the recipe:</span>
-                    <input name='searchInput' onChange={this.handleInputChange} />
+                    <span>Search the ingredients: </span>
+                    <input name='searchInput' onChange={this.handleInputChange} className='search-input'/>
                     <button onClick={this.getSearchResults}>search</button>
-                    <ul>
+                </section>
+                <section>
+                    <ul className='search-result'>
                         {searchResults}
                     </ul>
                 </section>

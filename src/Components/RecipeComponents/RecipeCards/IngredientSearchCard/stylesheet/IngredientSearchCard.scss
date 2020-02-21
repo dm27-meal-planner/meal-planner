@@ -1,0 +1,17 @@
+.IngredientSearchCard-wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    img{
+        width: 50px;
+        height: 50px;
+    }
+    button{
+        border-radius: 5px;
+    }
+    input{
+        width: 50px;
+    }
+
+}
