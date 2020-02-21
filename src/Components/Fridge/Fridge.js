@@ -44,6 +44,7 @@ class Fridge extends Component{
 
     deleteItem = (id) => {
         this.props.deleteItem(this.props.user_id, id);
+        this.updateFridge();
     }
 
     editItem = async (id, element) => {
@@ -68,7 +69,6 @@ class Fridge extends Component{
                 <div id="Fridge">
                     <h1>Your Fridge</h1>
                     <form>
-                        <input className="searchName" name="searchName" placeholder="Search by name" value={this.state.searchName} onChange={this.handleUserChange} />
                         <Link className="fridgeadd" to='/grocerylist'>Add More Ingredients</Link>
                     </form>
                     {this.props.fridge[0] ?
