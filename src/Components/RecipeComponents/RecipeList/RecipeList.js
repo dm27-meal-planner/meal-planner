@@ -1,45 +1,55 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import withSearch from '../../../hoc/withSearch';
-import {getMostLikedRecipe, getRecentRecipes, getUserRecipe, clearSearchResult} from '../../../redux/reducers/recipeReducer';
+import { getMostLikedRecipe, getRecentRecipes, getUserRecipe, clearSearchResult } from '../../../redux/reducers/recipeReducer';
 import TopFiveList from '../RecipeCards/TopFiveList/TopFiveList';
 import './stylesheet/RecipeList.scss'
 
-class RecipeList extends Component{
+class RecipeList extends Component {
 
-    componentDidMount(){
+    componentDidMount() {
         this.props.getMostLikedRecipe();
         this.props.getRecentRecipes();
-        if(this.props.user_id){
+        if (this.props.user_id) {
             this.props.getUserRecipe(this.props.user_id);
         }
         // clear search result
         this.props.clearSearchResult();
     }
 
-    redirectToSearchResult = ()=>{
+    redirectToSearchResult = () => {
         // after press search button, redirect to search result page.
         this.props.history.push('/recipe/search');
     }
-    render(){
-        let SearchBar = withSearch(()=>{return(<div></div>)}, this.redirectToSearchResult);
+    render() {
+        let SearchBar = withSearch(() => { return (<div></div>) }, this.redirectToSearchResult);
         // console.log(SearchBar);
-        
+
         return (
             <div className='RecipeList-wrapper'>
-                <SearchBar />
+                <header>
+                    {this.props.user_id?(
+                        <Link to='/recipe/add'><button className='addBtn'>Add a new recipe</button></Link>
+                    ):null}
+                    <SearchBar />
+                    {this.props.user_id?(
+                        <div className='dummy'></div>
+                    ):null}
+                </header>
+                
                 {/* {withSearch(<div></div>, this.redirectToSearchResult)} */}
                 <main>
-                    <TopFiveList listName='Recently Added' recipeList={this.props.recentlyAddedRecipes} editFlag={false}/>
-                    <TopFiveList listName='Your Recipes' recipeList={this.props.userRecipes} editFlag={true}/>
-                    <TopFiveList listName='Most Liked' recipeList={this.props.mostLiked} editFlag={false}/>
+                    <TopFiveList listName='Recently Added' recipeList={this.props.recentlyAddedRecipes} editFlag={false} />
+                    <TopFiveList listName='Your Recipes' recipeList={this.props.userRecipes} editFlag={true} />
+                    <TopFiveList listName='Most Liked' recipeList={this.props.mostLiked} editFlag={false} />
                 </main>
             </div>
         )
     }
 }
 
-const mapStateToProps = function (reduxState){
+const mapStateToProps = function (reduxState) {
     return {
         user_id: reduxState.user.user_id,
         recentlyAddedRecipes: reduxState.recipe.recentlyAddedRecipes,
@@ -49,4 +59,4 @@ const mapStateToProps = function (reduxState){
     }
 }
 
-export default connect(mapStateToProps, {getMostLikedRecipe, getRecentRecipes, getUserRecipe, clearSearchResult}) (RecipeList);
+export default connect(mapStateToProps, { getMostLikedRecipe, getRecentRecipes, getUserRecipe, clearSearchResult })(RecipeList);
