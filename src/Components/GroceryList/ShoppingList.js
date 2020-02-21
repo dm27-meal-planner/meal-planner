@@ -26,9 +26,9 @@ class ShoppingList extends Component {
    }
 
 
-   updateGroceryList = () => {
-      this.setState({purchasedItems: []})
-      this.setState({shoppingList: this.props.groceryList});
+   updateGroceryList = async () => {
+      await this.setState({purchasedItems: []})
+      await this.setState({shoppingList: this.props.groceryList});
    }
 
    // purchasingItem = (element) => {
@@ -44,10 +44,6 @@ class ShoppingList extends Component {
    //    }} catch(err) {alert('An error has occurred.'); console.log(err);}
    //    console.log(this.state.purchasedItems);
    // }
-
-   highlightPurchasedItems = () => {
-      //if the item is in the purchasedItems list, highlight it
-   }
 
    render() {
       return(

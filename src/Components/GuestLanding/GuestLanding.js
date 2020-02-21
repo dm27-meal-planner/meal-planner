@@ -3,8 +3,6 @@ import {connect} from 'react-redux';
 import {getUser, registerUser} from '../../redux/reducers/userReducer';
 import { Redirect } from 'react-router';
 import './stylesheet/GuestLanding.css';
-// import firebase from 'firebase';
-// import firebaseui from 'firebaseui';
 
 class GuestLanding extends Component{
     constructor(){
@@ -103,6 +101,7 @@ class GuestLanding extends Component{
                     {/* </>} */}
                     <button className="register" onClick={this.handleUserRegistration}>Register</button>
                     {this.state.message}
+                    <p>Or sign in with Google.</p>
                 </div>
             </div>
         )

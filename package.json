@@ -24,7 +24,6 @@
     "enzyme-adapter-react-16": "^1.15.2",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
-    "firebase": "^7.8.1",
     "firebaseui": "^4.4.0",
     "lodash": "^4.17.15",
     "massive": "^6.1.4",

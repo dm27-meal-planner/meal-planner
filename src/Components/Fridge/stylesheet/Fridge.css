@@ -1,4 +1,4 @@
-table thead th, table tbody th {
+.fridgeTable thead th, .fridgeTable tbody th {
   border-right: 1px solid black;
   padding: 10px;
 }
@@ -48,26 +48,26 @@ table thead th, table tbody th {
   border: none !important;
 }
 
-table {
+.fridgeTable {
   border: 1px solid black;
   margin: 20px;
   -webkit-box-shadow: 2px 2px 5px grey;
           box-shadow: 2px 2px 5px grey;
 }
 
-table thead th {
+.fridgeTable thead th {
   border-bottom: 1px solid black;
 }
 
-table tbody input {
+.fridgeTable tbody input {
   width: 40px;
 }
 
-table tbody img {
+.fridgeTable tbody img {
   max-height: 75px;
 }
 
-table tbody .individualFridgeQuantity button {
+.fridgeTable tbody .individualFridgeQuantity button {
   margin-left: 5px;
 }
 /*# sourceMappingURL=Fridge.css.map */

@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {getUser, loginUser, logoutUser, registerFirebase, loginFirebase} from '../../redux/reducers/userReducer';
 import { withRouter } from 'react-router';
-import Firebase from '../Firebase/Firebase';
 import {Popover} from 'antd';
 import '../NavBar/style/NavBar.css';
 
