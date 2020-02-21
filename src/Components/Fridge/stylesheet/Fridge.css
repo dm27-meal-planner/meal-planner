@@ -50,6 +50,9 @@ table thead th, table tbody th {
 
 table {
   border: 1px solid black;
+  margin: 20px;
+  -webkit-box-shadow: 2px 2px 5px grey;
+          box-shadow: 2px 2px 5px grey;
 }
 
 table thead th {
@@ -62,5 +65,9 @@ table tbody input {
 
 table tbody img {
   max-height: 75px;
+}
+
+table tbody .individualFridgeQuantity button {
+  margin-left: 5px;
 }
 /*# sourceMappingURL=Fridge.css.map */
