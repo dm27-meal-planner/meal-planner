@@ -1,0 +1,135 @@
+.RecipeEditor-wrapper{
+    width: 1100px;
+    margin: auto;
+   
+    
+    >div{
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        > div{
+            border: black 2px solid;
+            border-radius: 10px;
+        }
+    }
+
+    .first-column-wrapper{
+        .first-block{
+            width: 400px;
+            display: flex;
+            flex-direction: column;
+            input{
+                width: 350px;
+            }
+            *{
+                // margin-top: 10px;
+                margin-bottom: 10px;
+                margin-left: 15px;
+                text-align: left;
+            }
+            
+        }
+        .second-block{
+            border: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .third-block{
+            width: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            text-align: left;
+            > div{
+                margin-left: 15px;
+            }
+            button{
+                border-radius: 5px;
+            }
+        }
+    }
+
+    .second-column-wrapper{
+        .fourth-block{
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            input{
+                width: 50px;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                margin-left: 15px;
+            }
+            .des-wrapper{
+                width: 300px;
+                display: flex;
+                flex-direction: column;
+                text-align: left;
+                *{
+                    margin: 10px;
+                }
+                textarea{
+                    height: 100px;
+                }
+            }
+        }
+        .fifth-block{
+            
+            width: 400px;
+            text-align: left;
+            *{
+                margin: 10px;
+                
+            }
+            textarea{
+                width: 350px;
+                height: 300px;
+            }
+        }
+        .sixth-block{
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            table{
+                margin: auto;
+                // margin-bottom: 50px;
+                width: 250px;
+            }
+            >div{
+                margin-bottom: 10px;
+            }
+        }
+    }
+    .third-column-wrapper{
+        .seventh-block{
+            border: none;
+            width: 400px;
+            ul{
+                height: 80%;
+                li{
+                    width: 50%;
+                    font-size: large;
+                    margin-top: 20px;
+                    text-align: left;
+                    list-style: square;
+                    font-weight: 500;
+                    border-bottom: solid rgba(122, 122, 122, 0.596) 1.5px;
+                    border-radius: 0px;
+        
+                }
+            }
+        }
+        button{
+            border-radius: 5px;
+        }
+    }
+    .submitBtn{
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+}

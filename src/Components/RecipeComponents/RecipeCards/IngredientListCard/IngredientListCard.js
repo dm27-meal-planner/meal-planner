@@ -1,4 +1,5 @@
 import React from 'react'
+import './stylesheet/IngredientListCard.scss';
 
 class IngredientListCard extends React.Component{
     constructor(){
@@ -19,9 +20,9 @@ class IngredientListCard extends React.Component{
     render(){
         const {name, amount, unit, i, saveChanges, removeItem} = this.props
         return(
-        <li  >
-            <div style={{display: 'flex'}}>
-                <input type='checkbox'/>
+        <li  className='IngredientListCard-wrapper'>
+            <div>
+                {/* <input type='checkbox'/> */}
                 <p>{amount} {unit} {name}</p>
                 {/* <img src={`https://www.spoonacular.com/cdn/ingredients_100x100/${image}`} alt='ingredient_image'/> */}
                 {this.state.editMode ? 
@@ -32,8 +33,10 @@ class IngredientListCard extends React.Component{
                         this.setState({editMode: !this.state.editMode});
                         } } >Save Changes</button>
                 </div> : null}
-                <button onClick={() => this.setState({editMode: !this.state.editMode})}>✏</button>
-                <button onClick={() => removeItem(i)}><span role="img">❌</span></button>
+                <div>
+                    <button onClick={() => this.setState({editMode: !this.state.editMode})}>✏</button>
+                    <button onClick={() => removeItem(i)}><span role="img">❌</span></button>
+                </div>
             </div>
         </li>
         )

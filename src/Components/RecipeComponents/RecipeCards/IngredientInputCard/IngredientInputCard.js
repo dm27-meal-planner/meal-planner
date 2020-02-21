@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './stylesheet/IngredientInputCard.scss';
 
 class IngredientInputCard extends Component {
     constructor() {
@@ -20,19 +21,22 @@ class IngredientInputCard extends Component {
 
     render() {
         return (
-            <div>
+            <div className='IngredientInputCard-wrapper'>
                 <input name='amount' placeholder='qty'
                     onChange={this.handleInputChange}
                     type='number' min='0'
                     value={this.state.amount}
+                    className='amount'
                 />
                 <input name='unit' placeholder='unit'
                     onChange={this.handleInputChange}
                     value={this.state.unit}
+                    className='unit'
                 />
                 <input name='iName' placeholder='ingredient name'
                     onChange={this.handleInputChange}
                     value={this.state.iName}
+                    className='iName'
                 />
                 <button onClick={() => {
 
@@ -51,7 +55,9 @@ class IngredientInputCard extends Component {
                         spoon_id: null
                     })
 
-                }}>Add</button>
+                }}
+                disabled={!this.state.amount || !this.state.unit || !this.state.iName}
+                >Add</button>
             </div>
         )
     }

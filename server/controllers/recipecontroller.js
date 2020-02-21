@@ -132,7 +132,7 @@ const getRecipeByQuery = async (req, res) => {
                // return [];
             })
 
-            console.log(spoonacularRecipes)
+            // console.log(spoonacularRecipes)
             console.log(allRecipes)
          // combine two database
          // allRecipes = allRecipes.concat(spoonacularRecipes);
@@ -362,6 +362,8 @@ const editRecipe = async (req, res) => {
       return null;
    }
    const recipeId = req.params.recipe_id.slice(1);
+   console.log('recipeId:', recipeId);
+   
    const {
       recipeName,
       recipeImg,
@@ -407,9 +409,12 @@ const editRecipe = async (req, res) => {
    // update recipe table
    const updRecipe = await db.recipes.update_recipe(
       recipeName, recipeImg, recipePrepTime, recipeCookTime,
-      recipeDirection, recipeMealType, recipeDes, JSON.stringify(recipeNutrition),
+      recipeDirection, recipeMealType, recipeDes, 
+      // JSON.stringify(recipeNutrition),
       recipeServings, recipeCuisine, recipeId
    );
+
+
 
    // remove all the ingredients and add them again
 
@@ -572,14 +577,13 @@ const getTotalNutrition = (ingredients, servings, cb) => {
          // console.log('nutritionList: ',nutritionList);
          
          nutritionList.forEach(arr => {
-            console.log('nutrition:', arr.data[0].nutrition.nutrients);
+            console.log('nutrition:', arr.data[0].nutrition.nutrients.slice(0,9));
             
             arr.data[0].nutrition.nutrients.slice(0,9).forEach(n => {
-               console.log('n:',n);
-               
+               // console.log('n:',n);
                let match = result.find(r => r.title === n.title);
                if (match) {
-                  match.amount = parseFloat(match.amount).toFixed(2) + parseFloat(n.amount).toFixed(2);
+                  match.amount = parseFloat(match.amount) + parseFloat(n.amount);
                } else {
                   result.push(n);
                }

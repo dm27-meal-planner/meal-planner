@@ -1,0 +1,10 @@
+.IngredientListCard-wrapper{
+    > div{
+        display: flex;
+        align-content: center;
+        justify-content: space-between;
+    }
+    input{
+        width: 50px;
+    }
+}

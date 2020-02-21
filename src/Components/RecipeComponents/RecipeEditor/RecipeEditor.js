@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 // import { Redirect, Link } from 'react-router-dom'
 import axios from 'axios';
+import { Modal } from 'antd';
 import MealTypeCard from '../RecipeCards/MealTypeCard/MealTypeCard';
 import RecipeIngredientCard from '../RecipeCards/RecipeIngredientCard/RecipeIngredientCard';
+import './stylesheet/RecipeEditor.scss';
 class RecipeEditor extends Component {
     constructor() {
         super();
@@ -41,6 +43,11 @@ class RecipeEditor extends Component {
     }
 
     componentDidMount() {
+
+        if(!this.props.user_id){
+            this.props.history.push('/home');
+        }
+
         // edit: need to bring data from database.
         if (this.props.match.params.recipe_id) {
             let sourceId = this.props.match.params.recipe_id;
@@ -77,6 +84,8 @@ class RecipeEditor extends Component {
                 }
             })
         }
+
+
 
         // get cuisine list
         axios.get('/api/recipe/cuisinelist').then(response => {
@@ -175,13 +184,15 @@ class RecipeEditor extends Component {
 
     render() {
 
-        let mealTypeWindow = this.state.mealTypeWindow ? (<div>
-            <MealTypeCard
-                recipeMealType={this.state.recipeMealType}
-                handleMealTypeChange={this.handleMealTypeChange}
-                handleMealTypeWindow={this.handleMealTypeWindow}
-            />
-            {/* <span>Select One</span>
+        let mealTypeWindow =
+            // this.state.mealTypeWindow ? 
+            (<div>
+                <MealTypeCard
+                    recipeMealType={this.state.recipeMealType}
+                    handleMealTypeChange={this.handleMealTypeChange}
+                    handleMealTypeWindow={this.handleMealTypeWindow}
+                />
+                {/* <span>Select One</span>
             <ul>
                 <li><input type='radio' name='meal-type' value='breakfast'
                     checked={this.state.recipeMealType === 'breakfast'}
@@ -194,80 +205,142 @@ class RecipeEditor extends Component {
                     onChange={this.handleMealTypeChange} /> Dinner </li>
             </ul>
             <button onClick={this.handleMealTypeWindow}>Done </button> */}
-        </div>) : null
+            </div>)
+        // : null
 
 
 
         return (
-            <div>
+            <div className='RecipeEditor-wrapper'>
                 <div className='first-column-wrapper'>
-                    <div>
+                    <div className='first-block'>
+                        <span>Recipe name:</span>
                         <input name='recipeName' onChange={this.handleUserInput}
                             placeholder='Recipe Name' value={this.state.recipeName} />
+                        <span>Recipe image URL:</span>
                         <input name='recipeImg' onChange={this.handleUserInput}
                             placeholder='Picture URL' value={this.state.recipeImg} />
                     </div>
-                    <div>
+                    <div className='second-block'>
                         <span>Create Your Own Recipe!</span>
                     </div>
-                    <div>
+                    <div className='third-block'>
                         <div>
-                            <span>Meal Type</span>
+                            <span>Meal Type: {this.state.recipeMealType}</span>
                             <button onClick={this.handleMealTypeWindow}>Select</button>
                         </div>
-                        {mealTypeWindow}
-                        <span>Cuisine: </span>
-                        <select name='recipeCuisine' onChange={this.handleUserInput} value={this.state.recipeCuisine}>
-                            <option value=''>Select Cuisine</option>
-                            {this.state.cuisineList.map((ele, i) => <option value={ele.cuisine_name.toLowerCase()} key={ele.cuisine_id} >{ele.cuisine_name}</option>)}
-                        </select>
-                        <span>Serving: </span>
-                        <input name='recipeServings' onChange={this.handleUserInput}
-                            value={this.state.recipeServings}
-                            type='number' min='1' step='1' />
+                        {/* {mealTypeWindow} */}
+                        <Modal
+                            title="Choose the meal type"
+                            visible={this.state.mealTypeWindow}
+                            onOk={this.handleMealTypeWindow}
+                        // onCancel={this.handleMealTypeWindow}
+                        >
+                            {mealTypeWindow}
+                        </Modal>
+                        <div>
+                            <span>Cuisine: </span>
+                            <select name='recipeCuisine' onChange={this.handleUserInput} value={this.state.recipeCuisine}>
+                                <option value=''>Select Cuisine</option>
+                                {this.state.cuisineList.map((ele, i) => <option value={ele.cuisine_name.toLowerCase()} key={ele.cuisine_id} >{ele.cuisine_name}</option>)}
+                            </select>
+                        </div>
+                        <div>
+                            <span>Serving: </span>
+                            <input name='recipeServings' onChange={this.handleUserInput}
+                                value={this.state.recipeServings}
+                                type='number' min='1' step='1' />
+                        </div>
                     </div>
                 </div>
                 <div className='second-column-wrapper'>
-                    <div>
-                        <span>Prepare Time:</span>
-                        <input type='number' min='0' step='1'
-                            name='recipePrepTimeHour'
-                            onChange={this.handleUserInput} 
-                            value={this.state.recipePrepTimeHour}/> hour
-                        <input type='number' min='0' step='1'
-                            name='recipePrepTimeMin'
-                            onChange={this.handleUserInput} max='59'
-                            value={this.state.recipePrepTimeMin} />min
+                    <div className='fourth-block'>
+                        <div>
+                            <span>Prepare Time:</span>
+                            <div>
+                                <span>
+                                    <input type='number' min='0' step='1'
+                                        name='recipePrepTimeHour'
+                                        onChange={this.handleUserInput}
+                                        value={this.state.recipePrepTimeHour} /> hour
+                                </span>
+                                <span>
+                                    <input type='number' min='0' step='1'
+                                        name='recipePrepTimeMin'
+                                        onChange={this.handleUserInput} max='59'
+                                        value={this.state.recipePrepTimeMin} />min
+                                </span>
+                            </div>
+                        </div>
+                        <div>
+                            <span>Cook Time: </span>
+                            <div>
+                                <span>
+                                    <input type='number' min='0' step='1'
+                                        name='recipeCookTimeHour'
+                                        onChange={this.handleUserInput}
+                                        value={this.state.recipeCookTimeHour} /> hour
+                                </span>
+                                <span>
+                                    <input type='number' min='0' step='1'
+                                        name='recipeCookTimeMin'
+                                        onChange={this.handleUserInput} max='59'
+                                        value={this.state.recipeCookTimeMin} />min
+                                </span>
+                            </div>
+                        </div>
+                        <div className='des-wrapper'>
+                            <span>Descriptions: </span>
+                            <textarea name='recipeDes' onChange={this.handleUserInput} value={this.state.recipeDes}>
 
-                        <span>Cook Time: </span>
-                        <input type='number' min='0' step='1'
-                            name='recipeCookTimeHour'
-                            onChange={this.handleUserInput} 
-                            value={this.state.recipeCookTimeHour} /> hour
-                        <input type='number' min='0' step='1'
-                            name='recipeCookTimeMin'
-                            onChange={this.handleUserInput} max='59' 
-                            value={this.state.recipeCookTimeMin} />min
+                            </textarea>
+                        </div>
                     </div>
-                    <div>
-                        <span>Descriptions: </span>
-                        <textarea name='recipeDes' onChange={this.handleUserInput} value={this.state.recipeDes}>
-                            
-                        </textarea>
+                    <div className='fifth-block'>
+                        <span>Directions:</span>
+                        <div>
+                            <textarea name='recipeDirection' onChange={this.handleUserInput} value={this.state.recipeDirection}>
+
+                            </textarea>
+                        </div>
                     </div>
-                    <div>
+                    <div className='sixth-block'>
                         <span>Nutrition Information</span>
                         <span>This will update after save the recipe.</span>
-                        {/* **beautify later */}
-                        <div>{JSON.stringify(this.state.recipeNutrition)} </div>
+                        {/* <div>{JSON.stringify(this.state.recipeNutrition)} </div> */}
+                        <div>
+                            <table>
+                                {JSON.parse(JSON.stringify(this.state.recipeNutrition)).slice(0, 9).map(ele => {
+                                    return (
+                                        <tr>
+                                            <th>{ele.title}</th>
+                                            <td>{parseFloat(ele.amount).toFixed(2)} {ele.unit}</td>
+                                        </tr>
+                                    )
+                                })
+                                }
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div className='third-column-wrapper'>
-                    <div>
+                    <div className='seventh-block'>
+                        <ul>
+                            {this.state.recipeIngredients.map((e, i) => {
+                                return (
+                                    <li key={i} ><i>{e.amount} {e.unit}</i> {e.name}</li>
+                                )
+                            })}
+                        </ul>
                         <button onClick={this.handleIngredientWindow}>
                             Open ingredient window
                         </button>
-                        {this.state.ingredientWindow ? (
+                        <Modal
+                            title="Enter ingredients here"
+                            visible={this.state.ingredientWindow}
+                            onOk={this.handleIngredientWindow}
+                        // onCancel={this.handleIngredientWindow}
+                        >
                             <RecipeIngredientCard
                                 ingredients={this.state.recipeIngredients}
                                 changeIngredient={this.changeIngredient}
@@ -275,19 +348,21 @@ class RecipeEditor extends Component {
                                 removeIngredient={this.removeIngredient}
                                 closeWindow={this.handleIngredientWindow}
                             />
-                        ) : null}
-                    </div>
-                    <div>
-                        <span>Directions:</span>
-                        <div>
-                            <textarea name='recipeDirection' onChange={this.handleUserInput} value={this.state.recipeDirection}>
-                                
-                            </textarea>
-                        </div>
-                    </div>
-                </div>
+                        </Modal>
 
-                <button onClick={this.handleSubmitClick} >Submit</button>
+                        {/* {this.state.ingredientWindow ? (
+                            <RecipeIngredientCard
+                                ingredients={this.state.recipeIngredients}
+                                changeIngredient={this.changeIngredient}
+                                addToIngredients={this.addToIngredients}
+                                removeIngredient={this.removeIngredient}
+                                closeWindow={this.handleIngredientWindow}
+                            />
+                        ) : null} */}
+                    </div>
+                    
+                </div>
+                <button onClick={this.handleSubmitClick} className='submitBtn' >Submit</button>
             </div>
         )
     }
