@@ -28,7 +28,7 @@
     "lodash": "^4.17.15",
     "massive": "^6.1.4",
     "moment": "^2.24.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "querystring": "^0.2.0",
     "react": "^16.12.0",
     "react-chartjs-2": "^2.9.0",
